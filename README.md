@@ -1,11 +1,19 @@
-backend (https://fullstackopen.com/en/part9/typing_an_express_app)
+# backend
+
+https://fullstackopen.com/en/part9/typing_an_express_app
+
+```
 pnpm init
 pnpm install typescript --save-dev
-// add tsc to package.json
+# add tsc to package.json
 npm run tsc -- --init # generate tsconfig
 npm install express
 npm install --save-dev eslint @types/express @typescript-eslint/eslint-plugin @typescript-eslint/parser ts-node-dev
+```
 
+package.json
+
+```
 "scripts": {
 "tsc": "tsc",
 "dev": "ts-node-dev index.ts",
@@ -13,6 +21,9 @@ npm install --save-dev eslint @types/express @typescript-eslint/eslint-plugin @t
 "start": "node build/index.js"
 ...
 }
+```
+
+.eslintrc
 
 ```
 {
@@ -44,5 +55,29 @@ npm install --save-dev eslint @types/express @typescript-eslint/eslint-plugin @t
   "parserOptions": {
     "project": "./tsconfig.json"
   }
+}
+```
+
+DB schema:
+
+```
+CURRENT REQUEST:
+{
+  id,
+  requestorId,
+  requestorDisplayName,
+  requestTimestamp
+}
+
+RESOLVED REQUEST:
+{
+  id,
+  requestorId,
+  requestorDisplayName,
+  resolverId,
+  resolverDisplayName,
+  resolutionStatus (cancel | resolve),
+  requestTimestamp,
+  resolveTimestamp
 }
 ```
