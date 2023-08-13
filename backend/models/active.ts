@@ -9,10 +9,12 @@ const schema = new mongoose.Schema({
   requestorId: {
     type: String,
     required: true,
+    unique: false,
   },
   requestorDisplayName: {
     type: String,
     required: true,
+    unique: false,
   },
   requestTimestamp: {
     type: String,

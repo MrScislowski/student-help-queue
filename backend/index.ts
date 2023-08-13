@@ -56,7 +56,7 @@ app.get("/resolverandom", async (_req, res) => {
 });
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
-app.get("/getActive", async (_req, res) => {
+app.get("/api/queue", async (_req, res) => {
   const results = await Active.find({});
   res.send(results);
 });
@@ -69,6 +69,7 @@ app.get("/getArchived", async (_req, res) => {
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
 app.post("/api/queue", async (req, res) => {
+  // TODO: check that this person doesn't already have an entry in the db (i don't want to force it to be unique on the schema side right now in case they want me to grade multiple pieces of work, eg)
   try {
     const reqData = parseActiveEntry(req.body);
     const newEntry = new Active(reqData);
