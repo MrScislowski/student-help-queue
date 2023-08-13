@@ -8,6 +8,7 @@ app.use(express.json());
 
 import Active from "./models/active";
 import Archived from "./models/archived";
+import { ActiveEntry } from "./types";
 
 const PORT = config.PORT;
 const MONGODB_URI = config.DB_URL;
@@ -32,7 +33,7 @@ app.get("/ping", (_req, res) => {
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
 app.get("/addrandom", async (_req, res) => {
-  const newActiveTicket = new Active({
+  const newActiveTicket: mongoose.Document = new Active({
     requestorId: randString(),
     requestorDisplayName: randString(),
     requestTimestamp: randString(),
@@ -50,7 +51,7 @@ app.get("/resolverandom", async (_req, res) => {
 
   const chosenIndex = Math.floor(Math.random() * allActive.length);
   const chosenEntry = allActive[chosenIndex];
-  const chosenEntryData = chosenEntry.toObject();
+  const chosenEntryData: ActiveEntry = chosenEntry.toObject();
   const archivedVersion = new Archived({
     ...chosenEntryData,
     resolverId: randString(),
