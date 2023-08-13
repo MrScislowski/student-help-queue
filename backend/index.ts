@@ -9,6 +9,7 @@ app.use(express.json());
 import Active from "./models/active";
 import Archived from "./models/archived";
 import { ActiveEntry } from "./types";
+import { parseActiveEntry } from "./utils";
 
 const PORT = config.PORT;
 const MONGODB_URI = config.DB_URL;
@@ -29,17 +30,6 @@ mongoose
 app.get("/ping", (_req, res) => {
   console.log("server received ping");
   res.send("pong");
-});
-
-// eslint-disable-next-line @typescript-eslint/no-misused-promises
-app.get("/addrandom", async (_req, res) => {
-  const newActiveTicket: mongoose.Document = new Active({
-    requestorId: randString(),
-    requestorDisplayName: randString(),
-    requestTimestamp: randString(),
-  });
-  await newActiveTicket.save();
-  res.send(newActiveTicket);
 });
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
@@ -75,6 +65,22 @@ app.get("/getActive", async (_req, res) => {
 app.get("/getArchived", async (_req, res) => {
   const results = await Archived.find({});
   res.send(results);
+});
+
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
+app.post("/api/queue", async (req, res) => {
+  try {
+    const reqData = parseActiveEntry(req.body);
+    const newEntry = new Active(reqData);
+    await newEntry.save();
+    res.send(newEntry);
+  } catch (error: unknown) {
+    let errorMessage = "Error occurred. ";
+    if (error instanceof Error) {
+      errorMessage += error.message;
+    }
+    res.status(400).send(errorMessage);
+  }
 });
 
 app.listen(PORT, () => {

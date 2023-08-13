@@ -82,3 +82,16 @@ RESOLVED REQUEST:
 
 }
 ```
+
+Endpoints:
+Create
+
+POST /api/queue
+
+Read
+
+GET /api/queue
+
+Update/Delete
+
+POST /api/queue/:id
