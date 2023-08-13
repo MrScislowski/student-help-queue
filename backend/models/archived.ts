@@ -18,6 +18,22 @@ const schema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  resolverId: {
+    type: String,
+    required: true,
+  },
+  resolverDisplayName: {
+    type: String,
+    required: true,
+  },
+  resolveTimestamp: {
+    type: String,
+    required: true,
+  },
+  resolutionStatus: {
+    type: String,
+    required: true,
+  },
 });
 
-export default mongoose.model("Active", schema);
+export default mongoose.model("Archived", schema);

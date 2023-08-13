@@ -1,0 +1,15 @@
+GET http://localhost:3000/ping
+
+###
+GET http://localhost:3000/addrandom
+
+
+###
+GET http://localhost:3000/getActive
+
+
+### 
+GET http://localhost:3000/getArchived
+
+###
+GET http://localhost:3000/resolverandom

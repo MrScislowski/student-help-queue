@@ -7,6 +7,7 @@ const app = express();
 app.use(express.json());
 
 import Active from "./models/active";
+import Archived from "./models/archived";
 
 const PORT = config.PORT;
 const MONGODB_URI = config.DB_URL;
@@ -32,9 +33,8 @@ app.get("/ping", (_req, res) => {
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
 app.get("/addrandom", async (_req, res) => {
   const newActiveTicket = new Active({
-    id: randString(),
-    requestorDisplayName: randString(),
     requestorId: randString(),
+    requestorDisplayName: randString(),
     requestTimestamp: randString(),
   });
   await newActiveTicket.save();
@@ -42,8 +42,37 @@ app.get("/addrandom", async (_req, res) => {
 });
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
-app.get("/getall", async (_req, res) => {
+app.get("/resolverandom", async (_req, res) => {
+  const allActive = await Active.find({});
+  if (allActive.length === 0) {
+    return res.send("no active entries");
+  }
+
+  const chosenIndex = Math.floor(Math.random() * allActive.length);
+  const chosenEntry = allActive[chosenIndex];
+  const chosenEntryData = chosenEntry.toObject();
+  const archivedVersion = new Archived({
+    ...chosenEntryData,
+    resolverId: randString(),
+    resolverDisplayName: randString(),
+    resolveTimestamp: randString(),
+    resolutionStatus: Math.random() > 0.5 ? "cancel" : "resolve",
+  });
+  await archivedVersion.save();
+  await chosenEntry.deleteOne();
+
+  res.send("deleted, I think...");
+});
+
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
+app.get("/getActive", async (_req, res) => {
   const results = await Active.find({});
+  res.send(results);
+});
+
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
+app.get("/getArchived", async (_req, res) => {
+  const results = await Archived.find({});
   res.send(results);
 });
 

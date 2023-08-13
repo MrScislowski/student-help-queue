@@ -74,10 +74,11 @@ RESOLVED REQUEST:
   id,
   requestorId,
   requestorDisplayName,
+  requestTimestamp,
   resolverId,
   resolverDisplayName,
+  resolveTimestamp,
   resolutionStatus (cancel | resolve),
-  requestTimestamp,
-  resolveTimestamp
+
 }
 ```
