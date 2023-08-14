@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import express from "express";
 import config from "./config";
 import mongoose from "mongoose";
@@ -27,21 +28,17 @@ app.get("/ping", (_req, res) => {
   res.send("pong");
 });
 
-// eslint-disable-next-line @typescript-eslint/no-misused-promises
 app.get("/api/queue", async (_req, res) => {
   const results = await Active.find({});
   res.send(results);
 });
 
-// eslint-disable-next-line @typescript-eslint/no-misused-promises
 app.get("/api/archived", async (_req, res) => {
   const results = await Archived.find({});
   res.send(results);
 });
 
-// eslint-disable-next-line @typescript-eslint/no-misused-promises
 app.post("/api/queue", async (req, res) => {
-  // TODO: check that this person doesn't already have an entry in the db (i don't want to force it to be unique on the schema side right now in case they want me to grade multiple pieces of work, eg)
   try {
     const reqData = parseActiveEntry(req.body);
 
@@ -66,7 +63,6 @@ app.post("/api/queue", async (req, res) => {
   }
 });
 
-// eslint-disable-next-line @typescript-eslint/no-misused-promises
 app.post("/api/queue/:id", async (req, res) => {
   const entryId = req.params.id;
 
@@ -92,6 +88,12 @@ app.post("/api/queue/:id", async (req, res) => {
     }
     return res.status(400).send(errorMessage);
   }
+});
+
+app.post("/api/clear", async (_req, res) => {
+  await Active.deleteMany({});
+  await Archived.deleteMany({});
+  res.send("database cleared");
 });
 
 app.listen(PORT, () => {
