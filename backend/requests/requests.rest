@@ -4,16 +4,23 @@ GET http://localhost:3000/ping
 GET http://localhost:3000/api/queue
 
 ### 
-GET http://localhost:3000/getArchived
-
-###
-GET http://localhost:3000/resolverandom
+GET http://localhost:3000/api/archived
 
 ###
 POST http://localhost:3000/api/queue
 Content-Type: application/json
 
 {
-  "requestorDisplayName": "a",
-  "requestorId": "b"
+  "requestorDisplayName": "c",
+  "requestorId": "e"
+}
+
+###
+POST http://localhost:3000/api/queue/64d99583f3f4d84d955bfb1e
+Content-Type: application/json
+
+{
+  "resolverId": "c",
+  "resolverDisplayName": "d",
+  "resolutionStatus": "cancel"
 }

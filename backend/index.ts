@@ -8,15 +8,10 @@ app.use(express.json());
 
 import Active from "./models/active";
 import Archived from "./models/archived";
-import { ActiveEntry } from "./types";
-import { parseActiveEntry } from "./utils";
+import { parseActiveEntry, parseResolveRequest } from "./utils";
 
 const PORT = config.PORT;
 const MONGODB_URI = config.DB_URL;
-
-const randString = (): string => {
-  return (Math.random() + 1).toString(36).substring(7);
-};
 
 mongoose
   .connect(MONGODB_URI)
@@ -33,36 +28,13 @@ app.get("/ping", (_req, res) => {
 });
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
-app.get("/resolverandom", async (_req, res) => {
-  const allActive = await Active.find({});
-  if (allActive.length === 0) {
-    return res.send("no active entries");
-  }
-
-  const chosenIndex = Math.floor(Math.random() * allActive.length);
-  const chosenEntry = allActive[chosenIndex];
-  const chosenEntryData: ActiveEntry = chosenEntry.toObject();
-  const archivedVersion = new Archived({
-    ...chosenEntryData,
-    resolverId: randString(),
-    resolverDisplayName: randString(),
-    resolveTimestamp: randString(),
-    resolutionStatus: Math.random() > 0.5 ? "cancel" : "resolve",
-  });
-  await archivedVersion.save();
-  await chosenEntry.deleteOne();
-
-  res.send("deleted, I think...");
-});
-
-// eslint-disable-next-line @typescript-eslint/no-misused-promises
 app.get("/api/queue", async (_req, res) => {
   const results = await Active.find({});
   res.send(results);
 });
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
-app.get("/getArchived", async (_req, res) => {
+app.get("/api/archived", async (_req, res) => {
   const results = await Archived.find({});
   res.send(results);
 });
@@ -72,6 +44,16 @@ app.post("/api/queue", async (req, res) => {
   // TODO: check that this person doesn't already have an entry in the db (i don't want to force it to be unique on the schema side right now in case they want me to grade multiple pieces of work, eg)
   try {
     const reqData = parseActiveEntry(req.body);
+
+    const hasDuplicate = await Active.findOne({
+      requestorId: reqData.requestorId,
+    });
+    if (hasDuplicate) {
+      return res
+        .status(400)
+        .send("user already has an entry in the active queue");
+    }
+
     const newEntry = new Active(reqData);
     await newEntry.save();
     res.send(newEntry);
@@ -81,6 +63,34 @@ app.post("/api/queue", async (req, res) => {
       errorMessage += error.message;
     }
     res.status(400).send(errorMessage);
+  }
+});
+
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
+app.post("/api/queue/:id", async (req, res) => {
+  const entryId = req.params.id;
+
+  const foundEntry = await Active.findById(entryId);
+  if (!foundEntry) {
+    return res.status(404).send("Entry not found");
+  }
+
+  try {
+    const resolutionData = parseResolveRequest(req.body);
+    const archivedVersion = new Archived({
+      ...(foundEntry.toObject() as object),
+      resolveTimestamp: new Date().toISOString(),
+      ...resolutionData,
+    });
+    await archivedVersion.save();
+    await foundEntry.deleteOne();
+    return res.send(archivedVersion);
+  } catch (e: unknown) {
+    let errorMessage = "Error occurred. ";
+    if (e instanceof Error) {
+      errorMessage += e.message;
+    }
+    return res.status(400).send(errorMessage);
   }
 });
 
