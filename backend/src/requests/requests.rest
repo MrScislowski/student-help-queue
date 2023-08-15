@@ -1,12 +1,12 @@
 
 ###
-GET http://localhost:3000/api/queue
+GET http://localhost:3001/api/queue
 
 ### 
-GET http://localhost:3000/api/archived
+GET http://localhost:3001/api/archived
 
 ###
-POST http://localhost:3000/api/queue
+POST http://localhost:3001/api/queue
 Content-Type: application/json
 
 {
@@ -17,7 +17,7 @@ Content-Type: application/json
 }
 
 ###
-POST http://localhost:3000/api/queue/64db7a1b2fc5cff00d792e05
+POST http://localhost:3001/api/queue/64db7a1b2fc5cff00d792e05
 Content-Type: application/json
 
 {
@@ -29,7 +29,10 @@ Content-Type: application/json
 }
 
 ###
-POST http://localhost:3000/api/clear
+POST http://localhost:3001/api/clear
 
 ###
-POST http://localhost:3000/api/fillrandom
+POST http://localhost:3001/api/fillrandom
+
+###
+GEt http://localhost:3001/api/currentTime

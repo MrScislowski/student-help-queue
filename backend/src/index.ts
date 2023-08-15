@@ -33,6 +33,13 @@ app.get("/api/queue", async (_req, res) => {
   res.send(results);
 });
 
+app.get("/api/currentTime", (_req, res) => {
+  const time = new Date().getTime();
+  res.send({
+    currentTime: time,
+  });
+});
+
 app.get("/api/archived", async (_req, res) => {
   const results = await entriesService.getArchivedEntries();
   res.send(results);
