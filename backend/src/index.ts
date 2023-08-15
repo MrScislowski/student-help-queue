@@ -10,6 +10,7 @@ app.use(express.json());
 app.use((_req: Request, _res: Response, next: NextFunction) => {
   next();
 }, cors({ maxAge: 84600 }));
+
 import Active from "./models/active";
 import Archived from "./models/archived";
 import { parseActiveEntry, parseArchivedEntry } from "./utils";
