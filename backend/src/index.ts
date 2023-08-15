@@ -73,6 +73,20 @@ app.post("/api/clear", async (_req, res) => {
   res.send("databases cleared");
 });
 
+app.post("/api/fillrandom", async (_req, res) => {
+  await Promise.all(
+    Array.from({ length: 5 }, () =>
+      Math.random().toString(36).substring(7)
+    ).map((id) =>
+      entriesService.addActiveEntry({
+        requestor: { id: id, displayName: id },
+      })
+    )
+  );
+
+  res.send("5 random entries added");
+});
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
