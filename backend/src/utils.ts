@@ -1,4 +1,9 @@
-import { ActiveEntry, ResolutionStatus } from "./types";
+import {
+  ActiveEntryStub,
+  ArchivedEntryStub,
+  ResolutionStatus,
+  User,
+} from "./types";
 
 const isString = (text: unknown): text is string => {
   return typeof text === "string" || text instanceof String;
@@ -12,7 +17,7 @@ const parseString = (arg: unknown): string => {
   return arg;
 };
 
-const parseResolutionStatus = (arg: unknown): ResolutionStatus => {
+export const parseResolutionStatus = (arg: unknown): ResolutionStatus => {
   if (!arg || !isString(arg)) {
     throw new Error("expected a string");
   }
@@ -24,40 +29,48 @@ const parseResolutionStatus = (arg: unknown): ResolutionStatus => {
   return arg;
 };
 
-export const parseActiveEntry = (body: unknown): Omit<ActiveEntry, "_id"> => {
-  if (!body || typeof body !== "object") {
-    throw new Error("request body must be an object");
+export const parseUser = (user: unknown): User => {
+  if (!user || typeof user !== "object") {
+    throw new Error("request user must be an object");
   }
 
-  if ("requestorDisplayName" in body && "requestorId" in body) {
+  if ("displayName" in user && "id" in user) {
     return {
-      requestorDisplayName: parseString(body.requestorDisplayName),
-      requestorId: parseString(body.requestorId),
-      requestTimestamp: new Date().toISOString(),
+      displayName: parseString(user.displayName),
+      id: parseString(user.id),
     };
   }
 
   throw new Error("missing request data");
 };
 
-export const parseResolveRequest = (body: unknown) => {
+export const parseActiveEntry = (body: unknown): ActiveEntryStub => {
   if (!body || typeof body !== "object") {
-    throw new Error("request body must be an object");
+    throw new Error("request body must be an object to add to queue");
   }
 
-  if (
-    "resolverId" in body &&
-    "resolverDisplayName" in body &&
-    "resolutionStatus" in body
-  ) {
-    return {
-      resolverId: parseString(body.resolverId),
-      resolverDisplayName: parseString(body.resolverDisplayName),
-      resolutionStatus: parseResolutionStatus(body.resolutionStatus),
-    };
+  if (!("user" in body)) {
+    throw new Error("Must specify user to add to queue. ");
   }
 
-  throw new Error(
-    "you must provide resolverId, resolverDisplayName, resolutionStatus"
-  );
+  return {
+    requestor: parseUser(body.user),
+  };
+};
+
+export const parseArchivedEntry = (body: unknown): ArchivedEntryStub => {
+  if (!body || typeof body !== "object") {
+    throw new Error("request body must be an object to add to queue");
+  }
+
+  if (!("user" in body && "resolutionStatus" in body)) {
+    throw new Error(
+      "Must specify user and resolutionStatus to mark entry resolved. "
+    );
+  }
+
+  return {
+    resolver: parseUser(body.user),
+    resolutionStatus: parseResolutionStatus(body.resolutionStatus),
+  };
 };

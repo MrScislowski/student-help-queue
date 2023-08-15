@@ -1,4 +1,3 @@
-GET http://localhost:3000/ping
 
 ###
 GET http://localhost:3000/api/queue
@@ -11,17 +10,21 @@ POST http://localhost:3000/api/queue
 Content-Type: application/json
 
 {
-  "requestorDisplayName": "c",
-  "requestorId": "e"
+  "user": {
+    "id": "b",
+    "displayName": "b"
+  }
 }
 
 ###
-POST http://localhost:3000/api/queue/64d99583f3f4d84d955bfb1e
+POST http://localhost:3000/api/queue/64db7a1b2fc5cff00d792e05
 Content-Type: application/json
 
 {
-  "resolverId": "c",
-  "resolverDisplayName": "d",
+  "user": {
+    "id": "b",
+    "displayName": "b"
+  },
   "resolutionStatus": "cancel"
 }
 

@@ -1,20 +1,16 @@
 import mongoose from "mongoose";
+import { ActiveEntry } from "../types";
 
-const schema = new mongoose.Schema({
-  // id: {
-  //   type: String,
-  //   required: true,
-  //   unique: true,
-  // },
-  requestorId: {
-    type: String,
-    required: true,
-    unique: false,
-  },
-  requestorDisplayName: {
-    type: String,
-    required: true,
-    unique: false,
+const schema = new mongoose.Schema<ActiveEntry>({
+  requestor: {
+    id: {
+      type: String,
+      required: true,
+    },
+    displayName: {
+      type: String,
+      required: true,
+    },
   },
   requestTimestamp: {
     type: String,
@@ -22,4 +18,4 @@ const schema = new mongoose.Schema({
   },
 });
 
-export default mongoose.model("Active", schema);
+export default mongoose.model<ActiveEntry>("Active", schema);

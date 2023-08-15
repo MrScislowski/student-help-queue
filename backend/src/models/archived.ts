@@ -1,31 +1,30 @@
 import mongoose from "mongoose";
+import { ArchivedEntry } from "../types";
 
-const schema = new mongoose.Schema({
-  // id: {
-  //   type: String,
-  //   required: true,
-  //   unique: true,
-  // },
-  requestorId: {
-    type: String,
-    required: true,
-    unique: false,
-  },
-  requestorDisplayName: {
-    type: String,
-    required: true,
+const schema = new mongoose.Schema<ArchivedEntry>({
+  requestor: {
+    id: {
+      type: String,
+      required: true,
+    },
+    displayName: {
+      type: String,
+      required: true,
+    },
   },
   requestTimestamp: {
     type: String,
     required: true,
   },
-  resolverId: {
-    type: String,
-    required: true,
-  },
-  resolverDisplayName: {
-    type: String,
-    required: true,
+  resolver: {
+    id: {
+      type: String,
+      required: true,
+    },
+    displayName: {
+      type: String,
+      required: true,
+    },
   },
   resolveTimestamp: {
     type: String,
@@ -33,8 +32,9 @@ const schema = new mongoose.Schema({
   },
   resolutionStatus: {
     type: String,
+    enum: ["cancel", "resolve"],
     required: true,
   },
 });
 
-export default mongoose.model("Archived", schema);
+export default mongoose.model<ArchivedEntry>("Archived", schema);
