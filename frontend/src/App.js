@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { useQuery } from "react-query";
 import axios from "axios";
 import styled from "styled-components";
@@ -18,14 +19,26 @@ const QueueItem = styled.div`
 `;
 
 const App = () => {
-  // TODO: should both of these queries be combined into one?
   const result = useQuery("activeEntries", () =>
     axios.get("http://localhost:3001/api/queue").then((res) => res.data)
   );
 
+  // TODO: let's just send a timestamp with every server response...
   let serverTime = useQuery("serverTime", () =>
     axios.get("http://localhost:3001/api/currentTime").then((res) => res.data)
   );
+
+  const [currentTime, setCurrentTime] = useState(new Date().getTime());
+
+  // https://stackoverflow.com/questions/72766908/how-to-show-a-countdown-timer-in-react
+  useEffect(() => {
+    // every 6 seconds
+    const interval = setInterval(() => {
+      setCurrentTime(new Date().getTime());
+    }, 1000 * 6);
+    // TODO: learn what this "clean up" does
+    return () => interval;
+  }, []);
 
   if (result.isLoading || serverTime.isLoading) {
     return <div>loading...</div>;
@@ -33,17 +46,22 @@ const App = () => {
 
   serverTime = serverTime.data.currentTime;
 
+  // TODO: I don't want to keep calculating this... I should've done this just when I queried the server!
+  // what is the exact rule of useEffect...? What is and isn't recalculated.
   const timeDiff = new Date().getTime() - serverTime;
+  console.log(`timeDiff is: ${timeDiff}`);
 
   const getEntryAge = (timestamp) => {
     const millis =
       new Date().getTime() - new Date(timestamp).getTime() - timeDiff;
     const minutes = Math.floor(millis / 1000 / 60);
     if (minutes < 1) {
-      return "< 1 m";
-    } else {
-      return `${minutes} m`;
+      return "< 1m";
+    } else if (minutes > 60) {
+      const hours = Math.floor(minutes / 60);
+      return `${hours}h ${minutes - hours * 60}m`;
     }
+    return `${minutes}m`;
   };
 
   return (

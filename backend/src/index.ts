@@ -30,26 +30,28 @@ mongoose
 
 app.get("/api/queue", async (_req, res) => {
   const results = await entriesService.getActiveEntries();
-  res.send(results);
-});
-
-app.get("/api/currentTime", (_req, res) => {
-  const time = new Date().getTime();
   res.send({
-    currentTime: time,
+    timestamp: new Date().toISOString(),
+    entries: results,
   });
 });
 
 app.get("/api/archived", async (_req, res) => {
   const results = await entriesService.getArchivedEntries();
-  res.send(results);
+  res.send({
+    timestamp: new Date().toISOString(),
+    entries: results,
+  });
 });
 
 app.post("/api/queue", async (req, res) => {
   try {
     const reqData = parseActiveEntry(req.body);
     const newEntry = await entriesService.addActiveEntry(reqData);
-    res.send(newEntry);
+    res.send({
+      timestamp: new Date().toISOString(),
+      entry: newEntry,
+    });
   } catch (error: unknown) {
     let errorMessage = "Error occurred. ";
     if (error instanceof Error) {
@@ -68,7 +70,10 @@ app.post("/api/queue/:id", async (req, res) => {
       entryId,
       resolutionData
     );
-    return res.send(archivedVersion);
+    return res.send({
+      timestamp: new Date().toISOString(),
+      entry: archivedVersion,
+    });
   } catch (e: unknown) {
     let errorMessage = "Error occurred. ";
     if (e instanceof Error) {
