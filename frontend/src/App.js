@@ -19,13 +19,15 @@ const QueueItem = styled.div`
 `;
 
 const App = () => {
-  const result = useQuery("activeEntries", () =>
-    axios.get("http://localhost:3001/api/queue").then((res) => res.data)
-  );
+  const [timeDiff, setTimeDiff] = useState(0);
 
-  // TODO: let's just send a timestamp with every server response...
-  let serverTime = useQuery("serverTime", () =>
-    axios.get("http://localhost:3001/api/currentTime").then((res) => res.data)
+  const result = useQuery("activeEntries", () =>
+    axios.get("http://localhost:3001/api/queue").then((res) => {
+      setTimeDiff(
+        new Date().getTime() - new Date(res.data.timestamp).getTime()
+      );
+      return res.data.entries;
+    })
   );
 
   const [currentTime, setCurrentTime] = useState(new Date().getTime());
@@ -40,16 +42,9 @@ const App = () => {
     return () => interval;
   }, []);
 
-  if (result.isLoading || serverTime.isLoading) {
+  if (result.isLoading) {
     return <div>loading...</div>;
   }
-
-  serverTime = serverTime.data.currentTime;
-
-  // TODO: I don't want to keep calculating this... I should've done this just when I queried the server!
-  // what is the exact rule of useEffect...? What is and isn't recalculated.
-  const timeDiff = new Date().getTime() - serverTime;
-  console.log(`timeDiff is: ${timeDiff}`);
 
   const getEntryAge = (timestamp) => {
     const millis =
