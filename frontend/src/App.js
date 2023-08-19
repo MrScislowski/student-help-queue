@@ -1,43 +1,13 @@
 import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import axios from "axios";
-import styled from "styled-components";
-import { resolveEntry, cancelEntry } from "./requests";
-
-// TODO: define a mutation, call it for the resolve and cancel button, and invalidate queries
-
-const QueueContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  background-color: #8d94ba;
-  padding: 10px;
-  border-radius: 10px;
-`;
-
-const QueueItem = styled.div`
-  background-color: #a0cfd3;
-  border-radius: 5px;
-  padding: 10px;
-  margin: 10px;
-`;
-
-const ResolveButton = styled.button`
-  background-color: rgb(233, 246, 233);
-  border: none;
-  border-radius: 5px;
-`;
-
-const CancelButton = styled.button`
-  background-color: rgb(255, 241, 223);
-  border: none;
-  border-radius: 5px;
-`;
+import { resolveEntry } from "./requests";
+import Queue from "./components/Queue";
+import { GoogleLogin } from "@react-oauth/google";
 
 const App = () => {
   const [timeDiff, setTimeDiff] = useState(0);
-
   const queryClient = useQueryClient();
-
   const resolveEntryMutation = useMutation(resolveEntry, {
     onSuccess: () => {
       queryClient.invalidateQueries("activeEntries");
@@ -70,8 +40,7 @@ const App = () => {
   }
 
   const getEntryAge = (timestamp) => {
-    const millis =
-      new Date().getTime() - new Date(timestamp).getTime() - timeDiff;
+    const millis = currentTime - new Date(timestamp).getTime() - timeDiff;
     const minutes = Math.floor(millis / 1000 / 60);
     if (minutes < 1) {
       return "< 1m";
@@ -83,35 +52,15 @@ const App = () => {
   };
 
   return (
-    <QueueContainer>
-      {result.data.map((item) => {
-        return (
-          <QueueItem key={item.requestor.id}>
-            {item.requestor.displayName} ({getEntryAge(item.requestTimestamp)})
-            <ResolveButton
-              onClick={async () => {
-                await resolveEntryMutation.mutate({
-                  entry: item,
-                  resolutionStatus: "resolve",
-                });
-              }}
-            >
-              Resolve
-            </ResolveButton>
-            <CancelButton
-              onClick={async () => {
-                await resolveEntryMutation.mutate({
-                  entry: item,
-                  resolutionStatus: "cancel",
-                });
-              }}
-            >
-              Cancel
-            </CancelButton>
-          </QueueItem>
-        );
-      })}
-    </QueueContainer>
+    // <Queue
+    //   result={result}
+    //   resolveEntryMutation={resolveEntryMutation}
+    //   getEntryAge={getEntryAge}
+    // />
+    <GoogleLogin
+      onSuccess={() => console.log("logged in")}
+      onError={() => console.log("error signing in")}
+    />
   );
 };
 

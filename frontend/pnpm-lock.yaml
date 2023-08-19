@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@react-oauth/google':
+    specifier: ^0.11.1
+    version: 0.11.1(react-dom@18.2.0)(react@18.2.0)
   '@tanstack/react-query':
     specifier: ^4.32.6
     version: 4.32.6(react-dom@18.2.0)(react@18.2.0)
@@ -2167,6 +2170,16 @@ packages:
       source-map: 0.7.4
       webpack: 5.88.2
       webpack-dev-server: 4.15.1(webpack@5.88.2)
+    dev: false
+
+  /@react-oauth/google@0.11.1(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-tywZisXbsdaRBVbEu0VX6dRbOSL2I6DgY97woq5NMOOOz+xtDsm418vqq+Vx10KMtra3kdHMRMf0hXLWrk2RMg==}
+    peerDependencies:
+      react: '>=16.8.0'
+      react-dom: '>=16.8.0'
+    dependencies:
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
     dev: false
 
   /@rollup/plugin-babel@5.3.1(@babel/core@7.22.10)(rollup@2.79.1):
