@@ -1,7 +1,10 @@
 import { useState, useEffect } from "react";
-import { useQuery } from "react-query";
+import { useQuery, useMutation, useQueryClient } from "react-query";
 import axios from "axios";
 import styled from "styled-components";
+import { resolveEntry, cancelEntry } from "./requests";
+
+// TODO: define a mutation, call it for the resolve and cancel button, and invalidate queries
 
 const QueueContainer = styled.div`
   display: flex;
@@ -18,8 +21,28 @@ const QueueItem = styled.div`
   margin: 10px;
 `;
 
+const ResolveButton = styled.button`
+  background-color: rgb(233, 246, 233);
+  border: none;
+  border-radius: 5px;
+`;
+
+const CancelButton = styled.button`
+  background-color: rgb(255, 241, 223);
+  border: none;
+  border-radius: 5px;
+`;
+
 const App = () => {
   const [timeDiff, setTimeDiff] = useState(0);
+
+  const queryClient = useQueryClient();
+
+  const resolveEntryMutation = useMutation(resolveEntry, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("activeEntries");
+    },
+  });
 
   const result = useQuery("activeEntries", () =>
     axios.get("http://localhost:3001/api/queue").then((res) => {
@@ -65,6 +88,26 @@ const App = () => {
         return (
           <QueueItem key={item.requestor.id}>
             {item.requestor.displayName} ({getEntryAge(item.requestTimestamp)})
+            <ResolveButton
+              onClick={async () => {
+                await resolveEntryMutation.mutate({
+                  entry: item,
+                  resolutionStatus: "resolve",
+                });
+              }}
+            >
+              Resolve
+            </ResolveButton>
+            <CancelButton
+              onClick={async () => {
+                await resolveEntryMutation.mutate({
+                  entry: item,
+                  resolutionStatus: "cancel",
+                });
+              }}
+            >
+              Cancel
+            </CancelButton>
           </QueueItem>
         );
       })}
