@@ -4,6 +4,7 @@ import config from "./config";
 import mongoose from "mongoose";
 mongoose.set("strictQuery", false);
 import cors from "cors";
+import { OAuth2Client } from "google-auth-library";
 
 const app = express();
 app.use(express.json());
@@ -101,6 +102,22 @@ app.post("/api/fillrandom", async (_req, res) => {
   );
 
   res.send("5 random entries added");
+});
+
+app.post("/api/login", async (req, res) => {
+  try {
+    const client = new OAuth2Client(config.GOOGLE_OAUTH_CLIENT_ID);
+
+    const ticket = await client.verifyIdToken({
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      idToken: req.body.credential,
+      audience: config.GOOGLE_OAUTH_CLIENT_ID,
+    });
+
+    return res.send(ticket.getPayload());
+  } catch (error) {
+    return res.status(500).json(error);
+  }
 });
 
 app.listen(PORT, () => {

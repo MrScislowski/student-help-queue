@@ -35,4 +35,4 @@ POST http://localhost:3001/api/clear
 POST http://localhost:3001/api/fillrandom
 
 ###
-GEt http://localhost:3001/api/currentTime
+POST http://localhost:3001/api/login

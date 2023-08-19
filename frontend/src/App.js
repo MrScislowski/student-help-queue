@@ -1,17 +1,24 @@
 import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import axios from "axios";
-import { resolveEntry } from "./requests";
+import { attemptLogin, resolveEntry } from "./requests";
 import Queue from "./components/Queue";
-import { GoogleLogin } from "@react-oauth/google";
+import { GoogleLogin, useGoogleLogin } from "@react-oauth/google";
 
 const App = () => {
   const [timeDiff, setTimeDiff] = useState(0);
+  const [user, setUser] = useState(null);
+
   const queryClient = useQueryClient();
   const resolveEntryMutation = useMutation(resolveEntry, {
     onSuccess: () => {
       queryClient.invalidateQueries("activeEntries");
     },
+  });
+
+  const login = useGoogleLogin({
+    onSuccess: (response) => setUser(response),
+    onError: (error) => console.log(`Login error: ${error}`),
   });
 
   const result = useQuery("activeEntries", () =>
@@ -57,10 +64,12 @@ const App = () => {
     //   resolveEntryMutation={resolveEntryMutation}
     //   getEntryAge={getEntryAge}
     // />
-    <GoogleLogin
-      onSuccess={() => console.log("logged in")}
-      onError={() => console.log("error signing in")}
-    />
+    <>
+      <GoogleLogin
+        onSuccess={(response) => attemptLogin(response)}
+        onError={(error) => console.log(`Login error: ${error}`)}
+      />
+    </>
   );
 };
 
