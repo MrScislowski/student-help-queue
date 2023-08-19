@@ -66,6 +66,7 @@ const App = () => {
     // />
     <>
       <GoogleLogin
+        // TODO: save the response to attemptLogin in localstorage or something.
         onSuccess={(response) => attemptLogin(response)}
         onError={(error) => console.log(`Login error: ${error}`)}
       />
