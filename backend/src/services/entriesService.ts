@@ -1,11 +1,7 @@
 import Active from "../models/active";
 import Archived from "../models/archived";
 import { ActiveEntry, ArchivedEntry, ResolutionStatus, User } from "../types";
-
-const hasAdminRights = (user: User) => {
-  const adminList = ["dscislowski@usd266.com", "mr.scislowski@gmail.com"];
-  return adminList.includes(user.email);
-};
+import { hasAdminRights } from "../utils";
 
 const getActiveEntries = async (
   user: User

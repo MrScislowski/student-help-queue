@@ -16,7 +16,12 @@ app.use((_req: Request, _res: Response, next: NextFunction) => {
 
 import Active from "./models/active";
 import Archived from "./models/archived";
-import { parseArchivedEntry, parseLoginPayload, parseUser } from "./utils";
+import {
+  hasAdminRights,
+  parseArchivedEntry,
+  parseLoginPayload,
+  parseUser,
+} from "./utils";
 import entriesService from "./services/entriesService";
 import { ActiveEntry } from "./types";
 
@@ -132,7 +137,7 @@ app.post("/api/login", async (req, res) => {
 
     const token = jwt.sign(userInfo, config.SECRET);
 
-    return res.send({ ...userInfo, token });
+    return res.send({ ...userInfo, isAdmin: hasAdminRights(userInfo), token });
   } catch (error) {
     return res.status(500).json(error);
   }

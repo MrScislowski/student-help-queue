@@ -67,3 +67,12 @@ export const parseArchivedEntry = (body: unknown): ResolutionStatus => {
 
   return parseResolutionStatus(body.resolutionStatus);
 };
+
+const administratorsList = [
+  "dscislowski@usd266.com",
+  "mr.scislowski@gmail.com",
+];
+
+export const hasAdminRights = (user: User): boolean => {
+  return administratorsList.includes(user.email);
+};

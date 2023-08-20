@@ -37,15 +37,22 @@ const App = () => {
     },
   });
 
-  const result = useQuery("activeEntries", () =>
-    getActiveEntries().then((res) => {
-      setTimeDiff(
-        new Date().getTime() - new Date(res.data.timestamp).getTime()
-      );
-      setEntries(res.data.entries);
-      return res.data.entries;
-    })
-  );
+  const result = useQuery({
+    queryKey: "activeEntries",
+    queryFn: () => {
+      getActiveEntries().then((res) => {
+        setTimeDiff(
+          new Date().getTime() - new Date(res.data.timestamp).getTime()
+        );
+        setEntries(res.data.entries);
+        return res.data.entries;
+      });
+    },
+    refetchInterval: user && user.isAdmin ? 2000 : 15000,
+    refetchIntervalInBackground: user && user.isAdmin,
+  });
+
+  //   );
 
   const [currentTime, setCurrentTime] = useState(new Date().getTime());
 
