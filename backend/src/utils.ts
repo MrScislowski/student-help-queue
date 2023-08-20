@@ -3,6 +3,7 @@ import {
   ArchivedEntryStub,
   ResolutionStatus,
   User,
+  LoginPayload,
 } from "./types";
 
 const isString = (text: unknown): text is string => {
@@ -15,6 +16,22 @@ const parseString = (arg: unknown): string => {
   }
 
   return arg;
+};
+
+export const parseLoginPayload = (data: unknown): LoginPayload => {
+  if (!data || typeof data !== "object") {
+    throw new Error("login payload needs to be an object");
+  }
+
+  if ("email" in data && "given_name" in data && "family_name" in data) {
+    return {
+      email: parseString(data.email),
+      givenName: parseString(data.given_name),
+      familyName: parseString(data.family_name),
+    };
+  } else {
+    throw new Error("missing one or more required properties");
+  }
 };
 
 export const parseResolutionStatus = (arg: unknown): ResolutionStatus => {

@@ -6,6 +6,7 @@ mongoose.set("strictQuery", false);
 import cors from "cors";
 import { OAuth2Client } from "google-auth-library";
 import jwt from "jsonwebtoken";
+import { parseLoginPayload } from "./utils";
 
 const app = express();
 app.use(express.json());
@@ -115,26 +116,11 @@ app.post("/api/login", async (req, res) => {
       audience: config.GOOGLE_OAUTH_CLIENT_ID,
     });
 
-    // TODO: do this parsing somewhere else
     const payload = ticket.getPayload();
-    let email = "";
-    let given_name = "";
-    let family_name = "";
-    if (
-      payload &&
-      typeof payload === "object" &&
-      "email" in payload &&
-      "given_name" in payload &&
-      "family_name" in payload
-    ) {
-      email = payload.email ? payload.email : "";
-      given_name = payload.given_name ? payload.given_name : "";
-      family_name = payload.family_name ? payload.family_name : "";
-    }
-    const userForToken = { email, given_name, family_name };
-    const token = jwt.sign(userForToken, config.SECRET);
+    const userInfo = parseLoginPayload(payload);
+    // const token = jwt.sign(userInfo, config.SECRET);
 
-    return res.send({ token, email, given_name, family_name });
+    return res.send(userInfo);
   } catch (error) {
     return res.status(500).json(error);
   }

@@ -16,11 +16,6 @@ const App = () => {
     },
   });
 
-  const login = useGoogleLogin({
-    onSuccess: (response) => setUser(response),
-    onError: (error) => console.log(`Login error: ${error}`),
-  });
-
   const result = useQuery("activeEntries", () =>
     axios.get("http://localhost:3001/api/queue").then((res) => {
       setTimeDiff(
@@ -66,7 +61,8 @@ const App = () => {
     // />
     <>
       <GoogleLogin
-        // TODO: save the response to attemptLogin in localstorage or something.
+        // TODO: save the response to attemptLogin in localstorage or something. and move the token to be using state in a service like they do here:
+        // https://fullstackopen.com/en/part5/login_in_frontend
         onSuccess={(response) => attemptLogin(response)}
         onError={(error) => console.log(`Login error: ${error}`)}
       />

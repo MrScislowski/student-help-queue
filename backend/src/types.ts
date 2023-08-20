@@ -25,3 +25,9 @@ export interface User {
   id: string;
   displayName: string;
 }
+
+export interface LoginPayload {
+  email: string;
+  givenName: string;
+  familyName: string;
+}
