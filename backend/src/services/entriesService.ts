@@ -2,9 +2,25 @@ import Active from "../models/active";
 import Archived from "../models/archived";
 import { ActiveEntry, ArchivedEntry, ResolutionStatus, User } from "../types";
 
-const getActiveEntries = async () => {
-  const results = await Active.find({});
-  return results;
+const hasAdminRights = (user: User) => {
+  const adminList = ["dscislowski@usd266.com", "mr.scislowski@gmail.com"];
+  return adminList.includes(user.email);
+};
+
+const getActiveEntries = async (
+  user: User
+): Promise<Omit<ActiveEntry, "_id">[]> => {
+  const allResults: ActiveEntry[] = await Active.find({}).lean();
+  const isAdmin = hasAdminRights(user);
+
+  // leave out the id if the user doesn't have access
+  const resultsToReturn = allResults.map((entry) => {
+    return isAdmin || entry.request.user.email === user.email
+      ? entry
+      : { request: entry.request };
+  });
+
+  return resultsToReturn;
 };
 
 const getArchivedEntries = async () => {
@@ -40,6 +56,12 @@ const resolveActiveEntry = async (
   const activeEntry = await Active.findById(id);
   if (!activeEntry) {
     throw new Error(`Active entry with id ${id} not found. `);
+  }
+
+  if (user.email !== activeEntry.request.user.email && !hasAdminRights(user)) {
+    throw new Error(
+      `Cannot resolve entry belonging to someone else, unless you have admin rights`
+    );
   }
 
   const archivedVersion = new Archived({

@@ -1,13 +1,28 @@
 import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "react-query";
-import axios from "axios";
-import { addName, attemptLogin, resolveEntry, setToken } from "./requests";
+import {
+  addName,
+  attemptLogin,
+  resolveEntry,
+  setToken,
+  getActiveEntries,
+} from "./requests";
 import Queue from "./components/Queue";
 import { GoogleLogin } from "@react-oauth/google";
 
 const App = () => {
   const [timeDiff, setTimeDiff] = useState(0);
   const [user, setUser] = useState(null);
+  const [entries, setEntries] = useState([]);
+
+  useEffect(() => {
+    const storedUserInfo = window.localStorage.getItem("studentHelpQueueUser");
+    if (storedUserInfo) {
+      const userInfo = JSON.parse(storedUserInfo);
+      setUser(userInfo);
+      setToken(userInfo.token);
+    }
+  }, []);
 
   const queryClient = useQueryClient();
   const resolveEntryMutation = useMutation(resolveEntry, {
@@ -23,10 +38,11 @@ const App = () => {
   });
 
   const result = useQuery("activeEntries", () =>
-    axios.get("http://localhost:3001/api/queue").then((res) => {
+    getActiveEntries().then((res) => {
       setTimeDiff(
         new Date().getTime() - new Date(res.data.timestamp).getTime()
       );
+      setEntries(res.data.entries);
       return res.data.entries;
     })
   );
@@ -42,19 +58,6 @@ const App = () => {
     // TODO: learn what this "clean up" does
     return () => interval;
   }, []);
-
-  useEffect(() => {
-    const storedUserInfo = window.localStorage.getItem("studentHelpQueueUser");
-    if (storedUserInfo) {
-      const userInfo = JSON.parse(storedUserInfo);
-      setUser(userInfo);
-      setToken(userInfo.token);
-    }
-  }, []);
-
-  if (result.isLoading) {
-    return <div>loading...</div>;
-  }
 
   const getEntryAge = (timestamp) => {
     const millis = currentTime - new Date(timestamp).getTime() - timeDiff;
@@ -77,6 +80,8 @@ const App = () => {
             onClick={() => {
               window.localStorage.removeItem("studentHelpQueueUser");
               setUser(null);
+              setToken(null);
+              queryClient.invalidateQueries("activeEntries");
             }}
           >
             log out
@@ -92,16 +97,19 @@ const App = () => {
                 "studentHelpQueueUser",
                 JSON.stringify(response)
               );
+              queryClient.invalidateQueries("activeEntries");
             });
           }}
           onError={(error) => console.log(`Login error: ${error}`)}
         />
       )}
-      <button onClick={() => addNameMutation.mutate()}>
-        Add name to queue
-      </button>
+      {user && (
+        <button onClick={() => addNameMutation.mutate()}>
+          Add name to queue
+        </button>
+      )}
       <Queue
-        entries={result}
+        entries={entries}
         resolveEntryMutation={resolveEntryMutation}
         getEntryAge={getEntryAge}
       />

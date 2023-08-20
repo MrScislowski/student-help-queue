@@ -6,6 +6,7 @@ mongoose.set("strictQuery", false);
 import cors from "cors";
 import { OAuth2Client } from "google-auth-library";
 import jwt from "jsonwebtoken";
+import { User } from "./types";
 
 const app = express();
 app.use(express.json());
@@ -17,6 +18,7 @@ import Active from "./models/active";
 import Archived from "./models/archived";
 import { parseArchivedEntry, parseLoginPayload, parseUser } from "./utils";
 import entriesService from "./services/entriesService";
+import { ActiveEntry } from "./types";
 
 const PORT = config.PORT;
 const MONGODB_URI = config.DB_URL;
@@ -30,8 +32,17 @@ mongoose
     console.log(`error connecting to MongoDB: ${err.message}`);
   });
 
-app.get("/api/queue", async (_req, res) => {
-  const results = await entriesService.getActiveEntries();
+app.get("/api/queue", async (req, res) => {
+  let userInfo: User;
+  if (!req.headers.authorization) {
+    userInfo = { email: "", familyName: "", givenName: "" };
+  } else {
+    const token = req.headers.authorization.substring(7);
+    userInfo = parseUser(jwt.verify(token, config.SECRET));
+  }
+
+  const results: Omit<ActiveEntry, "_id">[] =
+    await entriesService.getActiveEntries(userInfo);
   res.send({
     timestamp: new Date().toISOString(),
     entries: results,
@@ -55,9 +66,7 @@ app.post("/api/queue", async (req, res) => {
   const userInfo = parseUser(jwt.verify(token, config.SECRET));
 
   try {
-    console.log("about to try to create a new active entry");
     const newEntry = await entriesService.addActiveEntry(userInfo);
-    console.log(`created active entry ${JSON.stringify(newEntry)}`);
 
     res.send({
       timestamp: new Date().toISOString(),
@@ -122,8 +131,6 @@ app.post("/api/login", async (req, res) => {
     const userInfo = parseLoginPayload(payload);
 
     const token = jwt.sign(userInfo, config.SECRET);
-
-    console.log(`sending token: ${token}`);
 
     return res.send({ ...userInfo, token });
   } catch (error) {

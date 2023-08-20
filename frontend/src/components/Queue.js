@@ -32,31 +32,35 @@ const Queue = (props) => {
 
   return (
     <Container>
-      {entries.data.map((item) => {
+      {entries.map((item) => {
         return (
           <QueueItem key={item.request.user.email}>
             {item.request.user.givenName} {item.request.user.familyName} (
             {getEntryAge(item.request.timestamp)})
-            <ResolveButton
-              onClick={async () => {
-                await resolveEntryMutation.mutate({
-                  entry: item,
-                  resolutionStatus: "resolve",
-                });
-              }}
-            >
-              Resolve
-            </ResolveButton>
-            <CancelButton
-              onClick={async () => {
-                await resolveEntryMutation.mutate({
-                  entry: item,
-                  resolutionStatus: "cancel",
-                });
-              }}
-            >
-              Cancel
-            </CancelButton>
+            {item._id && (
+              <>
+                <ResolveButton
+                  onClick={async () => {
+                    await resolveEntryMutation.mutate({
+                      entry: item,
+                      resolutionStatus: "resolve",
+                    });
+                  }}
+                >
+                  Resolve
+                </ResolveButton>
+                <CancelButton
+                  onClick={async () => {
+                    await resolveEntryMutation.mutate({
+                      entry: item,
+                      resolutionStatus: "cancel",
+                    });
+                  }}
+                >
+                  Cancel
+                </CancelButton>
+              </>
+            )}
           </QueueItem>
         );
       })}

@@ -3,14 +3,32 @@ import axios from "axios";
 const baseUrl = `http://localhost:3001/api/queue`;
 
 let token = null;
+
 export const setToken = (newValue) => {
-  token = `Bearer ${newValue}`;
+  if (newValue) {
+    token = `Bearer ${newValue}`;
+  } else {
+    token = null;
+  }
+};
+
+export const getActiveEntries = async () => {
+  let config = {};
+  if (token) {
+    config = {
+      headers: { Authorization: token },
+    };
+  }
+  return axios.get(`${baseUrl}`, config);
 };
 
 export const resolveEntry = async ({ entry, resolutionStatus }) => {
-  const config = {
-    headers: { Authorization: token },
-  };
+  let config = {};
+  if (token) {
+    config = {
+      headers: { Authorization: token },
+    };
+  }
   await axios.post(
     `${baseUrl}/${entry._id}`,
     {
@@ -29,8 +47,11 @@ export const attemptLogin = async ({ credential }) => {
 };
 
 export const addName = async () => {
-  const config = {
-    headers: { Authorization: token },
-  };
+  let config = {};
+  if (token) {
+    config = {
+      headers: { Authorization: token },
+    };
+  }
   await axios.post(`${baseUrl}`, null, config);
 };
