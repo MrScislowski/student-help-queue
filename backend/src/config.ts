@@ -18,7 +18,7 @@ if (NODE_ENV === "dev") {
   DB_URL = MONGODB_ATLAS_DB_URL;
 }
 
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 const GOOGLE_OAUTH_CLIENT_ID = process.env.GOOGLE_OAUTH_CLIENT_ID;
 const SECRET = process.env.SECRET || "";
 
