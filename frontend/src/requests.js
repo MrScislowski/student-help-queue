@@ -1,6 +1,9 @@
 import axios from "axios";
 
-const baseUrl = `http://localhost:3001/api/queue`;
+const baseUrl =
+  process.env.NODE_ENV === "development"
+    ? `http://localhost:3001/api/queue`
+    : "https://student-help-queue-backend-dbc8c16c81bf.herokuapp.com/api/queue";
 
 let token = null;
 
@@ -38,7 +41,10 @@ export const resolveEntry = async ({ entry, resolutionStatus }) => {
   );
 };
 
-const loginUrl = `http://localhost:3001/api/login`;
+const loginUrl =
+  process.env.NODE_ENV === "development"
+    ? `http://localhost:3001/api/login`
+    : "https://student-help-queue-backend-dbc8c16c81bf.herokuapp.com/api/login";
 // TODO: in future I think this info should be sent directly to the backend via the stored callback url in Google so that we never see it on the user end
 export const attemptLogin = async ({ credential }) => {
   const response = await axios.post(`${loginUrl}`, { credential });
