@@ -1,7 +1,23 @@
 import dotenv from "dotenv";
 dotenv.config();
 
-const DB_URL = process.env.OFFLINE_DB_URL || "default";
+const NODE_ENV = process.env.NODE_ENV ? process.env.NODE_ENV : "production";
+
+const OFFLINE_DB_URL = process.env.OFFLINE_DB_URL
+  ? process.env.OFFLINE_DB_URL
+  : "";
+
+const MONGODB_ATLAS_DB_URL = process.env.MONGODB_ATLAS_DB_URL
+  ? process.env.MONGODB_ATLAS_DB_URL
+  : "";
+
+let DB_URL = "";
+if (NODE_ENV === "dev") {
+  DB_URL = OFFLINE_DB_URL;
+} else {
+  DB_URL = MONGODB_ATLAS_DB_URL;
+}
+
 const PORT = 3001;
 const GOOGLE_OAUTH_CLIENT_ID = process.env.GOOGLE_OAUTH_CLIENT_ID;
 const SECRET = process.env.SECRET || "";
