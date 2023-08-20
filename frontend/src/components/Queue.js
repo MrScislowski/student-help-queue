@@ -36,7 +36,7 @@ const Queue = (props) => {
         return (
           <QueueItem key={item.request.user.email}>
             {item.request.user.givenName} {item.request.user.familyName} (
-            {getEntryAge(item.requestTimestamp)})
+            {getEntryAge(item.request.timestamp)})
             <ResolveButton
               onClick={async () => {
                 await resolveEntryMutation.mutate({

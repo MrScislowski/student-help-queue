@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import axios from "axios";
-import { addName, attemptLogin, resolveEntry } from "./requests";
+import { addName, attemptLogin, resolveEntry, setToken } from "./requests";
 import Queue from "./components/Queue";
 import { GoogleLogin } from "@react-oauth/google";
 
@@ -43,6 +43,15 @@ const App = () => {
     return () => interval;
   }, []);
 
+  useEffect(() => {
+    const storedUserInfo = window.localStorage.getItem("studentHelpQueueUser");
+    if (storedUserInfo) {
+      const userInfo = JSON.parse(storedUserInfo);
+      setUser(userInfo);
+      setToken(userInfo.token);
+    }
+  }, []);
+
   if (result.isLoading) {
     return <div>loading...</div>;
   }
@@ -62,14 +71,28 @@ const App = () => {
   return (
     <>
       {user ? (
-        <p>logged in as {user.email}</p>
+        <p>
+          logged in as {user.email}{" "}
+          <button
+            onClick={() => {
+              window.localStorage.removeItem("studentHelpQueueUser");
+              setUser(null);
+            }}
+          >
+            log out
+          </button>
+        </p>
       ) : (
         <GoogleLogin
-          // TODO: save the response to attemptLogin in localstorage or something. and move the token to be using state in a service like they do here:
-          // https://fullstackopen.com/en/part5/login_in_frontend
           onSuccess={(response) => {
             const { credential } = response;
-            attemptLogin({ credential }).then((response) => setUser(response));
+            attemptLogin({ credential }).then((response) => {
+              setUser(response);
+              window.localStorage.setItem(
+                "studentHelpQueueUser",
+                JSON.stringify(response)
+              );
+            });
           }}
           onError={(error) => console.log(`Login error: ${error}`)}
         />

@@ -25,8 +25,7 @@ const loginUrl = `http://localhost:3001/api/login`;
 export const attemptLogin = async ({ credential }) => {
   const response = await axios.post(`${loginUrl}`, { credential });
   setToken(response.data.token);
-  const { token, ...userData } = response.data;
-  return userData;
+  return response.data;
 };
 
 export const addName = async () => {
