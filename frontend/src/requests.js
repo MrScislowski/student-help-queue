@@ -5,6 +5,8 @@ const baseUrl =
     ? `http://localhost:3001/api/queue`
     : "https://student-help-queue-backend-dbc8c16c81bf.herokuapp.com/api/queue";
 
+console.log(`using baseUrl ${baseUrl}`);
+
 let token = null;
 
 export const setToken = (newValue) => {
