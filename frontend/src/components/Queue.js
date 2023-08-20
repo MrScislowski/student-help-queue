@@ -28,14 +28,15 @@ const CancelButton = styled.button`
 `;
 
 const Queue = (props) => {
-  const { result, resolveEntryMutation, getEntryAge } = props;
+  const { entries, resolveEntryMutation, getEntryAge } = props;
 
   return (
     <Container>
-      {result.data.map((item) => {
+      {entries.data.map((item) => {
         return (
-          <QueueItem key={item.requestor.id}>
-            {item.requestor.displayName} ({getEntryAge(item.requestTimestamp)})
+          <QueueItem key={item.request.user.email}>
+            {item.request.user.givenName} {item.request.user.familyName} (
+            {getEntryAge(item.requestTimestamp)})
             <ResolveButton
               onClick={async () => {
                 await resolveEntryMutation.mutate({

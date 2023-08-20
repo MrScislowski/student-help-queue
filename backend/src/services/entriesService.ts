@@ -1,11 +1,6 @@
 import Active from "../models/active";
 import Archived from "../models/archived";
-import {
-  ActiveEntry,
-  ActiveEntryStub,
-  ArchivedEntry,
-  ArchivedEntryStub,
-} from "../types";
+import { ActiveEntry, ArchivedEntry, ResolutionStatus, User } from "../types";
 
 const getActiveEntries = async () => {
   const results = await Active.find({});
@@ -17,25 +12,30 @@ const getArchivedEntries = async () => {
   return results;
 };
 
-const addActiveEntry = async (data: ActiveEntryStub): Promise<ActiveEntry> => {
+const addActiveEntry = async (user: User): Promise<ActiveEntry> => {
   const hasDuplicate = await Active.findOne({
-    "requestor.id": data.requestor.id,
+    "request.user.email": user.email,
   });
   if (hasDuplicate) {
     throw new Error("User already has an entry in the active queue. ");
   }
 
   const newEntry = new Active({
-    requestor: data.requestor,
-    requestTimestamp: new Date().toISOString(),
+    request: {
+      user,
+      timestamp: new Date().toISOString(),
+    },
   });
+
   await newEntry.save();
+
   return newEntry;
 };
 
 const resolveActiveEntry = async (
   id: string,
-  data: ArchivedEntryStub
+  user: User,
+  status: ResolutionStatus
 ): Promise<ArchivedEntry> => {
   const activeEntry = await Active.findById(id);
   if (!activeEntry) {
@@ -44,9 +44,11 @@ const resolveActiveEntry = async (
 
   const archivedVersion = new Archived({
     ...(activeEntry.toObject() as object),
-    resolver: data.resolver,
-    resolutionStatus: data.resolutionStatus,
-    resolveTimestamp: new Date().toISOString(),
+    resolution: {
+      user,
+      status,
+      timestamp: new Date().toISOString(),
+    },
   });
 
   await archivedVersion.save();

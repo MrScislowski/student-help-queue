@@ -6,7 +6,6 @@ mongoose.set("strictQuery", false);
 import cors from "cors";
 import { OAuth2Client } from "google-auth-library";
 import jwt from "jsonwebtoken";
-import { parseLoginPayload } from "./utils";
 
 const app = express();
 app.use(express.json());
@@ -16,7 +15,7 @@ app.use((_req: Request, _res: Response, next: NextFunction) => {
 
 import Active from "./models/active";
 import Archived from "./models/archived";
-import { parseActiveEntry, parseArchivedEntry } from "./utils";
+import { parseArchivedEntry, parseLoginPayload, parseUser } from "./utils";
 import entriesService from "./services/entriesService";
 
 const PORT = config.PORT;
@@ -48,9 +47,18 @@ app.get("/api/archived", async (_req, res) => {
 });
 
 app.post("/api/queue", async (req, res) => {
+  if (!req.headers.authorization) {
+    return res.status(400).send("token required in authorization header");
+  }
+  const token = req.headers.authorization.substring(7);
+
+  const userInfo = parseUser(jwt.verify(token, config.SECRET));
+
   try {
-    const reqData = parseActiveEntry(req.body);
-    const newEntry = await entriesService.addActiveEntry(reqData);
+    console.log("about to try to create a new active entry");
+    const newEntry = await entriesService.addActiveEntry(userInfo);
+    console.log(`created active entry ${JSON.stringify(newEntry)}`);
+
     res.send({
       timestamp: new Date().toISOString(),
       entry: newEntry,
@@ -66,11 +74,18 @@ app.post("/api/queue", async (req, res) => {
 
 app.post("/api/queue/:id", async (req, res) => {
   const entryId = req.params.id;
+  if (!req.headers.authorization) {
+    return res.status(400).send("token required in authorization header");
+  }
+  const token = req.headers.authorization.substring(7);
+
+  const userInfo = parseUser(jwt.verify(token, config.SECRET));
 
   try {
     const resolutionData = parseArchivedEntry(req.body);
     const archivedVersion = await entriesService.resolveActiveEntry(
       entryId,
+      userInfo,
       resolutionData
     );
     return res.send({
@@ -92,20 +107,6 @@ app.post("/api/clear", async (_req, res) => {
   res.send("databases cleared");
 });
 
-app.post("/api/fillrandom", async (_req, res) => {
-  await Promise.all(
-    Array.from({ length: 5 }, () =>
-      Math.random().toString(36).substring(7)
-    ).map((id) =>
-      entriesService.addActiveEntry({
-        requestor: { id: id, displayName: id },
-      })
-    )
-  );
-
-  res.send("5 random entries added");
-});
-
 app.post("/api/login", async (req, res) => {
   try {
     const client = new OAuth2Client(config.GOOGLE_OAUTH_CLIENT_ID);
@@ -121,6 +122,8 @@ app.post("/api/login", async (req, res) => {
     const userInfo = parseLoginPayload(payload);
 
     const token = jwt.sign(userInfo, config.SECRET);
+
+    console.log(`sending token: ${token}`);
 
     return res.send({ ...userInfo, token });
   } catch (error) {

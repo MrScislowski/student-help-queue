@@ -3,15 +3,21 @@ import axios from "axios";
 const baseUrl = `http://localhost:3001/api/queue`;
 
 let token = null;
-const setToken = (newValue) => {
+export const setToken = (newValue) => {
   token = `Bearer ${newValue}`;
 };
 
 export const resolveEntry = async ({ entry, resolutionStatus }) => {
-  await axios.post(`${baseUrl}/${entry._id}`, {
-    user: { id: "me", displayName: "me" },
-    resolutionStatus,
-  });
+  const config = {
+    headers: { Authorization: token },
+  };
+  await axios.post(
+    `${baseUrl}/${entry._id}`,
+    {
+      resolutionStatus,
+    },
+    config
+  );
 };
 
 const loginUrl = `http://localhost:3001/api/login`;
@@ -21,4 +27,11 @@ export const attemptLogin = async ({ credential }) => {
   setToken(response.data.token);
   const { token, ...userData } = response.data;
   return userData;
+};
+
+export const addName = async () => {
+  const config = {
+    headers: { Authorization: token },
+  };
+  await axios.post(`${baseUrl}`, null, config);
 };

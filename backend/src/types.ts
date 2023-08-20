@@ -4,16 +4,20 @@ export type ResolutionStatus = "cancel" | "resolve";
 
 export interface ActiveEntry {
   _id: Types.ObjectId;
-  requestor: User;
-  requestTimestamp: string;
+  request: {
+    user: User;
+    timestamp: string;
+  };
 }
 
-export type ActiveEntryStub = Omit<ActiveEntry, "_id" | "requestTimestamp">;
+export type ActiveEntryStub = Omit<ActiveEntry, "_id" | "request.timestamp">;
 
 export interface ArchivedEntry extends ActiveEntry {
-  resolver: User;
-  resolveTimestamp: string;
-  resolutionStatus: ResolutionStatus;
+  resolution: {
+    user: User;
+    timestamp: string;
+    status: ResolutionStatus;
+  };
 }
 
 export type ArchivedEntryStub = Omit<
@@ -22,11 +26,6 @@ export type ArchivedEntryStub = Omit<
 >;
 
 export interface User {
-  id: string;
-  displayName: string;
-}
-
-export interface LoginPayload {
   email: string;
   givenName: string;
   familyName: string;

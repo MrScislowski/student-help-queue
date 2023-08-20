@@ -2,38 +2,50 @@ import mongoose from "mongoose";
 import { ArchivedEntry } from "../types";
 
 const schema = new mongoose.Schema<ArchivedEntry>({
-  requestor: {
-    id: {
-      type: String,
-      required: true,
+  request: {
+    user: {
+      email: {
+        type: String,
+        required: true,
+      },
+      givenName: {
+        type: String,
+        required: true,
+      },
+      familyName: {
+        type: String,
+        required: true,
+      },
     },
-    displayName: {
-      type: String,
-      required: true,
-    },
-  },
-  requestTimestamp: {
-    type: String,
-    required: true,
-  },
-  resolver: {
-    id: {
-      type: String,
-      required: true,
-    },
-    displayName: {
+    timestamp: {
       type: String,
       required: true,
     },
   },
-  resolveTimestamp: {
-    type: String,
-    required: true,
-  },
-  resolutionStatus: {
-    type: String,
-    enum: ["cancel", "resolve"],
-    required: true,
+  resolution: {
+    user: {
+      email: {
+        type: String,
+        required: true,
+      },
+      givenName: {
+        type: String,
+        required: true,
+      },
+      familyName: {
+        type: String,
+        required: true,
+      },
+    },
+    timestamp: {
+      type: String,
+      required: true,
+    },
+    status: {
+      type: String,
+      enum: ["cancel", "resolve"],
+      required: true,
+    },
   },
 });
 

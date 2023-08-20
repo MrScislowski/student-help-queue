@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import axios from "axios";
-import { attemptLogin, resolveEntry } from "./requests";
+import { addName, attemptLogin, resolveEntry } from "./requests";
 import Queue from "./components/Queue";
-import { GoogleLogin, useGoogleLogin } from "@react-oauth/google";
+import { GoogleLogin } from "@react-oauth/google";
 
 const App = () => {
   const [timeDiff, setTimeDiff] = useState(0);
@@ -62,15 +62,15 @@ const App = () => {
           // TODO: save the response to attemptLogin in localstorage or something. and move the token to be using state in a service like they do here:
           // https://fullstackopen.com/en/part5/login_in_frontend
           onSuccess={(response) => {
-            console.dir(response);
             const { credential } = response;
             attemptLogin({ credential }).then((response) => setUser(response));
           }}
           onError={(error) => console.log(`Login error: ${error}`)}
         />
       )}
+      <button onClick={addName}>Add name to queue</button>
       <Queue
-        result={result}
+        entries={result}
         resolveEntryMutation={resolveEntryMutation}
         getEntryAge={getEntryAge}
       />
