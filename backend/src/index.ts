@@ -143,6 +143,10 @@ app.post("/api/login", async (req, res) => {
   }
 });
 
+app.get("/", (_req, res) => {
+  res.send("welcome");
+});
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
