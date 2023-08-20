@@ -117,10 +117,12 @@ app.post("/api/login", async (req, res) => {
     });
 
     const payload = ticket.getPayload();
-    const userInfo = parseLoginPayload(payload);
-    // const token = jwt.sign(userInfo, config.SECRET);
 
-    return res.send(userInfo);
+    const userInfo = parseLoginPayload(payload);
+
+    const token = jwt.sign(userInfo, config.SECRET);
+
+    return res.send({ ...userInfo, token });
   } catch (error) {
     return res.status(500).json(error);
   }

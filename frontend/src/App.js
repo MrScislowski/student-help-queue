@@ -54,17 +54,25 @@ const App = () => {
   };
 
   return (
-    // <Queue
-    //   result={result}
-    //   resolveEntryMutation={resolveEntryMutation}
-    //   getEntryAge={getEntryAge}
-    // />
     <>
-      <GoogleLogin
-        // TODO: save the response to attemptLogin in localstorage or something. and move the token to be using state in a service like they do here:
-        // https://fullstackopen.com/en/part5/login_in_frontend
-        onSuccess={(response) => attemptLogin(response)}
-        onError={(error) => console.log(`Login error: ${error}`)}
+      {user ? (
+        <p>logged in as {user.email}</p>
+      ) : (
+        <GoogleLogin
+          // TODO: save the response to attemptLogin in localstorage or something. and move the token to be using state in a service like they do here:
+          // https://fullstackopen.com/en/part5/login_in_frontend
+          onSuccess={(response) => {
+            console.dir(response);
+            const { credential } = response;
+            attemptLogin({ credential }).then((response) => setUser(response));
+          }}
+          onError={(error) => console.log(`Login error: ${error}`)}
+        />
+      )}
+      <Queue
+        result={result}
+        resolveEntryMutation={resolveEntryMutation}
+        getEntryAge={getEntryAge}
       />
     </>
   );
