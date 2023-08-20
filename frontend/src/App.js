@@ -16,6 +16,12 @@ const App = () => {
     },
   });
 
+  const addNameMutation = useMutation(addName, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("activeEntries");
+    },
+  });
+
   const result = useQuery("activeEntries", () =>
     axios.get("http://localhost:3001/api/queue").then((res) => {
       setTimeDiff(
@@ -68,7 +74,9 @@ const App = () => {
           onError={(error) => console.log(`Login error: ${error}`)}
         />
       )}
-      <button onClick={addName}>Add name to queue</button>
+      <button onClick={() => addNameMutation.mutate()}>
+        Add name to queue
+      </button>
       <Queue
         entries={result}
         resolveEntryMutation={resolveEntryMutation}
