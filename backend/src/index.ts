@@ -125,6 +125,10 @@ app.post("/api/login", async (req, res) => {
   try {
     const client = new OAuth2Client(config.GOOGLE_OAUTH_CLIENT_ID);
 
+    if (!("credential" in req.body)) {
+      throw new Error("credential required");
+    }
+
     const ticket = await client.verifyIdToken({
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       idToken: req.body.credential,
@@ -139,7 +143,11 @@ app.post("/api/login", async (req, res) => {
 
     return res.send({ ...userInfo, isAdmin: hasAdminRights(userInfo), token });
   } catch (error) {
-    return res.status(500).json(error);
+    let message = "Error(s) occurred: ";
+    if (error instanceof Error) {
+      message += error.message;
+    }
+    return res.status(500).send(message);
   }
 });
 
