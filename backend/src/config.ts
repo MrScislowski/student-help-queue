@@ -20,6 +20,14 @@ if (NODE_ENV === "dev") {
 
 const PORT = process.env.PORT || 3001;
 const GOOGLE_OAUTH_CLIENT_ID = process.env.GOOGLE_OAUTH_CLIENT_ID;
+const GOOGLE_OAUTH_CLIENT_SECRET = process.env.GOOGLE_OAUTH_CLIENT_SECRET;
+
 const SECRET = process.env.SECRET || "";
 
-export default { DB_URL, PORT, GOOGLE_OAUTH_CLIENT_ID, SECRET };
+export default {
+  DB_URL,
+  PORT,
+  GOOGLE_OAUTH_CLIENT_ID,
+  SECRET,
+  GOOGLE_OAUTH_CLIENT_SECRET,
+};
