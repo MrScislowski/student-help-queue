@@ -108,6 +108,7 @@ const App = () => {
             });
           }}
           onError={(error) => console.log(`Login error: ${error}`)}
+          ux_mode="redirect"
         />
       )}
       {user && (
