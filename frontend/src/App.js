@@ -108,7 +108,8 @@ const App = () => {
             });
           }}
           onError={(error) => console.log(`Login error: ${error}`)}
-          ux_mode="redirect"
+          ux_mode="popup"
+          useOneTap
         />
       )}
       {user && (
