@@ -20,6 +20,19 @@ if (NODE_ENV === "dev") {
 
 const PORT = process.env.PORT || 3001;
 const GOOGLE_OAUTH_CLIENT_ID = process.env.GOOGLE_OAUTH_CLIENT_ID;
+const GOOGLE_OAUTH_CLIENT_SECRET = process.env.GOOGLE_OAUTH_CLIENT_SECRET;
+const BACKEND_URL =
+  NODE_ENV === "dev"
+    ? "http://localhost:3001"
+    : "https://student-help-queue-backend-dbc8c16c81bf.herokuapp.com";
+
 const SECRET = process.env.SECRET || "";
 
-export default { DB_URL, PORT, GOOGLE_OAUTH_CLIENT_ID, SECRET };
+export default {
+  DB_URL,
+  PORT,
+  GOOGLE_OAUTH_CLIENT_ID,
+  SECRET,
+  GOOGLE_OAUTH_CLIENT_SECRET,
+  BACKEND_URL,
+};

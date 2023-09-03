@@ -37,6 +37,13 @@ mongoose
     console.log(`error connecting to MongoDB: ${err.message}`);
   });
 
+const oAuth2Client = new OAuth2Client(
+  config.GOOGLE_OAUTH_CLIENT_ID,
+  config.GOOGLE_OAUTH_CLIENT_SECRET,
+  // TODO: https://github.com/MomenSherif/react-oauth/issues/12#issuecomment-1131408898 has "postmessage" as the 3rd argument, but the google documentation seemed to think redirect uris should be here
+  `${config.BACKEND_URL}/api/login`
+);
+
 app.get("/api/queue", async (req, res) => {
   let userInfo: User;
   if (!req.headers.authorization) {
@@ -121,24 +128,46 @@ app.post("/api/clear", async (_req, res) => {
   res.send("databases cleared");
 });
 
+app.get("/api/login", async (req, res) => {
+  try {
+    console.log(`about to query using code ${req.query.code}`);
+    console.log(`and oauthclient ${JSON.stringify(oAuth2Client)}`);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    const { tokens } = await oAuth2Client.getToken(req.query.code as string);
+    console.log(tokens);
+    res.json(tokens);
+
+    // const ticket = await oAuth2Client.verifyIdToken({
+    //   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    //   idToken: req.body.credential,
+    //   audience: config.GOOGLE_OAUTH_CLIENT_ID,
+    // });
+    // const payload = ticket.getPayload();
+    // const userInfo = parseLoginPayload(payload);
+    // const token = jwt.sign(userInfo, config.SECRET);
+    // return res.send({ ...userInfo, isAdmin: hasAdminRights(userInfo), token });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json(error);
+  }
+});
+
 app.post("/api/login", async (req, res) => {
   try {
-    const client = new OAuth2Client(config.GOOGLE_OAUTH_CLIENT_ID);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    const { tokens } = await oAuth2Client.getToken(req.body.code);
+    console.log(tokens);
+    res.json(tokens);
 
-    console.log(`request body is: ${JSON.stringify(req.body)}`);
-    const ticket = await client.verifyIdToken({
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      idToken: req.body.credential,
-      audience: config.GOOGLE_OAUTH_CLIENT_ID,
-    });
-
-    const payload = ticket.getPayload();
-
-    const userInfo = parseLoginPayload(payload);
-
-    const token = jwt.sign(userInfo, config.SECRET);
-
-    return res.send({ ...userInfo, isAdmin: hasAdminRights(userInfo), token });
+    // const ticket = await oAuth2Client.verifyIdToken({
+    //   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    //   idToken: req.body.credential,
+    //   audience: config.GOOGLE_OAUTH_CLIENT_ID,
+    // });
+    // const payload = ticket.getPayload();
+    // const userInfo = parseLoginPayload(payload);
+    // const token = jwt.sign(userInfo, config.SECRET);
+    // return res.send({ ...userInfo, isAdmin: hasAdminRights(userInfo), token });
   } catch (error) {
     console.log(error);
     return res.status(500).json(error);

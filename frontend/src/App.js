@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import {
@@ -8,7 +9,7 @@ import {
   getActiveEntries,
 } from "./requests";
 import Queue from "./components/Queue";
-import { GoogleLogin, useGoogleLogin } from "@react-oauth/google";
+import { useGoogleLogin } from "@react-oauth/google";
 
 const App = () => {
   const [timeDiff, setTimeDiff] = useState(0);
@@ -65,23 +66,23 @@ const App = () => {
   }, []);
 
   const googleLogin = useGoogleLogin({
-    onSuccess: (response) => {
-      const { access_token } = response;
-      console.log(
-        `got sucessful response from google: ${JSON.stringify(response)}`
-      );
-      attemptLogin({ credential: access_token }).then((response) => {
-        setUser(response);
-        window.localStorage.setItem(
-          "studentHelpQueueUser",
-          JSON.stringify(response)
-        );
-        queryClient.invalidateQueries("activeEntries");
+    flow: "auth-code",
+    redirect_uri: "http://localhost:3001/api/login",
+    onSuccess: async ({ code }) => {
+      const tokens = await axios.post("http://localhost:3001/api/login", {
+        code,
       });
+
+      // attemptLogin({ credential: access_token }).then((response) => {
+      //   setUser(response);
+      //   window.localStorage.setItem(
+      //     "studentHelpQueueUser",
+      //     JSON.stringify(response)
+      //   );
+      //   queryClient.invalidateQueries("activeEntries");
+      // });
     },
-    onError: (error) => console.log(`Login error: ${error}`),
     ux_mode: "redirect",
-    redirect_uri: "http://localhost:3000",
   });
 
   const getEntryAge = (timestamp) => {
