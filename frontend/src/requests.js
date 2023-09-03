@@ -52,6 +52,7 @@ const loginUrl =
 console.log(`using loginUrl ${loginUrl}`);
 
 export const attemptLogin = async ({ credential }) => {
+  console.log(`using credential: ${credential}`);
   const response = await axios.post(`${loginUrl}`, { credential });
   setToken(response.data.token);
   return response.data;

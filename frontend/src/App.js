@@ -8,7 +8,7 @@ import {
   getActiveEntries,
 } from "./requests";
 import Queue from "./components/Queue";
-import { GoogleLogin } from "@react-oauth/google";
+import { GoogleLogin, useGoogleLogin } from "@react-oauth/google";
 
 const App = () => {
   const [timeDiff, setTimeDiff] = useState(0);
@@ -52,8 +52,6 @@ const App = () => {
     refetchIntervalInBackground: user && user.isAdmin,
   });
 
-  //   );
-
   const [currentTime, setCurrentTime] = useState(new Date().getTime());
 
   // https://stackoverflow.com/questions/72766908/how-to-show-a-countdown-timer-in-react
@@ -65,6 +63,26 @@ const App = () => {
     // TODO: learn what this "clean up" does
     return () => interval;
   }, []);
+
+  const googleLogin = useGoogleLogin({
+    onSuccess: (response) => {
+      const { access_token } = response;
+      console.log(
+        `got sucessful response from google: ${JSON.stringify(response)}`
+      );
+      attemptLogin({ credential: access_token }).then((response) => {
+        setUser(response);
+        window.localStorage.setItem(
+          "studentHelpQueueUser",
+          JSON.stringify(response)
+        );
+        queryClient.invalidateQueries("activeEntries");
+      });
+    },
+    onError: (error) => console.log(`Login error: ${error}`),
+    ux_mode: "redirect",
+    redirect_uri: "http://localhost:3000",
+  });
 
   const getEntryAge = (timestamp) => {
     const millis = currentTime - new Date(timestamp).getTime() - timeDiff;
@@ -95,28 +113,30 @@ const App = () => {
           </button>
         </p>
       ) : (
-        <GoogleLogin
-          onSuccess={(response) => {
-            const { credential } = response;
-            attemptLogin({ credential }).then((response) => {
-              setUser(response);
-              window.localStorage.setItem(
-                "studentHelpQueueUser",
-                JSON.stringify(response)
-              );
-              queryClient.invalidateQueries("activeEntries");
-            });
-          }}
-          onError={(error) => console.log(`Login error: ${error}`)}
-          ux_mode="popup"
-          useOneTap
-        />
+        // <GoogleLogin
+        //   onSuccess={(response) => {
+        //     const { credential } = response;
+        //     attemptLogin({ credential }).then((response) => {
+        //       setUser(response);
+        //       window.localStorage.setItem(
+        //         "studentHelpQueueUser",
+        //         JSON.stringify(response)
+        //       );
+        //       queryClient.invalidateQueries("activeEntries");
+        //     });
+        //   }}
+        //   onError={(error) => console.log(`Login error: ${error}`)}
+        //   ux_mode="popup"
+        //   useOneTap
+        // />
+        <button onClick={() => googleLogin()}>Log in using Google</button>
       )}
       {user && (
         <button onClick={() => addNameMutation.mutate()}>
           Add name to queue
         </button>
       )}
+
       <Queue
         entries={entries}
         resolveEntryMutation={resolveEntryMutation}
