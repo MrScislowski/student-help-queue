@@ -65,11 +65,16 @@ const App = () => {
     return () => interval;
   }, []);
 
+  const backendUrl =
+    process.env.NODE_ENV === "development"
+      ? process.env.REACT_APP_DEV_BACKEND
+      : process.env.REACT_APP_BACKEND;
+
   const googleLogin = useGoogleLogin({
     flow: "auth-code",
-    redirect_uri: "http://localhost:3001/api/login",
+    redirect_uri: `${backendUrl}/api/login`,
     onSuccess: async ({ code }) => {
-      const tokens = await axios.post("http://localhost:3001/api/login", {
+      const tokens = await axios.post(`${backendUrl}/api/login`, {
         code,
       });
 

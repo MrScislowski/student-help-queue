@@ -128,6 +128,7 @@ app.post("/api/clear", async (_req, res) => {
   res.send("databases cleared");
 });
 
+// this seems to be called if "redirect" is used instead of "popup" for useGoogleLogin
 app.get("/api/login", async (req, res) => {
   try {
     console.log(`about to query using code ${req.query.code}`);
