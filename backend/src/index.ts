@@ -131,22 +131,19 @@ app.post("/api/clear", async (_req, res) => {
 // this seems to be called if "redirect" is used instead of "popup" for useGoogleLogin
 app.get("/api/login", async (req, res) => {
   try {
-    console.log(`about to query using code ${req.query.code}`);
-    console.log(`and oauthclient ${JSON.stringify(oAuth2Client)}`);
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     const { tokens } = await oAuth2Client.getToken(req.query.code as string);
     console.log(tokens);
-    res.json(tokens);
+    const ticket = await oAuth2Client.verifyIdToken({
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      idToken: tokens.id_token as string,
+      audience: config.GOOGLE_OAUTH_CLIENT_ID,
+    });
 
-    // const ticket = await oAuth2Client.verifyIdToken({
-    //   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    //   idToken: req.body.credential,
-    //   audience: config.GOOGLE_OAUTH_CLIENT_ID,
-    // });
-    // const payload = ticket.getPayload();
-    // const userInfo = parseLoginPayload(payload);
-    // const token = jwt.sign(userInfo, config.SECRET);
-    // return res.send({ ...userInfo, isAdmin: hasAdminRights(userInfo), token });
+    const payload = ticket.getPayload();
+    const userInfo = parseLoginPayload(payload);
+    const token = jwt.sign(userInfo, config.SECRET);
+    return res.send({ ...userInfo, isAdmin: hasAdminRights(userInfo), token });
   } catch (error) {
     console.log(error);
     return res.status(500).json(error);
