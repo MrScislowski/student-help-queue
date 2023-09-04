@@ -10,6 +10,7 @@ import {
 } from "./requests";
 import Queue from "./components/Queue";
 import { useGoogleLogin } from "@react-oauth/google";
+import config from "./config";
 
 const App = () => {
   const [timeDiff, setTimeDiff] = useState(0);
@@ -65,29 +66,19 @@ const App = () => {
     return () => interval;
   }, []);
 
-  const backendUrl =
-    process.env.NODE_ENV === "development"
-      ? process.env.REACT_APP_DEV_BACKEND
-      : process.env.REACT_APP_BACKEND;
-
   const googleLogin = useGoogleLogin({
     flow: "auth-code",
-    redirect_uri: `${backendUrl}/api/login`,
+    redirect_uri: `${config.backendUrl}/api/login`,
+    ux_mode: "popup",
     onSuccess: async ({ code }) => {
-      const tokens = await axios.post(`${backendUrl}/api/login`, {
-        code,
-      });
-
-      // attemptLogin({ credential: access_token }).then((response) => {
-      //   setUser(response);
-      //   window.localStorage.setItem(
-      //     "studentHelpQueueUser",
-      //     JSON.stringify(response)
-      //   );
-      //   queryClient.invalidateQueries("activeEntries");
-      // });
+      const tokens = await attemptLogin({ code });
+      setUser(tokens);
+      window.localStorage.setItem(
+        "studentHelpQueueUser",
+        JSON.stringify(tokens)
+      );
+      queryClient.invalidateQueries("activeEntries");
     },
-    ux_mode: "redirect",
   });
 
   const getEntryAge = (timestamp) => {
