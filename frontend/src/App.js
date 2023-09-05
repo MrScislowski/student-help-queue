@@ -97,7 +97,6 @@ const App = () => {
       ) : (
         <GoogleLogin
           onSuccess={(response) => {
-            window.location.reload();
             const { credential } = response;
             attemptLogin({ credential }).then((response) => {
               setUser(response);
