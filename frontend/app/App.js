@@ -80,7 +80,7 @@ const App = () => {
     <>
       {user ? (
         <p>
-          logged in as {user.email}{" "}
+          logged in as {user.email}
           <button
             onClick={() => {
               window.localStorage.removeItem("studentHelpQueueUser");
