@@ -15,7 +15,10 @@ const queryClient = new QueryClient({
 export default function Home() {
   return (
     <GoogleOAuthProvider
-      clientId={process.env.NEXT_PUBLIC_GOOGLE_OAUTH_CLIENT_ID || "whatever"}
+      clientId={
+        process.env.NEXT_PUBLIC_GOOGLE_OAUTH_CLIENT_ID ||
+        "client_id_not_supplied_from_environment_variable"
+      }
     >
       <QueryClientProvider client={queryClient}>
         <App />
