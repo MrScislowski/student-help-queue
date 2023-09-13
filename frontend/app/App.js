@@ -52,8 +52,6 @@ const App = () => {
     refetchIntervalInBackground: user && user.isAdmin,
   });
 
-  //   );
-
   const [currentTime, setCurrentTime] = useState(new Date().getTime());
 
   // https://stackoverflow.com/questions/72766908/how-to-show-a-countdown-timer-in-react
