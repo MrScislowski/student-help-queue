@@ -47,6 +47,10 @@ const schema = new mongoose.Schema<ArchivedEntry>({
       required: true,
     },
   },
+  queue: {
+    type: String,
+    required: true,
+  },
 });
 
 export default mongoose.model<ArchivedEntry>("Archived", schema);

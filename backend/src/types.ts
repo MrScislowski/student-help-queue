@@ -18,12 +18,19 @@ export interface ArchivedEntry extends ActiveEntry {
     timestamp: string;
     status: ResolutionStatus;
   };
+  queue: string;
 }
 
 export type ArchivedEntryStub = Omit<
   ArchivedEntry,
   "_id" | "requestTimestamp" | "resolveTimestamp" | "requestor"
 >;
+
+export interface Queue {
+  _id: Types.ObjectId;
+  name: string;
+  entries: ActiveEntry[];
+}
 
 export interface User {
   email: string;

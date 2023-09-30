@@ -24,4 +24,6 @@ const schema = new mongoose.Schema<ActiveEntry>({
   },
 });
 
-export default mongoose.model<ActiveEntry>("Active", schema);
+const ActiveModel = mongoose.model<ActiveEntry>("Active", schema);
+
+export { schema as ActiveEntrySchema, ActiveModel as Active };

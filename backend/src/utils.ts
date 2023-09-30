@@ -56,6 +56,7 @@ export const parseResolutionStatus = (arg: unknown): ResolutionStatus => {
   return arg;
 };
 
+// TODO: have to make sure there's a queuetype also
 export const parseArchivedEntry = (body: unknown): ResolutionStatus => {
   if (!body || typeof body !== "object") {
     throw new Error("request body must be an object to add to queue");

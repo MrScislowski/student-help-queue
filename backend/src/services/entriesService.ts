@@ -1,4 +1,4 @@
-import Active from "../models/active";
+import { Active } from "../models/active";
 import Archived from "../models/archived";
 import { ActiveEntry, ArchivedEntry, ResolutionStatus, User } from "../types";
 import { hasAdminRights } from "../utils";
@@ -24,6 +24,7 @@ const getArchivedEntries = async () => {
   return results;
 };
 
+// TODO: need to put it in the correct queue type
 const addActiveEntry = async (user: User): Promise<ActiveEntry> => {
   const hasDuplicate = await Active.findOne({
     "request.user.email": user.email,
@@ -44,6 +45,7 @@ const addActiveEntry = async (user: User): Promise<ActiveEntry> => {
   return newEntry;
 };
 
+// TODO: need a reference to which queue to look in
 const resolveActiveEntry = async (
   id: string,
   user: User,

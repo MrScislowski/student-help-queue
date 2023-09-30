@@ -14,8 +14,6 @@ app.use((_req: Request, _res: Response, next: NextFunction) => {
   next();
 }, cors({ maxAge: 84600 }));
 
-import Active from "./models/active";
-import Archived from "./models/archived";
 import {
   hasAdminRights,
   parseArchivedEntry,
@@ -62,6 +60,7 @@ app.get("/api/archived", async (_req, res) => {
   });
 });
 
+// TODO: I think it makes sense to do /api/queue/help or /api/queue/completed, i.e. /api/queue/:queuetype
 app.post("/api/queue", async (req, res) => {
   if (!req.headers.authorization) {
     return res.status(400).send("token required in authorization header");
@@ -71,6 +70,7 @@ app.post("/api/queue", async (req, res) => {
   const userInfo = parseUser(jwt.verify(token, config.SECRET));
 
   try {
+    // TODO: need to specify which queue they're adding their name to.
     const newEntry = await entriesService.addActiveEntry(userInfo);
 
     res.send({
@@ -86,6 +86,7 @@ app.post("/api/queue", async (req, res) => {
   }
 });
 
+// TODO: change to /api/queue/:queuetype/:id
 app.post("/api/queue/:id", async (req, res) => {
   const entryId = req.params.id;
   if (!req.headers.authorization) {
@@ -113,12 +114,6 @@ app.post("/api/queue/:id", async (req, res) => {
     }
     return res.status(400).send(errorMessage);
   }
-});
-
-app.post("/api/clear", async (_req, res) => {
-  await Active.deleteMany({});
-  await Archived.deleteMany({});
-  res.send("databases cleared");
 });
 
 app.post("/api/login", async (req, res) => {
