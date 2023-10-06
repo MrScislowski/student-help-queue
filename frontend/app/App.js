@@ -109,16 +109,20 @@ const App = () => {
           onError={(error) => console.log(`Login error: ${error}`)}
         />
       )}
-      {user && (
-        <button onClick={() => addNameMutation.mutate("help")}>
-          Add name to queue
-        </button>
-      )}
-      <Queue
-        entries={entries}
-        resolveEntryMutation={resolveEntryMutation}
-        getEntryAge={getEntryAge}
-      />
+      {["help", "completed"].map((queueName) => {
+        return (
+          <>
+            <button onClick={() => addNameMutation.mutate(queueName)}>
+              + {`${queueName} queue`}
+            </button>
+            <Queue
+              entries={entries.filter((entry) => entry.queueName === queueName)}
+              resolveEntryMutation={resolveEntryMutation}
+              getEntryAge={getEntryAge}
+            />
+          </>
+        );
+      })}
     </>
   );
 };
