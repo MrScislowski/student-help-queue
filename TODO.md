@@ -1,4 +1,3 @@
-[ ] backend: add queueName to all active and archived entries
 [ ] frontend: adapt to this new queueName requirement
 [ ] db: write a command so that all archived entries are now put into a "help" queue
 [ ] backend: add a "Account" database type which can allow us to change which queues are active

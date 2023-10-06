@@ -4,7 +4,7 @@ const isString = (text: unknown): text is string => {
   return typeof text === "string" || text instanceof String;
 };
 
-const parseString = (arg: unknown): string => {
+export const parseString = (arg: unknown): string => {
   if (!arg || !isString(arg)) {
     throw new Error("expected a string");
   }

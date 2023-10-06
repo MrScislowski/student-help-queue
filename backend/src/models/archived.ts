@@ -47,7 +47,7 @@ const schema = new mongoose.Schema<ArchivedEntry>({
       required: true,
     },
   },
-  queue: {
+  queueName: {
     type: String,
     required: true,
   },

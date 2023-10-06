@@ -8,6 +8,7 @@ export interface ActiveEntry {
     user: User;
     timestamp: string;
   };
+  queueName: string;
 }
 
 export type ActiveEntryStub = Omit<ActiveEntry, "_id" | "request.timestamp">;
@@ -18,18 +19,6 @@ export interface ArchivedEntry extends ActiveEntry {
     timestamp: string;
     status: ResolutionStatus;
   };
-  queue: string;
-}
-
-export type ArchivedEntryStub = Omit<
-  ArchivedEntry,
-  "_id" | "requestTimestamp" | "resolveTimestamp" | "requestor"
->;
-
-export interface Queue {
-  _id: Types.ObjectId;
-  name: string;
-  entries: ActiveEntry[];
 }
 
 export interface User {

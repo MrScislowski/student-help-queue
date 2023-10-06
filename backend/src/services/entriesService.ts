@@ -13,7 +13,7 @@ const getActiveEntries = async (
   const resultsToReturn = allResults.map((entry) => {
     return isAdmin || entry.request.user.email === user.email
       ? entry
-      : { request: entry.request };
+      : { request: entry.request, queueName: entry.queueName };
   });
 
   return resultsToReturn;
@@ -25,12 +25,16 @@ const getArchivedEntries = async () => {
 };
 
 // TODO: need to put it in the correct queue type
-const addActiveEntry = async (user: User): Promise<ActiveEntry> => {
+const addActiveEntry = async (
+  user: User,
+  queueName: string
+): Promise<ActiveEntry> => {
   const hasDuplicate = await Active.findOne({
     "request.user.email": user.email,
+    queueName: queueName,
   });
   if (hasDuplicate) {
-    throw new Error("User already has an entry in the active queue. ");
+    throw new Error(`User already has an entry in the ${queueName} queue. `);
   }
 
   const newEntry = new Active({
@@ -38,6 +42,7 @@ const addActiveEntry = async (user: User): Promise<ActiveEntry> => {
       user,
       timestamp: new Date().toISOString(),
     },
+    queueName,
   });
 
   await newEntry.save();
@@ -45,7 +50,6 @@ const addActiveEntry = async (user: User): Promise<ActiveEntry> => {
   return newEntry;
 };
 
-// TODO: need a reference to which queue to look in
 const resolveActiveEntry = async (
   id: string,
   user: User,

@@ -18,6 +18,7 @@ import {
   hasAdminRights,
   parseArchivedEntry,
   parseLoginPayload,
+  parseString,
   parseUser,
 } from "./utils";
 import entriesService from "./services/entriesService";
@@ -60,7 +61,6 @@ app.get("/api/archived", async (_req, res) => {
   });
 });
 
-// TODO: I think it makes sense to do /api/queue/help or /api/queue/completed, i.e. /api/queue/:queuetype
 app.post("/api/queue", async (req, res) => {
   if (!req.headers.authorization) {
     return res.status(400).send("token required in authorization header");
@@ -71,7 +71,12 @@ app.post("/api/queue", async (req, res) => {
 
   try {
     // TODO: need to specify which queue they're adding their name to.
-    const newEntry = await entriesService.addActiveEntry(userInfo);
+    if (!("queueName" in req.body) || !req.body.queueName) {
+      throw new Error("queueName not specified");
+    }
+
+    const queueName = parseString(req.body);
+    const newEntry = await entriesService.addActiveEntry(userInfo, queueName);
 
     res.send({
       timestamp: new Date().toISOString(),
@@ -86,7 +91,6 @@ app.post("/api/queue", async (req, res) => {
   }
 });
 
-// TODO: change to /api/queue/:queuetype/:id
 app.post("/api/queue/:id", async (req, res) => {
   const entryId = req.params.id;
   if (!req.headers.authorization) {
