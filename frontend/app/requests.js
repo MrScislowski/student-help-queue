@@ -53,12 +53,12 @@ export const attemptLogin = async ({ credential }) => {
   return response.data;
 };
 
-export const addName = async () => {
+export const addName = async (queueName) => {
   let config = {};
   if (token) {
     config = {
       headers: { Authorization: token },
     };
   }
-  await axios.post(`${baseUrl}`, null, config);
+  await axios.post(`${baseUrl}`, { queueName }, config);
 };

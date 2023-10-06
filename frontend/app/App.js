@@ -31,7 +31,8 @@ const App = () => {
     },
   });
 
-  const addNameMutation = useMutation(addName, {
+  const addNameMutation = useMutation({
+    mutationFn: (queueName) => addName(queueName),
     onSuccess: () => {
       queryClient.invalidateQueries("activeEntries");
     },
@@ -109,7 +110,7 @@ const App = () => {
         />
       )}
       {user && (
-        <button onClick={() => addNameMutation.mutate()}>
+        <button onClick={() => addNameMutation.mutate("help")}>
           Add name to queue
         </button>
       )}

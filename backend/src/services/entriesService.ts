@@ -42,7 +42,7 @@ const addActiveEntry = async (
       user,
       timestamp: new Date().toISOString(),
     },
-    queueName,
+    queueName: queueName,
   });
 
   await newEntry.save();

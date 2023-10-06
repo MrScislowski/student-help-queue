@@ -74,8 +74,7 @@ app.post("/api/queue", async (req, res) => {
     if (!("queueName" in req.body) || !req.body.queueName) {
       throw new Error("queueName not specified");
     }
-
-    const queueName = parseString(req.body);
+    const queueName = parseString(req.body.queueName);
     const newEntry = await entriesService.addActiveEntry(userInfo, queueName);
 
     res.send({
