@@ -26,3 +26,9 @@ export interface User {
   givenName: string;
   familyName: string;
 }
+
+export interface Account {
+  user: User;
+  activeQueues: string[];
+  archivedQueues: string[];
+}

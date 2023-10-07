@@ -24,7 +24,6 @@ const getArchivedEntries = async () => {
   return results;
 };
 
-// TODO: need to put it in the correct queue type
 const addActiveEntry = async (
   user: User,
   queueName: string

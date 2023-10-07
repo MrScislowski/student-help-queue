@@ -23,6 +23,7 @@ import {
 } from "./utils";
 import entriesService from "./services/entriesService";
 import { ActiveEntry } from "./types";
+import accountsService from "./services/accountsService";
 
 const PORT = config.PORT;
 const MONGODB_URI = config.DB_URL;
@@ -70,7 +71,6 @@ app.post("/api/queue", async (req, res) => {
   const userInfo = parseUser(jwt.verify(token, config.SECRET));
 
   try {
-    // TODO: need to specify which queue they're adding their name to.
     if (!("queueName" in req.body) || !req.body.queueName) {
       throw new Error("queueName not specified");
     }
@@ -140,6 +140,24 @@ app.post("/api/login", async (req, res) => {
     return res.status(500).json(error);
   }
 });
+
+app.get("/api/account", async (req, res) => {
+  if (!req.headers.authorization) {
+    return res.status(400).send("token required in authorization header");
+  }
+  const token = req.headers.authorization.substring(7);
+
+  const userInfo = parseUser(jwt.verify(token, config.SECRET));
+
+  try {
+    const accountInfo = await accountsService.getAccountInfo(userInfo);
+    res.send(accountInfo);
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+});
+
+// TODO: make an endpoint that edits the queues (add one, delete one, make one active, etc)
 
 app.get("/", (_req, res) => {
   res.send("welcome");

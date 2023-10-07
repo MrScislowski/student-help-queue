@@ -1,21 +1,26 @@
 import mongoose from "mongoose";
-import { ActiveEntry } from "../types";
+import { ActiveEntry, User } from "../types";
+
+const userSchema = new mongoose.Schema<User>({
+  email: {
+    type: String,
+    required: true,
+  },
+  givenName: {
+    type: String,
+    required: true,
+  },
+  familyName: {
+    type: String,
+    required: true,
+  },
+});
 
 const schema = new mongoose.Schema<ActiveEntry>({
   request: {
     user: {
-      email: {
-        type: String,
-        required: true,
-      },
-      givenName: {
-        type: String,
-        required: true,
-      },
-      familyName: {
-        type: String,
-        required: true,
-      },
+      type: userSchema,
+      required: true,
     },
     timestamp: {
       type: String,
@@ -30,4 +35,4 @@ const schema = new mongoose.Schema<ActiveEntry>({
 
 const ActiveModel = mongoose.model<ActiveEntry>("Active", schema);
 
-export { ActiveModel as Active };
+export { ActiveModel as Active, userSchema };

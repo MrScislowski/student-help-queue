@@ -1,21 +1,12 @@
 import mongoose from "mongoose";
 import { ArchivedEntry } from "../types";
+import { userSchema } from "./active";
 
 const schema = new mongoose.Schema<ArchivedEntry>({
   request: {
     user: {
-      email: {
-        type: String,
-        required: true,
-      },
-      givenName: {
-        type: String,
-        required: true,
-      },
-      familyName: {
-        type: String,
-        required: true,
-      },
+      type: userSchema,
+      required: true,
     },
     timestamp: {
       type: String,
@@ -24,18 +15,8 @@ const schema = new mongoose.Schema<ArchivedEntry>({
   },
   resolution: {
     user: {
-      email: {
-        type: String,
-        required: true,
-      },
-      givenName: {
-        type: String,
-        required: true,
-      },
-      familyName: {
-        type: String,
-        required: true,
-      },
+      type: userSchema,
+      required: true,
     },
     timestamp: {
       type: String,
