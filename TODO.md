@@ -1,6 +1,9 @@
-[ ] make "add" on backend
-[ ] test on frontend
-[ ] make & test the rest
+[ ] test "add" on frontend
+[ ] make on backend then test using frontend for:
+
+- archive a queue
+- unarchive a queue
+- delete a queue
 
 [ ] frontend: implement changing which queues are active
 [ ] frontend: make the two queues side-by-side, and responsive to screen
