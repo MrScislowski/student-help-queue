@@ -7,6 +7,7 @@ import {
   setToken,
   getActiveEntries,
   getAccountInfo,
+  addQueue,
 } from "./requests";
 import Queue from "./components/Queue";
 import { GoogleLogin } from "@react-oauth/google";
@@ -16,6 +17,11 @@ const App = () => {
   const [timeDiff, setTimeDiff] = useState(0);
   const [user, setUser] = useState(null);
   const [entries, setEntries] = useState([]);
+  const [proposedNewQueueName, setProposedNewQueueName] = useState("");
+  const [accountInfo, setAccountInfo] = useState({
+    activeQueues: [],
+    archivedQueues: [],
+  });
 
   useEffect(() => {
     const storedUserInfo = window.localStorage.getItem("studentHelpQueueUser");
@@ -67,8 +73,6 @@ const App = () => {
     return () => interval;
   }, []);
 
-  const [accountInfo, setAccountInfo] = useState({ activeQueues: [] });
-
   useEffect(() => {
     const doTheFetch = async () => {
       const retrievedInfo = await getAccountInfo();
@@ -87,6 +91,21 @@ const App = () => {
       return `${hours}h ${minutes - hours * 60}m`;
     }
     return `${minutes}m`;
+  };
+
+  const attemptNewQueueCreation = (queueName) => {
+    if (
+      accountInfo.activeQueues.includes(queueName) ||
+      accountInfo.archivedQueues.includes(queueName)
+    ) {
+      alert("There's already a queue with that name");
+      return;
+    }
+
+    addQueue(queueName).then(() => {
+      setProposedNewQueueName("");
+      // TODO: use queryClient instead of useEffect, then invalidate queries here...
+    });
   };
 
   return (
@@ -121,6 +140,15 @@ const App = () => {
           onError={(error) => console.log(`Login error: ${error}`)}
         />
       )}
+      <input
+        type="text"
+        value={proposedNewQueueName}
+        onChange={(e) => setProposedNewQueueName(e.target.value)}
+      ></input>
+      <button onClick={() => attemptNewQueueCreation(proposedNewQueueName)}>
+        Add new queue
+      </button>
+      <br></br>
       {accountInfo.activeQueues.map((queueName) => {
         return (
           <React.Fragment key={`${queueName}-fragment`}>
