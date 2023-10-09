@@ -1,4 +1,7 @@
-[ ] backend: add a "Account" database type which can allow us to change which queues are active
+[ ] make "add" on backend
+[ ] test on frontend
+[ ] make & test the rest
+
 [ ] frontend: implement changing which queues are active
 [ ] frontend: make the two queues side-by-side, and responsive to screen
 [ ] frontend: don't display the add name button if your name is already in there

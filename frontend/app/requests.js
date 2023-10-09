@@ -62,3 +62,30 @@ export const addName = async (queueName) => {
   }
   await axios.post(`${baseUrl}`, { queueName }, config);
 };
+
+const accountUrl =
+  process.env.NODE_ENV === "development"
+    ? `http://localhost:3001/api/account`
+    : "https://student-help-queue-backend-dbc8c16c81bf.herokuapp.com/api/account";
+
+export const getAccountInfo = async () => {
+  let config = {};
+  if (token) {
+    config = {
+      headers: { Authorization: token },
+    };
+  }
+
+  return (await axios.get(`${accountUrl}`, config)).data;
+};
+
+export const addQueue = async (queueName) => {
+  let config = {};
+  if (token) {
+    config = {
+      headers: { Authorization: token },
+    };
+  }
+
+  await axios.post(`${accountUrl}/queues`, { queueName }, config);
+};

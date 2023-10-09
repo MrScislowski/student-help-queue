@@ -6,9 +6,11 @@ import {
   resolveEntry,
   setToken,
   getActiveEntries,
+  getAccountInfo,
 } from "./requests";
 import Queue from "./components/Queue";
 import { GoogleLogin } from "@react-oauth/google";
+import React from "react";
 
 const App = () => {
   const [timeDiff, setTimeDiff] = useState(0);
@@ -65,6 +67,16 @@ const App = () => {
     return () => interval;
   }, []);
 
+  const [accountInfo, setAccountInfo] = useState({ activeQueues: [] });
+
+  useEffect(() => {
+    const doTheFetch = async () => {
+      const retrievedInfo = await getAccountInfo();
+      setAccountInfo(retrievedInfo);
+    };
+    doTheFetch();
+  }, []);
+
   const getEntryAge = (timestamp) => {
     const millis = currentTime - new Date(timestamp).getTime() - timeDiff;
     const minutes = Math.floor(millis / 1000 / 60);
@@ -109,9 +121,9 @@ const App = () => {
           onError={(error) => console.log(`Login error: ${error}`)}
         />
       )}
-      {["help", "completed"].map((queueName) => {
+      {accountInfo.activeQueues.map((queueName) => {
         return (
-          <>
+          <React.Fragment key={`${queueName}-fragment`}>
             <button onClick={() => addNameMutation.mutate(queueName)}>
               + {`${queueName} queue`}
             </button>
@@ -120,7 +132,7 @@ const App = () => {
               resolveEntryMutation={resolveEntryMutation}
               getEntryAge={getEntryAge}
             />
-          </>
+          </React.Fragment>
         );
       })}
     </>

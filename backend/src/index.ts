@@ -153,11 +153,39 @@ app.get("/api/account", async (req, res) => {
     const accountInfo = await accountsService.getAccountInfo(userInfo);
     res.send(accountInfo);
   } catch (error) {
+    console.log(`error: ${JSON.stringify(error)}`);
     return res.status(500).json(error);
   }
 });
 
-// TODO: make an endpoint that edits the queues (add one, delete one, make one active, etc)
+// add a new queue
+app.post("/api/account/queues", async (req, res) => {
+  if (!req.headers.authorization) {
+    return res.status(400).send("token required in authorization header");
+  }
+  const token = req.headers.authorization.substring(7);
+
+  const userInfo = parseUser(jwt.verify(token, config.SECRET));
+
+  if (!("queueName" in req.body) || !req.body.queueName) {
+    return res.status(400).send("queueName required in request body");
+  }
+
+  try {
+    const queueName = parseString(req.body.queueName);
+
+    const updatedAccountInfo = await accountsService.addQueue(
+      userInfo,
+      queueName
+    );
+
+    res.send(updatedAccountInfo);
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+});
+
+// TODO: make endpoints that archive an active queue, make an archived queue active, and delete either type of queue
 
 app.get("/", (_req, res) => {
   res.send("welcome");
