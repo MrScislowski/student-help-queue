@@ -5,6 +5,8 @@
   [x] list all the archived code at the bottom, below the queues
   [x] add a button or something to archive the queue
 - unarchive a queue
+  [x] add backend code to unarchive a queue
+  [ ] add frontend code to unarchive a queue
 - delete a queue
 
 [ ] frontend: implement changing which queues are active

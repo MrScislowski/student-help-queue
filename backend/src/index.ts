@@ -203,13 +203,39 @@ app.post("/api/account/queues/archive", async (req, res) => {
   try {
     const queueName = parseString(req.body.queueName);
 
-    // TODO: add a method to the service
     const updatedInfo = await accountsService.archiveQueue(userInfo, queueName);
     res.send(updatedInfo);
   } catch (error) {
     return res.status(500).json(error);
   }
 });
+
+// unarchive aka reactivate aka activate a queue
+app.post("/api/account/queues/reactivate", async (req, res) => {
+  if (!req.headers.authorization) {
+    return res.status(400).send("token required in authorization header");
+  }
+  const token = req.headers.authorization.substring(7);
+
+  const userInfo = parseUser(jwt.verify(token, config.SECRET));
+
+  if (!("queueName" in req.body) || !req.body.queueName) {
+    return res.status(400).send("queueName required in request body");
+  }
+
+  try {
+    const queueName = parseString(req.body.queueName);
+
+    const updatedInfo = await accountsService.activateQueue(
+      userInfo,
+      queueName
+    );
+    res.send(updatedInfo);
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+});
+
 app.get("/", (_req, res) => {
   res.send("welcome");
 });
