@@ -1,17 +1,8 @@
-[ ] make on backend then test using frontend for:
-
-- archive a queue... let's list all the archived queues at the bottom, and you can delete / re-institute them from there.
-  [x] add backend code to archive a queue
-  [x] list all the archived code at the bottom, below the queues
-  [x] add a button or something to archive the queue
-- unarchive a queue
-  [x] add backend code to unarchive a queue
-  [x] add frontend code to unarchive a queue
-- delete a queue
-  [x] add backend code
-  [x] add frontend code
-
+[ ] refactor frontend code so that it's not so ugly
+[ ] use tanstack query for the account queries also
 [ ] frontend: make the two queues side-by-side, and responsive to screen
+[ ] move this account management to its own app...
+
 [ ] frontend: don't display the add name button if your name is already in there
 [ ] maybe display the most recently removed name for just a minute, so that if I incorrectly remove someone, I can get back to it. Maybe via a notifier with an "undo" button
 
