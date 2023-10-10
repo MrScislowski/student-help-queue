@@ -102,9 +102,37 @@ const activateQueue = async (
   return updatedAccountInfo;
 };
 
+const deleteQueue = async (user: User, queueName: string): Promise<Account> => {
+  const accountInfo = await AccountModel.findOne({
+    "user.email": user.email,
+  });
+
+  if (!accountInfo) {
+    throw new Error(`account for email ${user.email} not found`);
+  }
+
+  if (!accountInfo.archivedQueues.includes(queueName)) {
+    throw new Error(
+      `${queueName} is not an archived queue so cannot be deleted`
+    );
+  }
+
+  const updatedAccountInfo = await AccountModel.findOneAndUpdate(
+    { _id: accountInfo._id },
+    { $pull: { archivedQueues: queueName } }
+  );
+
+  if (!updatedAccountInfo) {
+    throw new Error(`unable to update the queue`);
+  }
+
+  return updatedAccountInfo;
+};
+
 export default {
   getAccountInfo,
   addQueue,
   archiveQueue,
   activateQueue,
+  deleteQueue,
 };

@@ -111,3 +111,14 @@ export const activateQueue = async (queueName) => {
 
   await axios.post(`${accountUrl}/queues/reactivate`, { queueName }, config);
 };
+
+export const deleteQueue = async (queueName) => {
+  let config = {};
+  if (token) {
+    config = {
+      headers: { Authorization: token },
+    };
+  }
+
+  await axios.post(`${accountUrl}/queues/delete`, { queueName }, config);
+};
