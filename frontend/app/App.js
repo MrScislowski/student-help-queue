@@ -8,8 +8,10 @@ import {
   getActiveEntries,
   getAccountInfo,
   addQueue,
+  archiveQueue,
 } from "./requests";
 import Queue from "./components/Queue";
+import ArchivedQueue from "./components/ArchivedQueue";
 import { GoogleLogin } from "@react-oauth/google";
 import React from "react";
 
@@ -155,6 +157,7 @@ const App = () => {
             <button onClick={() => addNameMutation.mutate(queueName)}>
               + {`${queueName} queue`}
             </button>
+            <button onClick={() => archiveQueue(queueName)}> x</button>
             <Queue
               entries={entries.filter((entry) => entry.queueName === queueName)}
               resolveEntryMutation={resolveEntryMutation}
@@ -163,6 +166,19 @@ const App = () => {
           </React.Fragment>
         );
       })}
+      <br></br>
+      <div>
+        <p>Archived queues: </p>
+        <ul>
+          {accountInfo.archivedQueues.map((queueName) => {
+            return (
+              <li key={queueName}>
+                <ArchivedQueue key={queueName} name={queueName} />
+              </li>
+            );
+          })}
+        </ul>
+      </div>
     </>
   );
 };

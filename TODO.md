@@ -1,7 +1,9 @@
-[ ] test "add" on frontend
 [ ] make on backend then test using frontend for:
 
-- archive a queue
+- archive a queue... let's list all the archived queues at the bottom, and you can delete / re-institute them from there.
+  [x] add backend code to archive a queue
+  [x] list all the archived code at the bottom, below the queues
+  [x] add a button or something to archive the queue
 - unarchive a queue
 - delete a queue
 

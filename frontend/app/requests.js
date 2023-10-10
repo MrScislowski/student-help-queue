@@ -89,3 +89,14 @@ export const addQueue = async (queueName) => {
 
   await axios.post(`${accountUrl}/queues`, { queueName }, config);
 };
+
+export const archiveQueue = async (queueName) => {
+  let config = {};
+  if (token) {
+    config = {
+      headers: { Authorization: token },
+    };
+  }
+
+  await axios.post(`${accountUrl}/queues/archive`, { queueName }, config);
+};

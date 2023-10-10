@@ -44,7 +44,36 @@ const addQueue = async (user: User, queueName: string): Promise<Account> => {
   return updatedAccountInfo;
 };
 
+const archiveQueue = async (
+  user: User,
+  queueName: string
+): Promise<Account> => {
+  const accountInfo = await AccountModel.findOne({
+    "user.email": user.email,
+  });
+
+  if (!accountInfo) {
+    throw new Error(`account for email ${user.email} not found`);
+  }
+
+  if (!accountInfo.activeQueues.includes(queueName)) {
+    throw new Error(`${queueName} is already an active queue`);
+  }
+
+  const updatedAccountInfo = await AccountModel.findOneAndUpdate(
+    { _id: accountInfo._id },
+    { $pull: { activeQueues: queueName }, $push: { archivedQueues: queueName } }
+  );
+
+  if (!updatedAccountInfo) {
+    throw new Error(`unable to update the queue`);
+  }
+
+  return updatedAccountInfo;
+};
+
 export default {
   getAccountInfo,
   addQueue,
+  archiveQueue,
 };
