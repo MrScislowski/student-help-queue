@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { setToken } from "./requests";
 import Header from "./components/Header";
 import LoginButton from "./components/LoginButton";
+import QueueSet from "./components/QueueSet";
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -29,6 +30,7 @@ const App = () => {
   return (
     <>
       <Header user={user} handleLogout={handleLogout} />
+      <QueueSet user={user} />
     </>
   );
 };
