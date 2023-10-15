@@ -27,6 +27,14 @@ export interface User {
   familyName: string;
 }
 
+export interface Session {
+  user: User;
+  selectedClass: {
+    name: string;
+    teacherEmail: string;
+  };
+}
+
 export interface Account {
   user: User;
   activeQueues: string[];

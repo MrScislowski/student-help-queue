@@ -1,17 +1,22 @@
 import { Active } from "../models/active";
 import Archived from "../models/archived";
-import { ActiveEntry, ArchivedEntry, ResolutionStatus, User } from "../types";
+import {
+  ActiveEntry,
+  ArchivedEntry,
+  ResolutionStatus,
+  Session,
+} from "../types";
 import { hasAdminRights } from "../utils";
 
 const getActiveEntries = async (
-  user: User
+  session: Session
 ): Promise<Omit<ActiveEntry, "_id">[]> => {
   const allResults: ActiveEntry[] = await Active.find({}).lean();
-  const isAdmin = hasAdminRights(user);
+  const isAdmin = hasAdminRights(session.user);
 
   // leave out the id if the user doesn't have access
   const resultsToReturn = allResults.map((entry) => {
-    return isAdmin || entry.request.user.email === user.email
+    return isAdmin || entry.request.user.email === session.user.email
       ? entry
       : { request: entry.request, queueName: entry.queueName };
   });
@@ -25,11 +30,11 @@ const getArchivedEntries = async () => {
 };
 
 const addActiveEntry = async (
-  user: User,
+  session: Session,
   queueName: string
 ): Promise<ActiveEntry> => {
   const hasDuplicate = await Active.findOne({
-    "request.user.email": user.email,
+    "request.user.email": session.user.email,
     queueName: queueName,
   });
   if (hasDuplicate) {
@@ -38,7 +43,7 @@ const addActiveEntry = async (
 
   const newEntry = new Active({
     request: {
-      user,
+      session: session.user,
       timestamp: new Date().toISOString(),
     },
     queueName: queueName,
@@ -51,7 +56,7 @@ const addActiveEntry = async (
 
 const resolveActiveEntry = async (
   id: string,
-  user: User,
+  session: Session,
   status: ResolutionStatus
 ): Promise<ArchivedEntry> => {
   const activeEntry = await Active.findById(id);
@@ -59,7 +64,10 @@ const resolveActiveEntry = async (
     throw new Error(`Active entry with id ${id} not found. `);
   }
 
-  if (user.email !== activeEntry.request.user.email && !hasAdminRights(user)) {
+  if (
+    session.user.email !== activeEntry.request.user.email &&
+    !hasAdminRights(session.user)
+  ) {
     throw new Error(
       `Cannot resolve entry belonging to someone else, unless you have admin rights`
     );
@@ -68,7 +76,7 @@ const resolveActiveEntry = async (
   const archivedVersion = new Archived({
     ...(activeEntry.toObject() as object),
     resolution: {
-      user,
+      user: session.user,
       status,
       timestamp: new Date().toISOString(),
     },

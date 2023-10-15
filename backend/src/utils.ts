@@ -1,4 +1,4 @@
-import { ResolutionStatus, User } from "./types";
+import { ResolutionStatus, User, Session } from "./types";
 
 const isString = (text: unknown): text is string => {
   return typeof text === "string" || text instanceof String;
@@ -41,6 +41,40 @@ export const parseUser = (data: unknown): User => {
     };
   } else {
     throw new Error("missing one or more required properties");
+  }
+};
+
+export const parseSession = (data: unknown): Session => {
+  if (!data || typeof data !== "object") {
+    throw new Error("login payload needs to be an object");
+  }
+
+  let userInfo: User;
+
+  if ("user" in data) {
+    userInfo = parseUser(data.user);
+  } else {
+    throw new Error("missing user property");
+  }
+
+  if (
+    "selectedClass" in data &&
+    data.selectedClass &&
+    typeof data.selectedClass === "object" &&
+    "name" in data.selectedClass &&
+    "teacherEmail" in data.selectedClass
+  ) {
+    return {
+      user: userInfo,
+      selectedClass: {
+        name: parseString(data.selectedClass.name),
+        teacherEmail: parseString(data.selectedClass.teacherEmail),
+      },
+    };
+  } else {
+    throw new Error(
+      "selectedClass property doesn't conform to required structure"
+    );
   }
 };
 

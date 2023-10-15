@@ -1,25 +1,34 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { Router } from "express";
-import { User } from "../types";
+import { Session } from "../types";
 import { ActiveEntry } from "../types";
 import jwt from "jsonwebtoken";
-import { parseArchivedEntry, parseString, parseUser } from "../utils";
+import { parseArchivedEntry, parseString, parseSession } from "../utils";
 import entriesService from "../services/entriesService";
 import config from "../config";
 
 const router = Router();
 
-router.get("/", async (req, res) => {
-  let userInfo: User;
+router.use((req, res, next) => {
   if (!req.headers.authorization) {
-    userInfo = { email: "", familyName: "", givenName: "" };
-  } else {
-    const token = req.headers.authorization.substring(7);
-    userInfo = parseUser(jwt.verify(token, config.SECRET));
+    return res.status(400).send("token required in authorization header");
   }
+  const token = req.headers.authorization.substring(7);
+
+  const sessionInfo = parseSession(jwt.verify(token, config.SECRET));
+
+  // this seemed too intense: https://stackoverflow.com/questions/55362741/overwrite-any-in-typescript-when-merging-interfaces
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  res.locals.session = sessionInfo;
+  next();
+});
+
+router.get("/", async (req, res) => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const session: Session = res.locals.session;
 
   const results: Omit<ActiveEntry, "_id">[] =
-    await entriesService.getActiveEntries(userInfo);
+    await entriesService.getActiveEntries(session);
   res.send({
     timestamp: new Date().toISOString(),
     entries: results,
@@ -27,19 +36,15 @@ router.get("/", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  if (!req.headers.authorization) {
-    return res.status(400).send("token required in authorization header");
-  }
-  const token = req.headers.authorization.substring(7);
-
-  const userInfo = parseUser(jwt.verify(token, config.SECRET));
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const session: Session = res.locals.session;
 
   try {
     if (!("queueName" in req.body) || !req.body.queueName) {
       throw new Error("queueName not specified");
     }
     const queueName = parseString(req.body.queueName);
-    const newEntry = await entriesService.addActiveEntry(userInfo, queueName);
+    const newEntry = await entriesService.addActiveEntry(session, queueName);
 
     res.send({
       timestamp: new Date().toISOString(),
@@ -55,19 +60,16 @@ router.post("/", async (req, res) => {
 });
 
 router.post("/:id", async (req, res) => {
-  const entryId = req.params.id;
-  if (!req.headers.authorization) {
-    return res.status(400).send("token required in authorization header");
-  }
-  const token = req.headers.authorization.substring(7);
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const session: Session = res.locals.session;
 
-  const userInfo = parseUser(jwt.verify(token, config.SECRET));
+  const entryId = req.params.id;
 
   try {
     const resolutionData = parseArchivedEntry(req.body);
     const archivedVersion = await entriesService.resolveActiveEntry(
       entryId,
-      userInfo,
+      session,
       resolutionData
     );
     return res.send({

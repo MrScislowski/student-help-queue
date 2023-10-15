@@ -14,13 +14,7 @@ app.use((_req: Request, _res: Response, next: NextFunction) => {
   next();
 }, cors({ maxAge: 84600 }));
 
-import {
-  hasAdminRights,
-  parseArchivedEntry,
-  parseLoginPayload,
-  parseString,
-  parseUser,
-} from "./utils";
+import { parseLoginPayload, parseString, parseUser } from "./utils";
 import entriesService from "./services/entriesService";
 import accountsService from "./services/accountsService";
 
@@ -60,9 +54,15 @@ app.post("/api/login", async (req, res) => {
 
     const userInfo = parseLoginPayload(payload);
 
-    const token = jwt.sign(userInfo, config.SECRET);
+    // FIXME: in future, need to involve frontend in selecting the relevant class
+    const sessionObject = {
+      user: userInfo,
+      selectedClass: { name: "", teacherEmail: "dscislowski@usd266.com" },
+    };
 
-    return res.send({ ...userInfo, isAdmin: hasAdminRights(userInfo), token });
+    const token = jwt.sign(sessionObject, config.SECRET);
+
+    return res.send({ ...userInfo, token });
   } catch (error) {
     return res.status(500).json(error);
   }
