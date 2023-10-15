@@ -27,8 +27,20 @@ const CancelButton = styled.button`
   border-radius: 5px;
 `;
 
+const getEntryAge = (timestamp) => {
+  const millis = currentTime - new Date(timestamp).getTime() - timeDiff;
+  const minutes = Math.floor(millis / 1000 / 60);
+  if (minutes < 1) {
+    return "< 1m";
+  } else if (minutes > 60) {
+    const hours = Math.floor(minutes / 60);
+    return `${hours}h ${minutes - hours * 60}m`;
+  }
+  return `${minutes}m`;
+};
+
 const Queue = (props) => {
-  const { entries, resolveEntryMutation, getEntryAge } = props;
+  const { entries, resolveEntryMutation, timeDiff } = props;
 
   return (
     <Container>
