@@ -1,10 +1,10 @@
 import { Fragment, useState, useEffect } from "react";
 import Queue from "./Queue";
-import {
-  useAddNameMutation,
-  useGetActiveEntries,
-  useResolveEntryMutation,
-} from "../queries";
+// import {
+//   useAddNameMutation,
+//   useGetActiveEntries,
+//   useResolveEntryMutation,
+// } from "../queries";
 import { User } from "../types";
 
 interface QueueSetProps {
@@ -31,25 +31,25 @@ const QueueSet = (props: QueueSetProps) => {
     </>
   );
 
-  return (
-    <>
-      {accountInfo.activeQueues.map((queueName) => {
-        return (
-          <Fragment key={`${queueName}-fragment`}>
-            <button onClick={() => addNameMutation.mutate(queueName)}>
-              + {`${queueName} queue`}
-            </button>
-            <button onClick={() => archiveQueue(queueName)}> x</button>
-            <Queue
-              entries={entries.filter((entry) => entry.queueName === queueName)}
-              resolveEntryMutation={resolveEntryMutation}
-              getEntryAge={getEntryAge}
-            />
-          </Fragment>
-        );
-      })}
-    </>
-  );
+  // return (
+  //   <>
+  //     {accountInfo.activeQueues.map((queueName) => {
+  //       return (
+  //         <Fragment key={`${queueName}-fragment`}>
+  //           <button onClick={() => addNameMutation.mutate(queueName)}>
+  //             + {`${queueName} queue`}
+  //           </button>
+  //           <button onClick={() => archiveQueue(queueName)}> x</button>
+  //           <Queue
+  //             entries={entries.filter((entry) => entry.queueName === queueName)}
+  //             resolveEntryMutation={resolveEntryMutation}
+  //             getEntryAge={getEntryAge}
+  //           />
+  //         </Fragment>
+  //       );
+  //     })}
+  //   </>
+  // );
 };
 
 export default QueueSet;
