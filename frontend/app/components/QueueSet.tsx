@@ -1,4 +1,4 @@
-import { React, useState, useEffect } from "react";
+import { Fragment, useState, useEffect } from "react";
 import Queue from "./Queue";
 import {
   useAddNameMutation,
@@ -30,7 +30,7 @@ const QueueSet = (props) => {
     <>
       {accountInfo.activeQueues.map((queueName) => {
         return (
-          <React.Fragment key={`${queueName}-fragment`}>
+          <Fragment key={`${queueName}-fragment`}>
             <button onClick={() => addNameMutation.mutate(queueName)}>
               + {`${queueName} queue`}
             </button>
@@ -40,7 +40,7 @@ const QueueSet = (props) => {
               resolveEntryMutation={resolveEntryMutation}
               getEntryAge={getEntryAge}
             />
-          </React.Fragment>
+          </Fragment>
         );
       })}
     </>

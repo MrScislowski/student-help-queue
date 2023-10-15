@@ -4,9 +4,10 @@ import { setToken } from "./requests";
 import Header from "./components/Header";
 import LoginButton from "./components/LoginButton";
 import QueueSet from "./components/QueueSet";
+import { User } from "./types";
 
 const App = () => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     const storedUserInfo = window.localStorage.getItem("studentHelpQueueUser");

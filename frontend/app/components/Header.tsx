@@ -1,4 +1,11 @@
-const Header = (props) => {
+import { User } from "../types";
+
+interface HeaderProps {
+  user: User;
+  handleLogout: () => void;
+}
+
+const Header = (props: HeaderProps) => {
   const { user, handleLogout } = props;
 
   return (
