@@ -5,8 +5,13 @@ import {
   useGetActiveEntries,
   useResolveEntryMutation,
 } from "../queries";
+import { User } from "../types";
 
-const QueueSet = (props) => {
+interface QueueSetProps {
+  user: User;
+}
+
+const QueueSet = (props: QueueSetProps) => {
   const [currentTime, setCurrentTime] = useState(new Date().getTime());
   const [theirTime, setTheirTime] = useState(new Date().getTime());
   const [entries, setEntries] = useState([]);

@@ -1,5 +1,3 @@
-[ ] convert the frontend to typescript; currently using https://nextjs.org/learn/excel/typescript/create-tsconfig
-
 [ ] add querying abilities back into frontend
 [ ] move this account management to its own app...
 
