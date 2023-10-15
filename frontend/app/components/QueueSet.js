@@ -1,10 +1,10 @@
-import { React } from "react";
+import { React, useState, useEffect } from "react";
 import Queue from "./Queue";
 import {
   useAddNameMutation,
   useGetActiveEntries,
   useResolveEntryMutation,
-} from "./queries";
+} from "../queries";
 
 const QueueSet = (props) => {
   const [currentTime, setCurrentTime] = useState(new Date().getTime());
@@ -20,9 +20,12 @@ const QueueSet = (props) => {
 
   // do the fetch here...
 
-  // TODO: the activeQueues is part of account info, which I had refactored to QueueAdmin...
-  // I guess we make some sort of REST endpoint that can query which queues are active...?
-  // that's starting to feel like a bloatware of many requests. But maybe not too bad.
+  return (
+    <>
+      <p> Queues will go here ...</p>
+    </>
+  );
+
   return (
     <>
       {accountInfo.activeQueues.map((queueName) => {

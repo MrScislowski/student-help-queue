@@ -68,22 +68,22 @@ app.post("/api/login", async (req, res) => {
   }
 });
 
-app.get("/api/account", async (req, res) => {
-  if (!req.headers.authorization) {
-    return res.status(400).send("token required in authorization header");
-  }
-  const token = req.headers.authorization.substring(7);
+// app.get("/api/account", async (req, res) => {
+//   if (!req.headers.authorization) {
+//     return res.status(400).send("token required in authorization header");
+//   }
+//   const token = req.headers.authorization.substring(7);
 
-  const userInfo = parseUser(jwt.verify(token, config.SECRET));
+//   const userInfo = parseUser(jwt.verify(token, config.SECRET));
 
-  try {
-    const accountInfo = await accountsService.getAccountInfo(userInfo);
-    res.send(accountInfo);
-  } catch (error) {
-    console.log(`error: ${JSON.stringify(error)}`);
-    return res.status(500).json(error);
-  }
-});
+//   try {
+//     const accountInfo = await accountsService.getAccountInfo(userInfo);
+//     res.send(accountInfo);
+//   } catch (error) {
+//     console.log(`error: ${JSON.stringify(error)}`);
+//     return res.status(500).json(error);
+//   }
+// });
 
 // add a new queue
 app.post("/api/account/queues", async (req, res) => {
