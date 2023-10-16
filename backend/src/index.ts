@@ -7,6 +7,7 @@ import cors from "cors";
 import { OAuth2Client } from "google-auth-library";
 import jwt from "jsonwebtoken";
 import activeEntriesRouter from "./controllers/activeEntries";
+import queuesRouter from "./controllers/queues";
 
 const app = express();
 app.use(express.json());
@@ -14,9 +15,10 @@ app.use((_req: Request, _res: Response, next: NextFunction) => {
   next();
 }, cors({ maxAge: 84600 }));
 
-import { parseLoginPayload, parseString, parseUser } from "./utils";
+// import { parseLoginPayload, parseString, parseUser } from "./utils";
+import { parseLoginPayload } from "./utils";
 import entriesService from "./services/entriesService";
-import accountsService from "./services/accountsService";
+// import accountsService from "./services/accountsService";
 
 const PORT = config.PORT;
 const MONGODB_URI = config.DB_URL;
@@ -31,6 +33,8 @@ mongoose
   });
 
 app.use("/api/activeEntries", activeEntriesRouter);
+
+app.use("/api/queues", queuesRouter);
 
 app.get("/api/archived", async (_req, res) => {
   const results = await entriesService.getArchivedEntries();
@@ -85,104 +89,104 @@ app.post("/api/login", async (req, res) => {
 //   }
 // });
 
-// add a new queue
-app.post("/api/account/queues", async (req, res) => {
-  if (!req.headers.authorization) {
-    return res.status(400).send("token required in authorization header");
-  }
-  const token = req.headers.authorization.substring(7);
+// // add a new queue
+// app.post("/api/account/queues", async (req, res) => {
+//   if (!req.headers.authorization) {
+//     return res.status(400).send("token required in authorization header");
+//   }
+//   const token = req.headers.authorization.substring(7);
 
-  const userInfo = parseUser(jwt.verify(token, config.SECRET));
+//   const userInfo = parseUser(jwt.verify(token, config.SECRET));
 
-  if (!("queueName" in req.body) || !req.body.queueName) {
-    return res.status(400).send("queueName required in request body");
-  }
+//   if (!("queueName" in req.body) || !req.body.queueName) {
+//     return res.status(400).send("queueName required in request body");
+//   }
 
-  try {
-    const queueName = parseString(req.body.queueName);
+//   try {
+//     const queueName = parseString(req.body.queueName);
 
-    const updatedAccountInfo = await accountsService.addQueue(
-      userInfo,
-      queueName
-    );
+//     const updatedAccountInfo = await accountsService.addQueue(
+//       userInfo,
+//       queueName
+//     );
 
-    res.send(updatedAccountInfo);
-  } catch (error) {
-    return res.status(500).json(error);
-  }
-});
+//     res.send(updatedAccountInfo);
+//   } catch (error) {
+//     return res.status(500).json(error);
+//   }
+// });
 
-// archive a queue
-app.post("/api/account/queues/archive", async (req, res) => {
-  if (!req.headers.authorization) {
-    return res.status(400).send("token required in authorization header");
-  }
-  const token = req.headers.authorization.substring(7);
+// // archive a queue
+// app.post("/api/account/queues/archive", async (req, res) => {
+//   if (!req.headers.authorization) {
+//     return res.status(400).send("token required in authorization header");
+//   }
+//   const token = req.headers.authorization.substring(7);
 
-  const userInfo = parseUser(jwt.verify(token, config.SECRET));
+//   const userInfo = parseUser(jwt.verify(token, config.SECRET));
 
-  if (!("queueName" in req.body) || !req.body.queueName) {
-    return res.status(400).send("queueName required in request body");
-  }
+//   if (!("queueName" in req.body) || !req.body.queueName) {
+//     return res.status(400).send("queueName required in request body");
+//   }
 
-  try {
-    const queueName = parseString(req.body.queueName);
+//   try {
+//     const queueName = parseString(req.body.queueName);
 
-    const updatedInfo = await accountsService.archiveQueue(userInfo, queueName);
-    res.send(updatedInfo);
-  } catch (error) {
-    return res.status(500).json(error);
-  }
-});
+//     const updatedInfo = await accountsService.archiveQueue(userInfo, queueName);
+//     res.send(updatedInfo);
+//   } catch (error) {
+//     return res.status(500).json(error);
+//   }
+// });
 
-// unarchive aka reactivate aka activate a queue
-app.post("/api/account/queues/reactivate", async (req, res) => {
-  if (!req.headers.authorization) {
-    return res.status(400).send("token required in authorization header");
-  }
-  const token = req.headers.authorization.substring(7);
+// // unarchive aka reactivate aka activate a queue
+// app.post("/api/account/queues/reactivate", async (req, res) => {
+//   if (!req.headers.authorization) {
+//     return res.status(400).send("token required in authorization header");
+//   }
+//   const token = req.headers.authorization.substring(7);
 
-  const userInfo = parseUser(jwt.verify(token, config.SECRET));
+//   const userInfo = parseUser(jwt.verify(token, config.SECRET));
 
-  if (!("queueName" in req.body) || !req.body.queueName) {
-    return res.status(400).send("queueName required in request body");
-  }
+//   if (!("queueName" in req.body) || !req.body.queueName) {
+//     return res.status(400).send("queueName required in request body");
+//   }
 
-  try {
-    const queueName = parseString(req.body.queueName);
+//   try {
+//     const queueName = parseString(req.body.queueName);
 
-    const updatedInfo = await accountsService.activateQueue(
-      userInfo,
-      queueName
-    );
-    res.send(updatedInfo);
-  } catch (error) {
-    return res.status(500).json(error);
-  }
-});
+//     const updatedInfo = await accountsService.activateQueue(
+//       userInfo,
+//       queueName
+//     );
+//     res.send(updatedInfo);
+//   } catch (error) {
+//     return res.status(500).json(error);
+//   }
+// });
 
-// delete a queue
-app.post("/api/account/queues/delete", async (req, res) => {
-  if (!req.headers.authorization) {
-    return res.status(400).send("token required in authorization header");
-  }
-  const token = req.headers.authorization.substring(7);
+// // delete a queue
+// app.post("/api/account/queues/delete", async (req, res) => {
+//   if (!req.headers.authorization) {
+//     return res.status(400).send("token required in authorization header");
+//   }
+//   const token = req.headers.authorization.substring(7);
 
-  const userInfo = parseUser(jwt.verify(token, config.SECRET));
+//   const userInfo = parseUser(jwt.verify(token, config.SECRET));
 
-  if (!("queueName" in req.body) || !req.body.queueName) {
-    return res.status(400).send("queueName required in request body");
-  }
+//   if (!("queueName" in req.body) || !req.body.queueName) {
+//     return res.status(400).send("queueName required in request body");
+//   }
 
-  try {
-    const queueName = parseString(req.body.queueName);
+//   try {
+//     const queueName = parseString(req.body.queueName);
 
-    const updatedInfo = await accountsService.deleteQueue(userInfo, queueName);
-    res.send(updatedInfo);
-  } catch (error) {
-    return res.status(500).json(error);
-  }
-});
+//     const updatedInfo = await accountsService.deleteQueue(userInfo, queueName);
+//     res.send(updatedInfo);
+//   } catch (error) {
+//     return res.status(500).json(error);
+//   }
+// });
 
 app.get("/", (_req, res) => {
   res.send("welcome");
