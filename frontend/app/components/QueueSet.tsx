@@ -6,6 +6,8 @@ import Queue from "./Queue";
 //   useResolveEntryMutation,
 // } from "../queries";
 import { User } from "../types";
+import { useQuery, useQueryClient } from "react-query";
+import { getActiveEntries, getActiveQueues } from "../requests";
 
 interface QueueSetProps {
   user: User;
@@ -23,8 +25,14 @@ const QueueSet = (props: QueueSetProps) => {
     }, 1000 * 3);
   }, []);
 
-  // do the fetch here...
+  const queryClient = useQueryClient();
+  const getQueuesQuery = useQuery('queues', getActiveQueues);
+  const getEntriesQuery = useQuery('entries', getActiveEntries);
 
+  if (getEntriesQuery.isLoading || getQueuesQuery.isLoading) {
+    return <><p> queues loading ...</p></>
+  }
+  
   return (
     <>
       <p> Queues will go here ...</p>
