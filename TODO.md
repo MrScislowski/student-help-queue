@@ -1,4 +1,4 @@
-[ ] parseSession isn't getting what it wanted..., probably need to fix something on frontend (make sure the token actually contains the whole session not just the user also...)
+[ ] why isn't the thrown error in accountsService:10 getting caught by backend/controllers/queues:34?
 [ ] add querying abilities back into frontend
 [ ] move this account management to its own app...
 
