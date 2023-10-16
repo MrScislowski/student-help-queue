@@ -5,6 +5,9 @@ import Header from "./components/Header";
 import LoginButton from "./components/LoginButton";
 import QueueSet from "./components/QueueSet";
 import { User } from "./types";
+import { QueryClient, QueryClientProvider } from "react-query";
+
+const queryClient = new QueryClient();
 
 const App = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -29,10 +32,10 @@ const App = () => {
   }
 
   return (
-    <>
+    <QueryClientProvider client={queryClient}>
       <Header user={user} handleLogout={handleLogout} />
       <QueueSet user={user} />
-    </>
+    </QueryClientProvider>
   );
 };
 
