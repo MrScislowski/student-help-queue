@@ -1,16 +1,16 @@
-import { User } from "../types";
+import { Session, User } from "../types";
 
 interface HeaderProps {
-  user: User;
+  session: Session;
   handleLogout: () => void;
 }
 
 const Header = (props: HeaderProps) => {
-  const { user, handleLogout } = props;
+  const { session, handleLogout } = props;
 
   return (
     <p>
-      logged in as {user.email}
+      logged in as {session.user.email}
       <button onClick={handleLogout}>log out</button>
     </p>
   );

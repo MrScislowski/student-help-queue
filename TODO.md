@@ -1,4 +1,3 @@
-[ ] update frontend Header to display properly
 [ ] if no results found for the queues, display this to the user
 [ ] add querying abilities back into frontend
 [ ] move this account management to its own app...

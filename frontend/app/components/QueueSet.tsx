@@ -5,12 +5,12 @@ import Queue from "./Queue";
 //   useGetActiveEntries,
 //   useResolveEntryMutation,
 // } from "../queries";
-import { User } from "../types";
+import { Session } from "../types";
 import { useQuery, useQueryClient } from "react-query";
 import { getActiveEntries, getActiveQueues } from "../requests";
 
 interface QueueSetProps {
-  user: User;
+  session: Session;
 }
 
 const QueueSet = (props: QueueSetProps) => {
@@ -26,13 +26,17 @@ const QueueSet = (props: QueueSetProps) => {
   }, []);
 
   const queryClient = useQueryClient();
-  const getQueuesQuery = useQuery('queues', getActiveQueues);
-  const getEntriesQuery = useQuery('entries', getActiveEntries);
+  const getQueuesQuery = useQuery("queues", getActiveQueues);
+  const getEntriesQuery = useQuery("entries", getActiveEntries);
 
   if (getEntriesQuery.isLoading || getQueuesQuery.isLoading) {
-    return <><p> queues loading ...</p></>
+    return (
+      <>
+        <p> queues loading ...</p>
+      </>
+    );
   }
-  
+
   return (
     <>
       <p> Queues will go here ...</p>

@@ -4,37 +4,37 @@ import { setToken } from "./requests";
 import Header from "./components/Header";
 import LoginButton from "./components/LoginButton";
 import QueueSet from "./components/QueueSet";
-import { User } from "./types";
+import { Session } from "./types";
 import { QueryClient, QueryClientProvider } from "react-query";
 
 const queryClient = new QueryClient();
 
 const App = () => {
-  const [user, setUser] = useState<User | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
 
   useEffect(() => {
     const storedUserInfo = window.localStorage.getItem("studentHelpQueueUser");
     if (storedUserInfo) {
       const userInfo = JSON.parse(storedUserInfo);
-      setUser(userInfo);
+      setSession(userInfo);
       setToken(userInfo.token);
     }
   }, []);
 
   const handleLogout = () => {
     window.localStorage.removeItem("studentHelpQueueUser");
-    setUser(null);
+    setSession(null);
     setToken(null);
   };
 
-  if (!user) {
-    return <LoginButton setUser={setUser} />;
+  if (!session) {
+    return <LoginButton setSession={setSession} />;
   }
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Header user={user} handleLogout={handleLogout} />
-      <QueueSet user={user} />
+      <Header session={session} handleLogout={handleLogout} />
+      <QueueSet session={session} />
     </QueryClientProvider>
   );
 };

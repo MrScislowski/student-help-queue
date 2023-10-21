@@ -1,23 +1,23 @@
-import { attemptLogin, setToken } from "../requests";
+import { attemptLogin } from "../requests";
 import { GoogleLogin } from "@react-oauth/google";
-import { User } from "../types";
+import { Session, User } from "../types";
 
 interface LoginButtonProps {
-  setUser: (user: User|null) => void;
+  setSession: (session: Session | null) => void;
 }
 
 const LoginButton = (props: LoginButtonProps) => {
-  const { setUser } = props;
+  const { setSession } = props;
 
   return (
     <GoogleLogin
       onSuccess={(response) => {
         if (!response.credential) {
-          throw new Error("credential not returned")
+          throw new Error("credential not returned");
         }
         const credential: string = response.credential;
         attemptLogin(credential).then((response) => {
-          setUser(response);
+          setSession(response);
           window.localStorage.setItem(
             "studentHelpQueueUser",
             JSON.stringify(response)
@@ -25,7 +25,7 @@ const LoginButton = (props: LoginButtonProps) => {
         });
       }}
       onError={() => {
-        console.log(`Login error`)
+        console.log(`Login error`);
       }}
     />
   );
