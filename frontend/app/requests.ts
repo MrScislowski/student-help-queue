@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ActiveEntry, ResolutionStatus } from "./types";
+import { ActiveEntry, ResolutionStatus, User } from "./types";
 
 const activeEntriesUrl =
   process.env.NODE_ENV === "development"
@@ -16,14 +16,17 @@ export const setToken = (newValue: string | null) => {
   }
 };
 
-export const getActiveEntries = async () : Promise<{timestamp: string, entries: ActiveEntry[]}> =>  {
+export const getActiveEntries = async (): Promise<{
+  timestamp: string;
+  entries: ActiveEntry[];
+}> => {
   let config = {};
   if (token) {
     config = {
       headers: { Authorization: token },
     };
   }
-  return axios.get(`${activeEntriesUrl}`, config);
+  return (await axios.get(`${activeEntriesUrl}`, config)).data;
 };
 
 export const addName = async (queueName: string) => {
@@ -36,7 +39,13 @@ export const addName = async (queueName: string) => {
   await axios.post(`${activeEntriesUrl}`, { queueName }, config);
 };
 
-export const resolveEntry = async ({ entry, resolutionStatus }: {entry: ActiveEntry, resolutionStatus: ResolutionStatus}) => {
+export const resolveEntry = async ({
+  entry,
+  resolutionStatus,
+}: {
+  entry: ActiveEntry;
+  resolutionStatus: ResolutionStatus;
+}) => {
   let config = {};
   if (token) {
     config = {
@@ -57,14 +66,14 @@ const activeQueuesUrl =
     ? `http://localhost:3001/api/queues/active`
     : "https://student-help-queue-backend-dbc8c16c81bf.herokuapp.com/api/queues/active";
 
-export const getActiveQueues = async () : Promise<string[]> => {
+export const getActiveQueues = async (): Promise<string[]> => {
   let config = {};
   if (token) {
     config = {
       headers: { Authorization: token },
     };
   }
-  return axios.get(`${activeQueuesUrl}`, config);
+  return (await axios.get(`${activeQueuesUrl}`, config)).data;
 };
 
 const loginUrl =
@@ -79,14 +88,16 @@ export const attemptLogin = async (credential: string) => {
   return response.data;
 };
 
-
-
 const accountUrl =
   process.env.NODE_ENV === "development"
     ? `http://localhost:3001/api/account`
     : "https://student-help-queue-backend-dbc8c16c81bf.herokuapp.com/api/account";
 
-export const getAccountInfo = async () => {
+export const getAccountInfo = async (): Promise<{
+  user: User;
+  activeQueues: string[];
+  archivedQueues: string[];
+}> => {
   let config = {};
   if (token) {
     config = {

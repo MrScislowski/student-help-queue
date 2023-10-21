@@ -28,14 +28,14 @@ const QueueSet = (props: QueueSetProps) => {
 
   const queryClient = useQueryClient();
   const getQueuesQuery = useQuery({
-    queryKey: "queues",
+    queryKey: ["queues"],
     queryFn: getActiveQueues,
     retry: 2,
   });
 
   const getEntriesQuery = useQuery({
-    queryKey: "entries",
-    queryFn: getActiveEntries,
+    queryKey: ["entries"],
+    queryFn: async () => await getActiveEntries(),
     retry: getQueuesQuery.isError ? false : true,
   });
 
@@ -67,7 +67,6 @@ const QueueSet = (props: QueueSetProps) => {
     );
   }
 
-  console.log(JSON.stringify(getQueuesQuery.data));
   return (
     <>
       {getQueuesQuery.data.map((queueName) => {

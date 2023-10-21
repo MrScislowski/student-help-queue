@@ -1,4 +1,4 @@
-[ ] QueueSet:73... why does this fail... the .data property doesn't seem to be the shape promised by typescript
+[ ] implement functionality to add name using buttons, resolve / cancel open active entries
 [ ] add querying abilities back into frontend
 [ ] move this account management to its own app...
 
