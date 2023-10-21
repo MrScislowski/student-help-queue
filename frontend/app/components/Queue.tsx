@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { ActiveEntry, ResolutionStatus } from "../types";
 
 const Container = styled.div`
   display: flex;
@@ -27,19 +28,35 @@ const CancelButton = styled.button`
   border-radius: 5px;
 `;
 
-const getEntryAge = (timestamp) => {
-  const millis = currentTime - new Date(timestamp).getTime() - timeDiff;
-  const minutes = Math.floor(millis / 1000 / 60);
-  if (minutes < 1) {
-    return "< 1m";
-  } else if (minutes > 60) {
-    const hours = Math.floor(minutes / 60);
-    return `${hours}h ${minutes - hours * 60}m`;
-  }
-  return `${minutes}m`;
+// const getEntryAge = (timestamp: string) => {
+//   const millis = currentTime - new Date(timestamp).getTime() - timeDiff;
+//   const minutes = Math.floor(millis / 1000 / 60);
+//   if (minutes < 1) {
+//     return "< 1m";
+//   } else if (minutes > 60) {
+//     const hours = Math.floor(minutes / 60);
+//     return `${hours}h ${minutes - hours * 60}m`;
+//   }
+//   return `${minutes}m`;
+// };
+
+const getEntryAge = (timestamp: string) => {
+  return "1m";
 };
 
-const Queue = (props) => {
+interface QueueProps {
+  entries: ActiveEntry[];
+  resolveEntryMutation: ({
+    entry,
+    status,
+  }: {
+    entry: ActiveEntry;
+    status: ResolutionStatus;
+  }) => void;
+  timeDiff: Number;
+}
+
+const Queue = (props: QueueProps) => {
   const { entries, resolveEntryMutation, timeDiff } = props;
 
   return (
@@ -53,20 +70,22 @@ const Queue = (props) => {
               <>
                 <ResolveButton
                   onClick={async () => {
-                    await resolveEntryMutation.mutate({
-                      entry: item,
-                      resolutionStatus: "resolve",
-                    });
+                    // await resolveEntryMutation.mutate({
+                    //   entry: item,
+                    //   resolutionStatus: "resolve",
+                    // });
+                    alert("resolve entry mutation not yet defined");
                   }}
                 >
                   Resolve
                 </ResolveButton>
                 <CancelButton
                   onClick={async () => {
-                    await resolveEntryMutation.mutate({
-                      entry: item,
-                      resolutionStatus: "cancel",
-                    });
+                    // await resolveEntryMutation.mutate({
+                    //   entry: item,
+                    //   resolutionStatus: "cancel",
+                    // });
+                    alert("resolve entry mutation not yet defined");
                   }}
                 >
                   Cancel

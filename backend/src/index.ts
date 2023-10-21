@@ -61,7 +61,10 @@ app.post("/api/login", async (req, res) => {
     // FIXME: in future, need to involve frontend in selecting the relevant class
     const sessionObject = {
       user: userInfo,
-      selectedClass: { name: "placeholder", teacherEmail: "dscislowski@usd266.com" },
+      selectedClass: {
+        name: "placeholder",
+        teacherEmail: "mr.scislowski@gmail.com",
+      },
     };
 
     const token = jwt.sign(sessionObject, config.SECRET);

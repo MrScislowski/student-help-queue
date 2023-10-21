@@ -1,4 +1,4 @@
-[ ] if no results found for the queues, display this to the user
+[ ] QueueSet:73... why does this fail... the .data property doesn't seem to be the shape promised by typescript
 [ ] add querying abilities back into frontend
 [ ] move this account management to its own app...
 

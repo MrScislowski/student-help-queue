@@ -17,6 +17,7 @@ const QueueSet = (props: QueueSetProps) => {
   const [currentTime, setCurrentTime] = useState(new Date().getTime());
   const [theirTime, setTheirTime] = useState(new Date().getTime());
   const [entries, setEntries] = useState([]);
+  const [queues, setQueues] = useState([]);
 
   // https://stackoverflow.com/questions/72766908/how-to-show-a-countdown-timer-in-react
   useEffect(() => {
@@ -26,20 +27,69 @@ const QueueSet = (props: QueueSetProps) => {
   }, []);
 
   const queryClient = useQueryClient();
-  const getQueuesQuery = useQuery("queues", getActiveQueues);
-  const getEntriesQuery = useQuery("entries", getActiveEntries);
+  const getQueuesQuery = useQuery({
+    queryKey: "queues",
+    queryFn: getActiveQueues,
+    retry: 2,
+  });
+
+  const getEntriesQuery = useQuery({
+    queryKey: "entries",
+    queryFn: getActiveEntries,
+    retry: getQueuesQuery.isError ? false : true,
+  });
 
   if (getEntriesQuery.isLoading || getQueuesQuery.isLoading) {
     return (
       <>
-        <p> queues loading ...</p>
+        <p> Loading data ... </p>
       </>
     );
   }
 
+  if (getQueuesQuery.error || !getQueuesQuery.data) {
+    return (
+      <>
+        <p>
+          unable to get queues for class
+          {`"${props.session.selectedClass.name}"`}
+          with teacher email {props.session.selectedClass.teacherEmail}
+        </p>
+      </>
+    );
+  }
+
+  if (getEntriesQuery.error) {
+    return (
+      <>
+        <p>unable to get entries in queues: {`${getQueuesQuery.data}`}</p>
+      </>
+    );
+  }
+
+  console.log(JSON.stringify(getQueuesQuery.data));
   return (
     <>
-      <p> Queues will go here ...</p>
+      {getQueuesQuery.data.map((queueName) => {
+        return (
+          <Fragment key={`${queueName}-fragment`}>
+            <button onClick={() => alert("not implemented yet")}>
+              + {`${queueName} queue`}
+            </button>
+            <Queue
+              entries={
+                getEntriesQuery.data?.entries.filter(
+                  (entry) => entry.queueName === queueName
+                ) || []
+              }
+              resolveEntryMutation={() =>
+                alert("resolve entry mutation not yet defined")
+              }
+              timeDiff={5}
+            />
+          </Fragment>
+        );
+      })}
     </>
   );
 
@@ -47,17 +97,17 @@ const QueueSet = (props: QueueSetProps) => {
   //   <>
   //     {accountInfo.activeQueues.map((queueName) => {
   //       return (
-  //         <Fragment key={`${queueName}-fragment`}>
-  //           <button onClick={() => addNameMutation.mutate(queueName)}>
-  //             + {`${queueName} queue`}
-  //           </button>
-  //           <button onClick={() => archiveQueue(queueName)}> x</button>
-  //           <Queue
-  //             entries={entries.filter((entry) => entry.queueName === queueName)}
-  //             resolveEntryMutation={resolveEntryMutation}
-  //             getEntryAge={getEntryAge}
-  //           />
-  //         </Fragment>
+  // <Fragment key={`${queueName}-fragment`}>
+  //   <button onClick={() => addNameMutation.mutate(queueName)}>
+  //     + {`${queueName} queue`}
+  //   </button>
+  //   <button onClick={() => archiveQueue(queueName)}> x</button>
+  //   <Queue
+  //     entries={entries.filter((entry) => entry.queueName === queueName)}
+  //     resolveEntryMutation={resolveEntryMutation}
+  //     getEntryAge={getEntryAge}
+  //   />
+  // </Fragment>
   //       );
   //     })}
   //   </>
