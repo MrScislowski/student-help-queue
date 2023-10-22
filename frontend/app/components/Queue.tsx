@@ -64,6 +64,15 @@ const Queue = (props: QueueProps) => {
     },
   });
 
+  const cancelEntryMutation = useMutation({
+    mutationFn: ({ entry }: { entry: ActiveEntry }) => {
+      return resolveEntry(entry, "cancel");
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["entries"] });
+    },
+  });
+
   return (
     <Container>
       {entries.map((item) => {
@@ -84,11 +93,9 @@ const Queue = (props: QueueProps) => {
                 </ResolveButton>
                 <CancelButton
                   onClick={async () => {
-                    // await resolveEntryMutation.mutate({
-                    //   entry: item,
-                    //   resolutionStatus: "cancel",
-                    // });
-                    alert("resolve entry mutation not yet defined");
+                    cancelEntryMutation.mutate({
+                      entry: item,
+                    });
                   }}
                 >
                   Cancel
