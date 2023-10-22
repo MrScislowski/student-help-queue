@@ -1,5 +1,7 @@
 import styled from "styled-components";
 import { ActiveEntry, ResolutionStatus } from "../types";
+import { useMutation, useQueryClient } from "react-query";
+import { resolveEntry } from "../requests";
 
 const Container = styled.div`
   display: flex;
@@ -46,18 +48,21 @@ const getEntryAge = (timestamp: string) => {
 
 interface QueueProps {
   entries: ActiveEntry[];
-  resolveEntryMutation: ({
-    entry,
-    status,
-  }: {
-    entry: ActiveEntry;
-    status: ResolutionStatus;
-  }) => void;
   timeDiff: Number;
 }
 
 const Queue = (props: QueueProps) => {
-  const { entries, resolveEntryMutation, timeDiff } = props;
+  const { entries, timeDiff } = props;
+
+  const queryClient = useQueryClient();
+  const resolveEntryMutation = useMutation({
+    mutationFn: ({ entry }: { entry: ActiveEntry }) => {
+      return resolveEntry(entry, "resolve");
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["entries"] });
+    },
+  });
 
   return (
     <Container>
@@ -69,12 +74,10 @@ const Queue = (props: QueueProps) => {
             {item._id && (
               <>
                 <ResolveButton
-                  onClick={async () => {
-                    // await resolveEntryMutation.mutate({
-                    //   entry: item,
-                    //   resolutionStatus: "resolve",
-                    // });
-                    alert("resolve entry mutation not yet defined");
+                  onClick={() => {
+                    resolveEntryMutation.mutate({
+                      entry: item,
+                    });
                   }}
                 >
                   Resolve

@@ -43,7 +43,7 @@ const addActiveEntry = async (
 
   const newEntry = new Active({
     request: {
-      session: session.user,
+      user: session.user,
       timestamp: new Date().toISOString(),
     },
     queueName: queueName,

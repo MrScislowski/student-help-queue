@@ -1,5 +1,5 @@
 [ ] implement functionality to add name using buttons, resolve / cancel open active entries
-[ ] add querying abilities back into frontend
+[ ] add the ability to see the age of each request to frontend
 [ ] move this account management to its own app...
 
 [ ] frontend: make the two queues side-by-side, and responsive to screen

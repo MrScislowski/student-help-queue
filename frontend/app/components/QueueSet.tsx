@@ -6,8 +6,8 @@ import Queue from "./Queue";
 //   useResolveEntryMutation,
 // } from "../queries";
 import { Session } from "../types";
-import { useQuery, useQueryClient } from "react-query";
-import { getActiveEntries, getActiveQueues } from "../requests";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { addName, getActiveEntries, getActiveQueues } from "../requests";
 
 interface QueueSetProps {
   session: Session;
@@ -37,6 +37,15 @@ const QueueSet = (props: QueueSetProps) => {
     queryKey: ["entries"],
     queryFn: async () => await getActiveEntries(),
     retry: getQueuesQuery.isError ? false : true,
+  });
+
+  const addNameMutation = useMutation({
+    mutationFn: ({ queueName }: { queueName: string }) => {
+      return addName(queueName);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["entries"]);
+    },
   });
 
   if (getEntriesQuery.isLoading || getQueuesQuery.isLoading) {
@@ -72,7 +81,7 @@ const QueueSet = (props: QueueSetProps) => {
       {getQueuesQuery.data.map((queueName) => {
         return (
           <Fragment key={`${queueName}-fragment`}>
-            <button onClick={() => alert("not implemented yet")}>
+            <button onClick={() => addNameMutation.mutate({ queueName })}>
               + {`${queueName} queue`}
             </button>
             <Queue
@@ -80,9 +89,6 @@ const QueueSet = (props: QueueSetProps) => {
                 getEntriesQuery.data?.entries.filter(
                   (entry) => entry.queueName === queueName
                 ) || []
-              }
-              resolveEntryMutation={() =>
-                alert("resolve entry mutation not yet defined")
               }
               timeDiff={5}
             />

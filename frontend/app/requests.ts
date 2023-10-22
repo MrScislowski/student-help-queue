@@ -29,23 +29,20 @@ export const getActiveEntries = async (): Promise<{
   return (await axios.get(`${activeEntriesUrl}`, config)).data;
 };
 
-export const addName = async (queueName: string) => {
+export const addName = async (queueName: string): Promise<void> => {
   let config = {};
   if (token) {
     config = {
       headers: { Authorization: token },
     };
   }
-  await axios.post(`${activeEntriesUrl}`, { queueName }, config);
+  return (await axios.post(`${activeEntriesUrl}`, { queueName }, config)).data;
 };
 
-export const resolveEntry = async ({
-  entry,
-  resolutionStatus,
-}: {
-  entry: ActiveEntry;
-  resolutionStatus: ResolutionStatus;
-}) => {
+export const resolveEntry = async (
+  entry: ActiveEntry,
+  resolutionStatus: ResolutionStatus
+) => {
   let config = {};
   if (token) {
     config = {
