@@ -1,4 +1,4 @@
-import { Fragment, useState, useEffect } from "react";
+import { Fragment, useState, useEffect, useContext } from "react";
 import Queue from "./Queue";
 // import {
 //   useAddNameMutation,
@@ -8,16 +8,16 @@ import Queue from "./Queue";
 import { Session } from "../types";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { addName, getActiveEntries, getActiveQueues } from "../requests";
+import SessionContext from "../SessionContext";
 
-interface QueueSetProps {
-  session: Session;
-}
+interface QueueSetProps {}
 
 const QueueSet = (props: QueueSetProps) => {
   const [currentTime, setCurrentTime] = useState(new Date().getTime());
   const [theirTime, setTheirTime] = useState(new Date().getTime());
   const [entries, setEntries] = useState([]);
   const [queues, setQueues] = useState([]);
+  const session = useContext(SessionContext);
 
   // https://stackoverflow.com/questions/72766908/how-to-show-a-countdown-timer-in-react
   useEffect(() => {
@@ -61,8 +61,8 @@ const QueueSet = (props: QueueSetProps) => {
       <>
         <p>
           unable to get queues for class
-          {`"${props.session.selectedClass.name}"`}
-          with teacher email {props.session.selectedClass.teacherEmail}
+          {`"${session.selectedClass.name}"`}
+          with teacher email {session.selectedClass.teacherEmail}
         </p>
       </>
     );

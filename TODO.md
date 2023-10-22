@@ -1,4 +1,5 @@
 [ ] add the ability to see the age of each request to frontend
+[ ] use context for some things that we need widely (session, timediff)
 [ ] frontend: don't display the add name button if your name is already in there
 [ ] move this account management to its own app...
 

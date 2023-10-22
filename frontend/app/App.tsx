@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import SessionContext from "./SessionContext";
 
 import { setToken } from "./requests";
 import Header from "./components/Header";
@@ -33,8 +34,10 @@ const App = () => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Header session={session} handleLogout={handleLogout} />
-      <QueueSet session={session} />
+      <SessionContext.Provider value={session}>
+        <Header handleLogout={handleLogout} />
+        <QueueSet />
+      </SessionContext.Provider>
     </QueryClientProvider>
   );
 };

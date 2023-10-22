@@ -22,3 +22,11 @@ export interface Session {
     teacherEmail: string;
   };
 }
+
+export const emptySession = {
+  user: { email: "emptyuser", givenName: "empty", familyName: "user" },
+  selectedClass: {
+    name: "noclass",
+    teacherEmail: "noteacher",
+  },
+};

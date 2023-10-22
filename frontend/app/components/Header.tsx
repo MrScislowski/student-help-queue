@@ -1,12 +1,14 @@
 import { Session, User } from "../types";
+import { useContext } from "react";
+import SessionContext from "../SessionContext";
 
 interface HeaderProps {
-  session: Session;
   handleLogout: () => void;
 }
 
 const Header = (props: HeaderProps) => {
-  const { session, handleLogout } = props;
+  const { handleLogout } = props;
+  const session = useContext(SessionContext);
 
   return (
     <p>
