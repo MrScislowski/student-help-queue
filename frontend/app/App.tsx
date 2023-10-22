@@ -22,6 +22,7 @@ const App = () => {
     }
   }, []);
 
+  // TODO: could re-implement session context to provide the setter method. Then this logout could be moved into the loginbutton component
   const handleLogout = () => {
     window.localStorage.removeItem("studentHelpQueueUser");
     setSession(null);

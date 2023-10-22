@@ -1,30 +1,15 @@
 import { Fragment, useState, useEffect, useContext } from "react";
 import Queue from "./Queue";
-// import {
-//   useAddNameMutation,
-//   useGetActiveEntries,
-//   useResolveEntryMutation,
-// } from "../queries";
 import { Session } from "../types";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { addName, getActiveEntries, getActiveQueues } from "../requests";
 import SessionContext from "../SessionContext";
+import TimeOffsetContext from "../TimeOffsetContext";
 
 interface QueueSetProps {}
 
 const QueueSet = (props: QueueSetProps) => {
-  const [currentTime, setCurrentTime] = useState(new Date().getTime());
-  const [theirTime, setTheirTime] = useState(new Date().getTime());
-  const [entries, setEntries] = useState([]);
-  const [queues, setQueues] = useState([]);
   const session = useContext(SessionContext);
-
-  // https://stackoverflow.com/questions/72766908/how-to-show-a-countdown-timer-in-react
-  useEffect(() => {
-    setInterval(() => {
-      setCurrentTime(new Date().getTime());
-    }, 1000 * 3);
-  }, []);
 
   const queryClient = useQueryClient();
   const getQueuesQuery = useQuery({
@@ -76,8 +61,14 @@ const QueueSet = (props: QueueSetProps) => {
     );
   }
 
+  let timeOffset = 0;
+  if (getEntriesQuery.data) {
+    timeOffset =
+      new Date().getTime() - new Date(getEntriesQuery.data.timestamp).getTime();
+  }
+
   return (
-    <>
+    <TimeOffsetContext.Provider value={timeOffset}>
       {getQueuesQuery.data.map((queueName) => {
         return (
           <Fragment key={`${queueName}-fragment`}>
@@ -90,33 +81,12 @@ const QueueSet = (props: QueueSetProps) => {
                   (entry) => entry.queueName === queueName
                 ) || []
               }
-              timeDiff={5}
             />
           </Fragment>
         );
       })}
-    </>
+    </TimeOffsetContext.Provider>
   );
-
-  // return (
-  //   <>
-  //     {accountInfo.activeQueues.map((queueName) => {
-  //       return (
-  // <Fragment key={`${queueName}-fragment`}>
-  //   <button onClick={() => addNameMutation.mutate(queueName)}>
-  //     + {`${queueName} queue`}
-  //   </button>
-  //   <button onClick={() => archiveQueue(queueName)}> x</button>
-  //   <Queue
-  //     entries={entries.filter((entry) => entry.queueName === queueName)}
-  //     resolveEntryMutation={resolveEntryMutation}
-  //     getEntryAge={getEntryAge}
-  //   />
-  // </Fragment>
-  //       );
-  //     })}
-  //   </>
-  // );
 };
 
 export default QueueSet;

@@ -1,4 +1,3 @@
-[ ] add the ability to see the age of each request to frontend
 [ ] frontend: don't display the add name button if your name is already in there
 [ ] move this account management to its own app...
 
