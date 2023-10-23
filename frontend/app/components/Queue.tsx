@@ -1,11 +1,12 @@
 import styled from "styled-components";
 import { ActiveEntry, ResolutionStatus } from "../types";
 import { useMutation, useQueryClient } from "react-query";
-import { resolveEntry } from "../requests";
+import { resolveEntry, addName } from "../requests";
 import { useContext, useEffect, useState } from "react";
 import TimeOffsetContext from "../TimeOffsetContext";
+import SessionContext from "../SessionContext";
 
-const Container = styled.div`
+const EntriesContainer = styled.div`
   display: flex;
   flex-direction: column;
   background-color: #8d94ba;
@@ -32,6 +33,14 @@ const CancelButton = styled.button`
   border-radius: 5px;
 `;
 
+const AddNameButton = styled.button`
+  border-radius: 10px;
+`;
+
+const QueueTitle = styled.h2`
+  padding: 10px;
+`;
+
 const getEntryAge = (
   currentTime: number,
   entryTime: number,
@@ -49,14 +58,26 @@ const getEntryAge = (
 };
 
 interface QueueProps {
+  queueName: string;
   entries: ActiveEntry[];
 }
 
 const Queue = (props: QueueProps) => {
-  const { entries } = props;
+  const { queueName, entries } = props;
   const [currentTime, setCurrentTime] = useState(new Date().getTime());
+  const session = useContext(SessionContext);
 
   const queryClient = useQueryClient();
+
+  const addNameMutation = useMutation({
+    mutationFn: ({ queueName }: { queueName: string }) => {
+      return addName(queueName);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["entries"]);
+    },
+  });
+
   const resolveEntryMutation = useMutation({
     mutationFn: ({ entry }: { entry: ActiveEntry }) => {
       return resolveEntry(entry, "resolve");
@@ -86,43 +107,55 @@ const Queue = (props: QueueProps) => {
   }, []);
 
   return (
-    <Container>
-      {entries.map((item) => {
-        return (
-          <QueueItem key={item.user.email}>
-            {item.user.givenName} {item.user.familyName} (
-            {getEntryAge(
-              currentTime,
-              new Date(item.timestamp).getTime(),
-              timeOffset
-            )}
-            )
-            {item._id && (
-              <>
-                <ResolveButton
-                  onClick={() => {
-                    resolveEntryMutation.mutate({
-                      entry: item,
-                    });
-                  }}
-                >
-                  Resolve
-                </ResolveButton>
-                <CancelButton
-                  onClick={async () => {
-                    cancelEntryMutation.mutate({
-                      entry: item,
-                    });
-                  }}
-                >
-                  Cancel
-                </CancelButton>
-              </>
-            )}
-          </QueueItem>
-        );
-      })}
-    </Container>
+    <>
+      <QueueTitle>{queueName} queue</QueueTitle>
+
+      {entries.find((entry) => entry.user.email === session.user.email) ? (
+        ""
+      ) : (
+        <button onClick={() => addNameMutation.mutate({ queueName })}>
+          add name
+        </button>
+      )}
+
+      <EntriesContainer>
+        {entries.map((item) => {
+          return (
+            <QueueItem key={item.user.email}>
+              {item.user.givenName} {item.user.familyName} (
+              {getEntryAge(
+                currentTime,
+                new Date(item.timestamp).getTime(),
+                timeOffset
+              )}
+              )
+              {item._id && (
+                <>
+                  <ResolveButton
+                    onClick={() => {
+                      resolveEntryMutation.mutate({
+                        entry: item,
+                      });
+                    }}
+                  >
+                    Resolve
+                  </ResolveButton>
+                  <CancelButton
+                    onClick={async () => {
+                      cancelEntryMutation.mutate({
+                        entry: item,
+                      });
+                    }}
+                  >
+                    Cancel
+                  </CancelButton>
+                </>
+              )}
+            </QueueItem>
+          );
+        })}
+      </EntriesContainer>
+    </>
   );
 };
 

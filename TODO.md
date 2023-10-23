@@ -1,4 +1,3 @@
-[ ] frontend: don't display the add name button if your name is already in there
 [ ] move this account management to its own app...
 
 [ ] frontend: make the two queues side-by-side, and responsive to screen
