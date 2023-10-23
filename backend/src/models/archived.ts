@@ -3,7 +3,11 @@ import { ArchivedEntry } from "../types";
 import { activeEntrySchema, userSchema } from "./active";
 
 const schema = new mongoose.Schema<ArchivedEntry>({
-  request: activeEntrySchema,
+  request: {
+    type: activeEntrySchema,
+    _id: false,
+    versionkey: false,
+  },
   resolution: {
     user: {
       type: userSchema,

@@ -1,4 +1,3 @@
-[ ] figure out why the request object inside an archivedEntry has an \_id, but so does the archivedEntry itself, and they're the same.
 [ ] frontend: don't display the add name button if your name is already in there
 [ ] move this account management to its own app...
 

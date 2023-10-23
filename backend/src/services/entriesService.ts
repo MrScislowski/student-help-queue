@@ -58,7 +58,7 @@ const resolveActiveEntry = async (
   session: Session,
   status: ResolutionStatus
 ): Promise<ArchivedEntry> => {
-  const activeEntry = await Active.findById(id);
+  const activeEntry = await Active.findById(id).select("-__v");
   if (!activeEntry) {
     throw new Error(`Active entry with id ${id} not found. `);
   }
