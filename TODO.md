@@ -1,4 +1,4 @@
-[ ] the entries object I'm seeing in the network tab of the browser has two \_ids... one at the top level of the activeEntry object (this seems good), but then one inside every request.user{} object. And they're unique even if the user is the same. No bueno. In fact, I think I'd like to refactor the ActiveEntry model so that it doesn't have "request". That may mean the types are less inheritable, but I think that's the better trade-off
+[ ] figure out why the request object inside an archivedEntry has an \_id, but so does the archivedEntry itself, and they're the same.
 [ ] frontend: don't display the add name button if your name is already in there
 [ ] move this account management to its own app...
 

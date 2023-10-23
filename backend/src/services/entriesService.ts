@@ -16,9 +16,10 @@ const getActiveEntries = async (
 
   // leave out the id if the user doesn't have access
   const resultsToReturn = allResults.map((entry) => {
-    return isAdmin || entry.request.user.email === session.user.email
+    const { _id, ...entrySansId } = entry;
+    return isAdmin || entry.user.email === session.user.email
       ? entry
-      : { request: entry.request, queueName: entry.queueName };
+      : entrySansId;
   });
 
   return resultsToReturn;
@@ -42,10 +43,8 @@ const addActiveEntry = async (
   }
 
   const newEntry = new Active({
-    request: {
-      user: session.user,
-      timestamp: new Date().toISOString(),
-    },
+    user: session.user,
+    timestamp: new Date().toISOString(),
     queueName: queueName,
   });
 
@@ -65,7 +64,7 @@ const resolveActiveEntry = async (
   }
 
   if (
-    session.user.email !== activeEntry.request.user.email &&
+    session.user.email !== activeEntry.user.email &&
     !hasAdminRights(session.user)
   ) {
     throw new Error(
@@ -73,8 +72,11 @@ const resolveActiveEntry = async (
     );
   }
 
+  const { _id, ...activeEntrySansId } = activeEntry;
+
   const archivedVersion = new Archived({
-    ...(activeEntry.toObject() as object),
+    _id: activeEntry._id,
+    request: activeEntrySansId,
     resolution: {
       user: session.user,
       status,

@@ -89,11 +89,11 @@ const Queue = (props: QueueProps) => {
     <Container>
       {entries.map((item) => {
         return (
-          <QueueItem key={item.request.user.email}>
-            {item.request.user.givenName} {item.request.user.familyName} (
+          <QueueItem key={item.user.email}>
+            {item.user.givenName} {item.user.familyName} (
             {getEntryAge(
               currentTime,
-              new Date(item.request.timestamp).getTime(),
+              new Date(item.timestamp).getTime(),
               timeOffset
             )}
             )
