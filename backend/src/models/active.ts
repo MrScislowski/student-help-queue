@@ -1,27 +1,39 @@
 import mongoose from "mongoose";
-import { ActiveEntry } from "../types";
+import { ActiveEntry, User } from "../types";
 
-const schema = new mongoose.Schema<ActiveEntry>({
-  request: {
-    user: {
-      email: {
-        type: String,
-        required: true,
-      },
-      givenName: {
-        type: String,
-        required: true,
-      },
-      familyName: {
-        type: String,
-        required: true,
-      },
+const userSchema = new mongoose.Schema<User>(
+  {
+    email: {
+      type: String,
+      required: true,
     },
-    timestamp: {
+    givenName: {
+      type: String,
+      required: true,
+    },
+    familyName: {
       type: String,
       required: true,
     },
   },
+  { _id: false }
+);
+
+const schema = new mongoose.Schema<ActiveEntry>({
+  user: {
+    type: userSchema,
+    required: true,
+  },
+  timestamp: {
+    type: String,
+    required: true,
+  },
+  queueName: {
+    type: String,
+    required: true,
+  },
 });
 
-export default mongoose.model<ActiveEntry>("Active", schema);
+const ActiveModel = mongoose.model<ActiveEntry>("Active", schema);
+
+export { ActiveModel as Active, userSchema, schema as activeEntrySchema };

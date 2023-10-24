@@ -1,41 +1,17 @@
 import mongoose from "mongoose";
 import { ArchivedEntry } from "../types";
+import { activeEntrySchema, userSchema } from "./active";
 
 const schema = new mongoose.Schema<ArchivedEntry>({
   request: {
-    user: {
-      email: {
-        type: String,
-        required: true,
-      },
-      givenName: {
-        type: String,
-        required: true,
-      },
-      familyName: {
-        type: String,
-        required: true,
-      },
-    },
-    timestamp: {
-      type: String,
-      required: true,
-    },
+    type: activeEntrySchema,
+    _id: false,
+    versionkey: false,
   },
   resolution: {
     user: {
-      email: {
-        type: String,
-        required: true,
-      },
-      givenName: {
-        type: String,
-        required: true,
-      },
-      familyName: {
-        type: String,
-        required: true,
-      },
+      type: userSchema,
+      required: true,
     },
     timestamp: {
       type: String,

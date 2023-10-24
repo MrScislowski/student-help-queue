@@ -1,19 +1,25 @@
-import Active from "../models/active";
+import { Active } from "../models/active";
 import Archived from "../models/archived";
-import { ActiveEntry, ArchivedEntry, ResolutionStatus, User } from "../types";
+import {
+  ActiveEntry,
+  ArchivedEntry,
+  ResolutionStatus,
+  Session,
+} from "../types";
 import { hasAdminRights } from "../utils";
 
 const getActiveEntries = async (
-  user: User
+  session: Session
 ): Promise<Omit<ActiveEntry, "_id">[]> => {
   const allResults: ActiveEntry[] = await Active.find({}).lean();
-  const isAdmin = hasAdminRights(user);
+  const isAdmin = hasAdminRights(session.user);
 
   // leave out the id if the user doesn't have access
   const resultsToReturn = allResults.map((entry) => {
-    return isAdmin || entry.request.user.email === user.email
+    const { _id, ...entrySansId } = entry;
+    return isAdmin || entry.user.email === session.user.email
       ? entry
-      : { request: entry.request };
+      : entrySansId;
   });
 
   return resultsToReturn;
@@ -24,19 +30,22 @@ const getArchivedEntries = async () => {
   return results;
 };
 
-const addActiveEntry = async (user: User): Promise<ActiveEntry> => {
+const addActiveEntry = async (
+  session: Session,
+  queueName: string
+): Promise<ActiveEntry> => {
   const hasDuplicate = await Active.findOne({
-    "request.user.email": user.email,
+    "request.user.email": session.user.email,
+    queueName: queueName,
   });
   if (hasDuplicate) {
-    throw new Error("User already has an entry in the active queue. ");
+    throw new Error(`User already has an entry in the ${queueName} queue. `);
   }
 
   const newEntry = new Active({
-    request: {
-      user,
-      timestamp: new Date().toISOString(),
-    },
+    user: session.user,
+    timestamp: new Date().toISOString(),
+    queueName: queueName,
   });
 
   await newEntry.save();
@@ -46,24 +55,30 @@ const addActiveEntry = async (user: User): Promise<ActiveEntry> => {
 
 const resolveActiveEntry = async (
   id: string,
-  user: User,
+  session: Session,
   status: ResolutionStatus
 ): Promise<ArchivedEntry> => {
-  const activeEntry = await Active.findById(id);
+  const activeEntry = await Active.findById(id).select("-__v");
   if (!activeEntry) {
     throw new Error(`Active entry with id ${id} not found. `);
   }
 
-  if (user.email !== activeEntry.request.user.email && !hasAdminRights(user)) {
+  if (
+    session.user.email !== activeEntry.user.email &&
+    !hasAdminRights(session.user)
+  ) {
     throw new Error(
       `Cannot resolve entry belonging to someone else, unless you have admin rights`
     );
   }
 
+  const { _id, ...activeEntrySansId } = activeEntry;
+
   const archivedVersion = new Archived({
-    ...(activeEntry.toObject() as object),
+    _id: activeEntry._id,
+    request: activeEntrySansId,
     resolution: {
-      user,
+      user: session.user,
       status,
       timestamp: new Date().toISOString(),
     },
