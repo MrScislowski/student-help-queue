@@ -19,12 +19,5 @@ export interface Session {
     name: string;
     teacherEmail: string;
   };
+  token: string;
 }
-
-export const emptySession = {
-  user: { email: "emptyuser", givenName: "empty", familyName: "user" },
-  selectedClass: {
-    name: "noclass",
-    teacherEmail: "noteacher",
-  },
-};

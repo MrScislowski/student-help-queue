@@ -7,6 +7,7 @@ import LoginButton from "./components/LoginButton";
 import QueueSet from "./components/QueueSet";
 import { Session } from "./types";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { isSession } from "./utils";
 
 const queryClient = new QueryClient();
 
@@ -17,8 +18,12 @@ const App = () => {
     const storedUserInfo = window.localStorage.getItem("studentHelpQueueUser");
     if (storedUserInfo) {
       const userInfo = JSON.parse(storedUserInfo);
-      setSession(userInfo);
-      setToken(userInfo.token);
+      if (isSession(userInfo)) {
+        setSession(userInfo);
+        setToken(userInfo.token);
+      } else {
+        handleLogout();
+      }
     }
   }, []);
 
