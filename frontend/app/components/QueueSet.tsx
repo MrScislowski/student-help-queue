@@ -5,6 +5,8 @@ import { getActiveEntries, getActiveQueues } from "../requests";
 import SessionContext from "../SessionContext";
 import TimeOffsetContext from "../TimeOffsetContext";
 
+const refetchInterval = 3000; // 3 seconds
+
 interface QueueSetProps {}
 
 const QueueSet = (props: QueueSetProps) => {
@@ -15,12 +17,14 @@ const QueueSet = (props: QueueSetProps) => {
     queryKey: ["queues"],
     queryFn: getActiveQueues,
     retry: 2,
+    refetchInterval: refetchInterval, 
   });
 
   const getEntriesQuery = useQuery({
     queryKey: ["entries"],
     queryFn: async () => await getActiveEntries(),
     retry: getQueuesQuery.isError ? false : true,
+    refetchInterval: refetchInterval, 
   });
 
   if (getEntriesQuery.isLoading || getQueuesQuery.isLoading) {
