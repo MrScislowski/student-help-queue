@@ -1,7 +1,11 @@
 import { activateQueue, deleteQueue } from "../requests";
 
-const ArchivedQueue = (props) => {
-  const queueName = props.name;
+interface ArchivedQueueProps {
+  queueName: string;
+}
+
+const ArchivedQueue = (props: ArchivedQueueProps) => {
+  const queueName = props.queueName;
 
   return (
     <>

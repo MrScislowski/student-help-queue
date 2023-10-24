@@ -1,3 +1,6 @@
+git subtree push --prefix frontend heroku-frontend main
+git subtree push --prefix backend heroku-backend main
+
 # backend
 
 https://fullstackopen.com/en/part9/typing_an_express_app
