@@ -62,8 +62,8 @@ app.post("/api/login", async (req, res) => {
     const sessionObject = {
       user: userInfo,
       selectedClass: {
-        name: "placeholder",
-        teacherEmail: "mr.scislowski@gmail.com",
+        name: "Mr Scislowski's Entire Cohort",
+        teacherEmail: "dscislowski@usd266.com",
       },
     };
 
