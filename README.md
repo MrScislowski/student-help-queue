@@ -1,3 +1,7 @@
+git remote add heroku-backend https://git.heroku.com/student-help-queue-backend.git
+git remote add heroku-frontend https://git.heroku.com/student-help-queue-frontend.git
+
+
 git subtree push --prefix frontend heroku-frontend main
 git subtree push --prefix backend heroku-backend main
 
