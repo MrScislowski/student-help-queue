@@ -1,4 +1,9 @@
-[ ] move this account management to its own app...
+[ ] brainstorm teacher frontend views...
+
+- I think I should use all the same endpoints (when possible) as the student-facing queue
+- maybe just make it look pretty much the same, but include the ability to show / hide queues, and change their names
+- that will require a change in the DB etc, because queues should become objects with permanent ids, but their displayname etc can change
+- let's implement all that, then worry about how the display looks. When I'm ready to make it look fancy, use that as an excuse to learn tailwind css.
 
 [ ] frontend: make the two queues side-by-side, and responsive to screen
 
