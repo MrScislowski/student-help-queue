@@ -1,5 +1,3 @@
-[ ] copy over code so it looks just like the student version, then commit
-
 [ ] add the ability to change the name of the queues, but keeping their ids the same. This will require changes in the data structure used by the backend, frontend, and database. Maybe rethinking the backend endpoints at this point would be a good idea.
 
 [ ] implement adding / archiving queues etc.
