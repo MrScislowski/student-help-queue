@@ -40,3 +40,9 @@ export interface Account {
   activeQueues: string[];
   archivedQueues: string[];
 }
+
+export interface Queue {
+  _id: Types.ObjectId;
+  displayName: string;
+  visible: boolean;
+}
