@@ -1,17 +1,12 @@
 import mongoose from "mongoose";
 import { ArchivedEntry } from "../types";
-import { userSchema } from "./active";
+import { activeEntrySchema, userSchema } from "./active";
 
 const schema = new mongoose.Schema<ArchivedEntry>({
   request: {
-    user: {
-      type: userSchema,
-      required: true,
-    },
-    timestamp: {
-      type: String,
-      required: true,
-    },
+    type: activeEntrySchema,
+    _id: false,
+    versionkey: false,
   },
   resolution: {
     user: {
@@ -27,10 +22,6 @@ const schema = new mongoose.Schema<ArchivedEntry>({
       enum: ["cancel", "resolve"],
       required: true,
     },
-  },
-  queueName: {
-    type: String,
-    required: true,
   },
 });
 

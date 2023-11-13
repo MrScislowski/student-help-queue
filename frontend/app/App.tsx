@@ -1,40 +1,44 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import SessionContext from "./SessionContext";
 
 import { setToken } from "./requests";
 import Header from "./components/Header";
 import LoginButton from "./components/LoginButton";
 import QueueSet from "./components/QueueSet";
-import { User } from "./types";
+import { Session } from "./types";
 import { QueryClient, QueryClientProvider } from "react-query";
 
 const queryClient = new QueryClient();
 
 const App = () => {
-  const [user, setUser] = useState<User | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
 
   useEffect(() => {
     const storedUserInfo = window.localStorage.getItem("studentHelpQueueUser");
     if (storedUserInfo) {
       const userInfo = JSON.parse(storedUserInfo);
-      setUser(userInfo);
+      setSession(userInfo);
       setToken(userInfo.token);
     }
   }, []);
 
+  // TODO: could re-implement session context to provide the setter method. Then this logout could be moved into the loginbutton component
   const handleLogout = () => {
     window.localStorage.removeItem("studentHelpQueueUser");
-    setUser(null);
+    setSession(null);
     setToken(null);
   };
 
-  if (!user) {
-    return <LoginButton setUser={setUser} />;
+  if (!session) {
+    return <LoginButton setSession={setSession} />;
   }
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Header user={user} handleLogout={handleLogout} />
-      <QueueSet user={user} />
+      <SessionContext.Provider value={session}>
+        <Header handleLogout={handleLogout} />
+        <QueueSet />
+      </SessionContext.Provider>
     </QueryClientProvider>
   );
 };

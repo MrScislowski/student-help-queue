@@ -31,9 +31,12 @@ router.get("/active", async (req, res) => {
       session.selectedClass.teacherEmail
     );
     res.send(accountInfo.activeQueues);
-  } catch (error) {
-    console.log(`error: ${JSON.stringify(error)}`);
-    return res.status(500).json(error);
+  } catch (error: unknown) {
+    let message = "";
+    if (error instanceof Error) {
+      message += error.message;
+    }
+    return res.status(500).send({ error: message });
   }
 });
 

@@ -2,10 +2,8 @@ export type ResolutionStatus = "cancel" | "resolve";
 
 export interface ActiveEntry {
   _id: string;
-  request: {
-    user: User;
-    timestamp: string;
-  };
+  user: User;
+  timestamp: string;
   queueName: string;
 }
 
@@ -22,3 +20,11 @@ export interface Session {
     teacherEmail: string;
   };
 }
+
+export const emptySession = {
+  user: { email: "emptyuser", givenName: "empty", familyName: "user" },
+  selectedClass: {
+    name: "noclass",
+    teacherEmail: "noteacher",
+  },
+};
