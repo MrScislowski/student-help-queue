@@ -10,7 +10,8 @@ const schema = new mongoose.Schema<Queue>({
   visible: {
     type: Boolean,
     required: true,
-  }
+  },
 });
 
-export { schema as queueSchema};
+const QueueModel = mongoose.model<Queue>("Queue", schema);
+export { QueueModel };

@@ -1,7 +1,8 @@
 import mongoose from "mongoose";
 import { AccountModel } from "./models/account";
-import { Account, User } from "./types";
+import { Account, User, Queue } from "./types";
 import config from "./config";
+import { QueueModel } from "./models/queue";
 
 mongoose
   .connect(config.DB_URL)
@@ -43,6 +44,30 @@ async function createDBAccount(): Promise<void> {
     await AccountModel.insertMany([newAccount1, newAccount2]);
   } catch (err) {
     console.log(err);
+  }
+
+  const helpQueue: Queue = {
+    displayName: "help",
+    visible: true,
+  }
+
+  const completedQueue: Queue = {
+    displayName: "completed",
+    visible: true,
+  }
+
+  try {
+    const queues = await QueueModel.insertMany({
+      helpQueue, completedQueue,
+    })
+
+    const activeAccount = await AccountModel.findOne({"user.email": "dscislowski@usd266.com"});
+
+    if (!activeAccount) {
+      throw new Error("account not found");
+    }
+
+    queues.forEach(q => activeAccount.activeQueues.push()
   }
 }
 
