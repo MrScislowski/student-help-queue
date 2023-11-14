@@ -14,6 +14,7 @@
           {
             _id,
             name,
+            visibility,
             entries: [
               {
               _id,
