@@ -67,7 +67,6 @@ async function createDBAccount(): Promise<void> {
     if (!activeAccount) {
       throw new Error("account not found");
     }
-
     console.log(helpQueue);
     activeAccount.activeQueues.push(helpQueue, completedQueue);
     console.log(activeAccount);
@@ -77,7 +76,9 @@ async function createDBAccount(): Promise<void> {
     for (let count = 0; count < 5; count++) {
       const entry: ActiveEntry = {
         _id: new mongoose.Types.ObjectId(),
-        timestamp: new Date().toISOString(),
+        timestamp: new Date(
+          Date.now() - Math.random() * 20 * 60 * 1000
+        ).toISOString(),
         user: {
           email: `${Math.random().toString(36).substr(2, 5)}@gmail.com`,
           familyName: Math.random().toString(36).substr(2, 5),
