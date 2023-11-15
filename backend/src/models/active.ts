@@ -28,10 +28,6 @@ const schema = new mongoose.Schema<ActiveEntry>({
     type: String,
     required: true,
   },
-  queueName: {
-    type: String,
-    required: true,
-  },
 });
 
 const ActiveModel = mongoose.model<ActiveEntry>("Active", schema);

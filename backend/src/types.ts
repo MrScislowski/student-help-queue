@@ -6,7 +6,6 @@ export interface ActiveEntry {
   _id: Types.ObjectId;
   user: User;
   timestamp: string;
-  queueName: string;
 }
 
 export type ActiveEntryStub = Omit<ActiveEntry, "_id" | "request.timestamp">;
