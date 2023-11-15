@@ -1,6 +1,24 @@
-import mongoose from "mongoose";
-import { Account } from "../types";
-import { userSchema } from "./active";
+import mongoose, { Types } from "mongoose";
+
+import { Account, ActiveQueue } from "../types";
+import { userSchema, activeEntrySchema } from "./active";
+
+const activeQueueSchema = new mongoose.Schema<ActiveQueue>({
+  displayName: {
+    type: String,
+    required: true,
+  },
+
+  visible: {
+    type: Boolean,
+    required: true,
+  },
+
+  entries: {
+    type: [activeEntrySchema],
+    required: true,
+  },
+});
 
 const schema = new mongoose.Schema<Account>({
   user: {
@@ -8,11 +26,11 @@ const schema = new mongoose.Schema<Account>({
     required: true,
   },
   activeQueues: {
-    type: [String],
+    type: [activeQueueSchema],
     required: true,
   },
   archivedQueues: {
-    type: [String],
+    type: [Types.ObjectId],
     required: true,
   },
 });

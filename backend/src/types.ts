@@ -37,12 +37,13 @@ export interface Session {
 
 export interface Account {
   user: User;
-  activeQueues: string[];
-  archivedQueues: string[];
+  activeQueues: ActiveQueue[];
+  archivedQueues: Types.ObjectId[];
 }
 
-export interface Queue {
+export interface ActiveQueue {
   _id: Types.ObjectId;
   displayName: string;
   visible: boolean;
+  entries: ActiveEntry[];
 }
