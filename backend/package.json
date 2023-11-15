@@ -8,6 +8,7 @@
     "tsc": "tsc",
     "dev": "NODE_ENV=dev ts-node-dev ./src/index.ts",
     "dev-populate-db": "NODE_ENV=dev ts-node-dev ./src/dev-utils.ts",
+    "test-db-stuff": "NODE_ENV=dev ts-node ./src/db-test.ts",
     "lint": "eslint --ext .ts .",
     "start": "NODE_ENV=production node build/index.js",
     "postinstall": "npm run tsc"
