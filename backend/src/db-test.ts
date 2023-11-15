@@ -12,14 +12,7 @@ mongoose
     console.log(`error connecting to MongoDB: ${err.message}`);
   });
 
-/*
-MONGOOSE:
-AccountModel.findOne(
-  { "user.email": "dscislowski@usd266.com" },
-  { "activeQueues.displayName": 1 }
-)
-*/
-
+// find just the names of the queues
 AccountModel.findOne(
   { "user.email": "dscislowski@usd266.com" },
   { "activeQueues.displayName": 1 }
