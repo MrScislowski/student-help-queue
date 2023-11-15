@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { AccountModel } from "./models/account";
-import { Account, User, ActiveQueue } from "./types";
+import { Account, User, ActiveQueue, ActiveEntry } from "./types";
 import config from "./config";
 
 mongoose
@@ -73,7 +73,22 @@ async function createDBAccount(): Promise<void> {
     console.log(activeAccount);
 
     await activeAccount.save();
-    console.log("saved...");
+
+    for (let count = 0; count < 5; count++) {
+      const entry: ActiveEntry = {
+        _id: new mongoose.Types.ObjectId(),
+        timestamp: new Date().toISOString(),
+        user: {
+          email: `${Math.random().toString(36).substr(2, 5)}@gmail.com`,
+          familyName: Math.random().toString(36).substr(2, 5),
+          givenName: Math.random().toString(36).substr(2, 5),
+        },
+      };
+      activeAccount.activeQueues
+        .find((q) => q._id === helpQueue._id)
+        ?.entries.push(entry);
+      await activeAccount.save();
+    }
   } catch (err) {
     console.log("Error: ", err);
   }
