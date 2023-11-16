@@ -14,7 +14,11 @@
   - teacher may want just the queue names if they're going to be changing them etc
     => teachers will get data by their user email
 
-  * [ ] consolidate activeEntries and queues request so only one DB request is required
+  * [ ] consolidate activeEntries and queues request so only one DB request is required... have getQueues function that takes an endpoint... students can use this
+    - controllers handle the incoming requests (bridge between routes and business logic)
+    - controllers should use services to get things from the db
+    - services do the business logic. these exist to keep the controllers thin
+      => controller should check on permissions etc. Probably handle the session and pass on appropriate parts to the service
   * [ ] use projections etc so unnecessary data isn't sent
   * [ ] use a url endpoint to identify which teacher, or something like that.
 
