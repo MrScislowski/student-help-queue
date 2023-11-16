@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { AccountModel } from "./models/account";
-import { Account, User, ActiveQueue, ActiveEntry } from "./types";
+import { Account, ActiveQueue, ActiveEntry, Owner } from "./types";
 import config from "./config";
 
 mongoose
@@ -13,28 +13,30 @@ mongoose
   });
 
 async function createDBAccount(): Promise<void> {
-  const accountUser1: User = {
+  const accountUser1: Owner = {
     email: "mr.scislowski@gmail.com",
     familyName: "Scislowski",
     givenName: "Daniel",
+    endpoint: "mrscislowski",
   };
 
-  const accountUser2: User = {
+  const accountUser2: Owner = {
     email: "dscislowski@usd266.com",
     familyName: "Scislowski",
     givenName: "Daniel",
+    endpoint: "scislowski-usd266",
   };
 
   const newAccount1: Account = {
     activeQueues: [],
     archivedQueues: [],
-    user: accountUser1,
+    owner: accountUser1,
   };
 
   const newAccount2: Account = {
     activeQueues: [],
     archivedQueues: [],
-    user: accountUser2,
+    owner: accountUser2,
   };
 
   try {
@@ -61,15 +63,13 @@ async function createDBAccount(): Promise<void> {
 
   try {
     const activeAccount = await AccountModel.findOne({
-      "user.email": "dscislowski@usd266.com",
+      "owner.email": "dscislowski@usd266.com",
     });
 
     if (!activeAccount) {
       throw new Error("account not found");
     }
-    console.log(helpQueue);
     activeAccount.activeQueues.push(helpQueue, completedQueue);
-    console.log(activeAccount);
 
     await activeAccount.save();
 
@@ -97,4 +97,6 @@ async function createDBAccount(): Promise<void> {
 
 createDBAccount()
   .then(() => console.log("db filled"))
-  .catch(() => console.log("error filling db"));
+  .then(() => mongoose.connection.close())
+  .then(() => console.log("goodbye"))
+  .catch(() => console.log("error occured shutting down"));
