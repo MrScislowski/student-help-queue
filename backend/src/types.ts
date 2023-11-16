@@ -42,7 +42,7 @@ export interface Session {
 }
 
 export interface Account {
-  user: User;
+  owner: Owner;
   activeQueues: ActiveQueue[];
   archivedQueues: Types.ObjectId[];
 }

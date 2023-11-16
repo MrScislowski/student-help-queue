@@ -1,7 +1,8 @@
 import mongoose, { Types } from "mongoose";
 
 import { Account, ActiveQueue } from "../types";
-import { userSchema, activeEntrySchema } from "./active";
+import { activeEntrySchema } from "./active";
+import { ownerSchema } from "./owner";
 
 const activeQueueSchema = new mongoose.Schema<ActiveQueue>({
   displayName: {
@@ -20,9 +21,9 @@ const activeQueueSchema = new mongoose.Schema<ActiveQueue>({
   },
 });
 
-const schema = new mongoose.Schema<Account>({
-  user: {
-    type: userSchema,
+const accountSchema = new mongoose.Schema<Account>({
+  owner: {
+    type: ownerSchema,
     required: true,
   },
   activeQueues: {
@@ -35,6 +36,6 @@ const schema = new mongoose.Schema<Account>({
   },
 });
 
-const AccountModel = mongoose.model<Account>("Account", schema);
+const AccountModel = mongoose.model<Account>("Account", accountSchema);
 
 export { AccountModel };
