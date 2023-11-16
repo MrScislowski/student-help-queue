@@ -26,6 +26,13 @@ export interface User {
   familyName: string;
 }
 
+export interface Owner {
+  email: string;
+  givenName: string;
+  familyName: string;
+  endpoint: string;
+}
+
 export interface Session {
   user: User;
   selectedClass: {
