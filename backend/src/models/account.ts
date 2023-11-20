@@ -5,6 +5,11 @@ import { activeEntrySchema } from "./active";
 import { ownerSchema } from "./owner";
 
 const activeQueueSchema = new mongoose.Schema<ActiveQueue>({
+  _id: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+  },
+
   displayName: {
     type: String,
     required: true,

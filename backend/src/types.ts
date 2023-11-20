@@ -8,8 +8,6 @@ export interface ActiveEntry {
   timestamp: string;
 }
 
-export type ActiveEntryStub = Omit<ActiveEntry, "_id" | "request.timestamp">;
-
 export interface ArchivedEntry {
   _id: Types.ObjectId;
   request: Omit<ActiveEntry, "_id">;
