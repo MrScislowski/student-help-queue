@@ -5,9 +5,11 @@ import {
   Owner,
   ResolutionStatus,
   User,
+  ArchivedEntry,
 } from "../types";
 import { AccountModel } from "../models/account";
 import mongoose from "mongoose";
+import ArchivedModel from "../models/archived";
 
 const getQueuesForStudent = async (
   endpoint: string
@@ -53,13 +55,46 @@ const addActiveEntry = async (
   );
 };
 
-// // resolve an entry
-// const resolveEntry = (
-//   user: User,
-//   endpoint: string,
-//   queueId: string,
-//   resolutionStatus: ResolutionStatus
-// ): void => {};
+// resolve an entry
+const resolveEntry = async (
+  user: User,
+  endpoint: string,
+  queueId: string,
+  resolutionStatus: ResolutionStatus
+): Promise<void> => {
+  // pull it out of the array
+
+  const queueContents = await AccountModel.findOneAndUpdate(
+    { "owner.endpoint": endpoint, "activeQueues._id": queueId },
+    { $pull: { "activeQueues.$.entries": { "user.email": user.email } } },
+    { new: false, projection: { "activeQueues.$": 1 } }
+  );
+
+  // add it to the archived place
+  const removedEntry = (queueContents as unknown as ActiveQueue).entries.find(
+    (entry) => entry.user.email === user.email
+  );
+
+  if (!removedEntry) {
+    throw new Error("could not find entry");
+  }
+
+  const { _id, ...entryData } = removedEntry;
+
+  const resolution = {
+    user,
+    timestamp: new Date().toISOString(),
+    status: resolutionStatus,
+  };
+
+  const archivedVersion: ArchivedEntry = {
+    _id,
+    request: entryData,
+    resolution,
+  };
+
+  await ArchivedModel.insertMany([archivedVersion]);
+};
 
 // // add a queue
 // const addQueue = (owner: Owner, queueName: string): void => {};
