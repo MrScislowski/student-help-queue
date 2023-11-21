@@ -9,6 +9,7 @@
     "dev": "NODE_ENV=dev ts-node-dev ./src/index.ts",
     "dev-populate-db": "NODE_ENV=dev ts-node ./src/dev-utils.ts",
     "test-db-stuff": "NODE_ENV=dev ts-node ./src/db-test.ts",
+    "dev-sans-auth": "NODE_ENV=dev DISABLE_AUTH=true ts-node ./src/index.ts",
     "lint": "eslint --ext .ts .",
     "start": "NODE_ENV=production node build/index.js",
     "postinstall": "npm run tsc"

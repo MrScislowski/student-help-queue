@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { Router, Request, Response, NextFunction } from "express";
-import { ActiveQueue } from "../types";
+import { ActiveQueue, Session } from "../types";
 import { parseSession } from "../utils";
 import jwt from "jsonwebtoken";
 import config from "../config";
@@ -8,17 +8,35 @@ import activeQueueService from "../services/activeQueueService";
 
 const router = Router();
 
+const mockSession: Session = {
+  user: {
+    email: "testuser@gmail.com",
+    familyName: "smith",
+    givenName: "john",
+  },
+  selectedClass: {
+    name: "exampleClass",
+    teacherEmail: "teacherexample@gmail.com",
+  },
+};
+
 const authenticateToken = (
   req: Request,
   res: Response,
   next: NextFunction
 ): void | Response => {
-  if (!req.headers.authorization) {
-    return res.status(400).send("Token required in authorization header");
-  }
+  let sessionInfo;
 
-  const token = req.headers.authorization.substring(7);
-  const sessionInfo = parseSession(jwt.verify(token, config.SECRET));
+  if (config.DISABLE_AUTH) {
+    sessionInfo = mockSession;
+  } else {
+    if (!req.headers.authorization) {
+      return res.status(400).send("Token required in authorization header");
+    }
+
+    const token = req.headers.authorization.substring(7);
+    sessionInfo = parseSession(jwt.verify(token, config.SECRET));
+  }
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   res.locals.session = sessionInfo;
