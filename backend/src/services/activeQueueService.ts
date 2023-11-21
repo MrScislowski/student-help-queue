@@ -1,8 +1,6 @@
 import {
-  Account,
   ActiveEntry,
   ActiveQueue,
-  Owner,
   ResolutionStatus,
   User,
   ArchivedEntry,
@@ -112,4 +110,9 @@ const resolveEntry = async (
 
 // const deleteQueue = (owner: Owner, queueId: string): void => {};
 
-export default { getQueuesForStudent, getQueuesForTeacher, addActiveEntry };
+export default {
+  getQueuesForStudent,
+  getQueuesForTeacher,
+  addActiveEntry,
+  resolveEntry,
+};
