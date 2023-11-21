@@ -1,5 +1,13 @@
-import { Account, ActiveQueue, ResolutionStatus, User } from "../types";
+import {
+  Account,
+  ActiveEntry,
+  ActiveQueue,
+  Owner,
+  ResolutionStatus,
+  User,
+} from "../types";
 import { AccountModel } from "../models/account";
+import mongoose from "mongoose";
 
 const getQueuesForStudent = async (
   endpoint: string
@@ -28,12 +36,22 @@ const getQueuesForTeacher = async (
   return returnData;
 };
 
-// // add an entry
-// const addActiveEntry = (
-//   user: User,
-//   endpoint: string,
-//   queueId: string
-// ): void => {};
+// add an entry
+const addActiveEntry = async (
+  user: User,
+  endpoint: string,
+  queueId: string
+): Promise<void> => {
+  const newEntry: ActiveEntry = {
+    _id: new mongoose.Types.ObjectId(),
+    timestamp: new Date().toISOString(),
+    user: user,
+  };
+  await AccountModel.findOneAndUpdate(
+    { "owner.endpoint": endpoint, "activeQueues._id": queueId },
+    { $push: { "activeQueues.$.entries": newEntry } }
+  );
+};
 
 // // resolve an entry
 // const resolveEntry = (
@@ -59,4 +77,4 @@ const getQueuesForTeacher = async (
 
 // const deleteQueue = (owner: Owner, queueId: string): void => {};
 
-export default { getQueuesForStudent, getQueuesForTeacher };
+export default { getQueuesForStudent, getQueuesForTeacher, addActiveEntry };
