@@ -7,7 +7,8 @@ import cors from "cors";
 import { OAuth2Client } from "google-auth-library";
 import jwt from "jsonwebtoken";
 import activeEntriesRouter from "./controllers/activeEntries";
-import queuesRouter from "./controllers/queues";
+import studentRouter from "./controllers/studentRequests";
+// import queuesRouter from "./controllers/queues";
 
 const app = express();
 app.use(express.json());
@@ -34,7 +35,8 @@ mongoose
 
 app.use("/api/activeEntries", activeEntriesRouter);
 
-app.use("/api/queues", queuesRouter);
+// app.use("/api/queues", queuesRouter);
+app.use("/api/student", studentRouter);
 
 app.get("/api/archived", async (_req, res) => {
   const results = await entriesService.getArchivedEntries();

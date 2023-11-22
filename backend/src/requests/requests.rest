@@ -1,38 +1,6 @@
+###
+GET http://localhost:3001/api/student/scislowski-usd266
 
 ###
-GET http://localhost:3001/api/queue
+GET http://localhost:3001/api/student/mrscislowski
 
-### 
-GET http://localhost:3001/api/archived
-
-###
-POST http://localhost:3001/api/queue
-Content-Type: application/json
-
-{
-  "user": {
-    "id": "b",
-    "displayName": "b"
-  }
-}
-
-###
-POST http://localhost:3001/api/queue/64db7a1b2fc5cff00d792e05
-Content-Type: application/json
-
-{
-  "user": {
-    "id": "b",
-    "displayName": "b"
-  },
-  "resolutionStatus": "cancel"
-}
-
-###
-POST http://localhost:3001/api/clear
-
-###
-POST http://localhost:3001/api/fillrandom
-
-###
-POST http://localhost:3001/api/login
