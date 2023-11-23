@@ -102,6 +102,28 @@ export const parseArchivedEntry = (body: unknown): ResolutionStatus => {
   return parseResolutionStatus(body.resolutionStatus);
 };
 
+export const parseBodyString = (
+  body: unknown,
+  propertyName: string
+): string => {
+  if (!body || typeof body !== "object") {
+    throw new Error(`body does not contain property ${propertyName}`);
+  }
+
+  if (!(propertyName in body)) {
+    throw new Error(`body does not contain property ${propertyName}`);
+  }
+
+  const bodyObject = body as { [key: string]: unknown };
+  const value = bodyObject[propertyName];
+
+  if (!isString(value)) {
+    throw new Error(`property ${propertyName} is not a string`);
+  }
+
+  return value;
+};
+
 const administratorsList = [
   "dscislowski@usd266.com",
   "mr.scislowski@gmail.com",

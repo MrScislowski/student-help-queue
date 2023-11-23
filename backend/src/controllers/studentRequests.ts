@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { Router, Request, Response, NextFunction } from "express";
 import { ActiveQueue, Session } from "../types";
-import { parseSession } from "../utils";
+import { parseBodyString, parseSession } from "../utils";
 import jwt from "jsonwebtoken";
 import config from "../config";
 import activeQueueService from "../services/activeQueueService";
@@ -61,6 +61,22 @@ router.get("/:classId", async (req, res) => {
       message += error.message;
     }
     return res.status(500).send({ error: message });
+  }
+});
+
+router.post("/:classId", async (req, res) => {
+  try {
+    const classId = req.params.classId;
+
+    const queueId = parseBodyString(req.body, "queueId");
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const session: Session = res.locals.session;
+
+    await activeQueueService.addActiveEntry(session.user, classId, queueId);
+    res.status(200).send();
+  } catch (err) {
+    res.status(400).send("error occurred");
   }
 });
 

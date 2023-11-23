@@ -4,3 +4,10 @@ GET http://localhost:3001/api/student/scislowski-usd266
 ###
 GET http://localhost:3001/api/student/mrscislowski
 
+###
+POST http://localhost:3001/api/student/scislowski-usd266
+Content-Type: application/json
+
+{
+  "queueId": "655d3aec9d42432780a24d50"
+}
