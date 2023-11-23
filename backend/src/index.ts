@@ -6,7 +6,6 @@ mongoose.set("strictQuery", false);
 import cors from "cors";
 import { OAuth2Client } from "google-auth-library";
 import jwt from "jsonwebtoken";
-import activeEntriesRouter from "./controllers/activeEntries";
 import studentRouter from "./controllers/studentRequests";
 // import queuesRouter from "./controllers/queues";
 
@@ -18,7 +17,6 @@ app.use((_req: Request, _res: Response, next: NextFunction) => {
 
 // import { parseLoginPayload, parseString, parseUser } from "./utils";
 import { parseLoginPayload } from "./utils";
-import entriesService from "./services/entriesService";
 // import accountsService from "./services/accountsService";
 
 const PORT = config.PORT;
@@ -33,18 +31,16 @@ mongoose
     console.log(`error connecting to MongoDB: ${err.message}`);
   });
 
-app.use("/api/activeEntries", activeEntriesRouter);
-
 // app.use("/api/queues", queuesRouter);
 app.use("/api/student", studentRouter);
 
-app.get("/api/archived", async (_req, res) => {
-  const results = await entriesService.getArchivedEntries();
-  res.send({
-    timestamp: new Date().toISOString(),
-    entries: results,
-  });
-});
+// app.get("/api/archived", async (_req, res) => {
+//   const results = await entriesService.getArchivedEntries();
+//   res.send({
+//     timestamp: new Date().toISOString(),
+//     entries: results,
+//   });
+// });
 
 app.post("/api/login", async (req, res) => {
   try {
