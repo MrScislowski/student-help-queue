@@ -1,4 +1,4 @@
-import mongoose, { Types } from "mongoose";
+import mongoose from "mongoose";
 
 import { Account, ActiveQueue } from "../types";
 import { activeEntrySchema } from "./active";
@@ -20,10 +20,7 @@ const activeQueueSchema = new mongoose.Schema<ActiveQueue>({
     required: true,
   },
 
-  entries: {
-    type: [activeEntrySchema],
-    required: true,
-  },
+  entries: [activeEntrySchema],
 });
 
 const accountSchema = new mongoose.Schema<Account>({
@@ -36,7 +33,7 @@ const accountSchema = new mongoose.Schema<Account>({
     required: true,
   },
   archivedQueues: {
-    type: [Types.ObjectId],
+    type: [mongoose.Types.ObjectId],
     required: true,
   },
 });

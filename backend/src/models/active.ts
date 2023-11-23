@@ -19,16 +19,19 @@ const userSchema = new mongoose.Schema<User>(
   { _id: false }
 );
 
-const schema = new mongoose.Schema<ActiveEntry>({
-  user: {
-    type: userSchema,
-    required: true,
+const schema = new mongoose.Schema<ActiveEntry>(
+  {
+    user: {
+      type: userSchema,
+      required: true,
+    },
+    timestamp: {
+      type: String,
+      required: true,
+    },
   },
-  timestamp: {
-    type: String,
-    required: true,
-  },
-});
+  { _id: false }
+);
 
 const ActiveModel = mongoose.model<ActiveEntry>("Active", schema);
 

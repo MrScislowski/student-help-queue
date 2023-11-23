@@ -75,7 +75,6 @@ async function createDBAccount(): Promise<void> {
 
     for (let count = 0; count < 5; count++) {
       const entry: ActiveEntry = {
-        _id: new mongoose.Types.ObjectId(),
         timestamp: new Date(
           Date.now() - Math.random() * 20 * 60 * 1000
         ).toISOString(),

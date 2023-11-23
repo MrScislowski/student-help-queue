@@ -3,14 +3,13 @@ import { Types } from "mongoose";
 export type ResolutionStatus = "cancel" | "resolve";
 
 export interface ActiveEntry {
-  _id: Types.ObjectId;
   user: User;
   timestamp: string;
 }
 
 export interface ArchivedEntry {
   _id: Types.ObjectId;
-  request: Omit<ActiveEntry, "_id">;
+  request: ActiveEntry;
   resolution: {
     user: User;
     timestamp: string;
