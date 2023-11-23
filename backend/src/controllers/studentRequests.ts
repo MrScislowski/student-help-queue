@@ -76,7 +76,7 @@ router.post("/:classId", async (req, res) => {
     await activeQueueService.addActiveEntry(session.user, classId, queueId);
     res.status(200).send();
   } catch (err) {
-    res.status(400).send("error occurred");
+    res.status(400).send(err);
   }
 });
 

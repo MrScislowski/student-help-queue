@@ -43,13 +43,21 @@ const addActiveEntry = async (
   queueId: string
 ): Promise<void> => {
   const newEntry: ActiveEntry = {
-    _id: new mongoose.Types.ObjectId(),
     timestamp: new Date().toISOString(),
     user: user,
   };
+
   await AccountModel.findOneAndUpdate(
-    { "owner.endpoint": endpoint, "activeQueues._id": queueId },
-    { $push: { "activeQueues.$.entries": newEntry } }
+    {
+      "owner.endpoint": endpoint,
+      "activeQueues._id": queueId,
+      "activeQueues.entries.user.email": { $ne: user.email },
+    },
+    { $addToSet: { "activeQueues.$[queue].entries": newEntry } },
+    {
+      new: true,
+      arrayFilters: [{ "queue._id": queueId }],
+    }
   );
 };
 
@@ -77,8 +85,6 @@ const resolveEntry = async (
     throw new Error("could not find entry");
   }
 
-  const { _id, ...entryData } = removedEntry;
-
   const resolution = {
     user,
     timestamp: new Date().toISOString(),
@@ -86,8 +92,8 @@ const resolveEntry = async (
   };
 
   const archivedVersion: ArchivedEntry = {
-    _id,
-    request: entryData,
+    _id: new mongoose.Types.ObjectId(),
+    request: removedEntry,
     resolution,
   };
 
