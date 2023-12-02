@@ -51,12 +51,18 @@ const addActiveEntry = async (
     {
       "owner.endpoint": endpoint,
       "activeQueues._id": queueId,
-      "activeQueues.entries.user.email": { $ne: user.email },
+      "activeQueues.entries": {
+        $not: {
+          $elemMatch: {
+            "user.email": user.email,
+          },
+        },
+      },
     },
-    { $addToSet: { "activeQueues.$[queue].entries": newEntry } },
     {
-      new: true,
-      arrayFilters: [{ "queue._id": queueId }],
+      $push: {
+        "activeQueues.$.entries": newEntry,
+      },
     }
   );
 };
