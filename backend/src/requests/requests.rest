@@ -1,16 +1,14 @@
 ###
-GET http://localhost:3001/api/student/scislowski-usd266
+GET http://localhost:3001/api/classes/scislowski-usd266/queues
+
 
 ###
-GET http://localhost:3001/api/student/mrscislowski
+POST http://localhost:3001/api/classes/scislowski-usd266/queues/656c991ce03d7c894cc03626
 
 ###
-POST http://localhost:3001/api/student/scislowski-usd266
+DELETE http://localhost:3001/api/classes/scislowski-usd266/queues/656c991ce03d7c894cc03626
 Content-Type: application/json
 
 {
-  "queueId": "656c991ce03d7c894cc03626"
+  "resolutionStatus": "resolve"
 }
-
-###
-POST http://localhost:3001/api/student/scislowski-usd266

@@ -6,7 +6,7 @@ mongoose.set("strictQuery", false);
 import cors from "cors";
 import { OAuth2Client } from "google-auth-library";
 import jwt from "jsonwebtoken";
-import studentRouter from "./controllers/studentRequests";
+import entriesRouter from "./controllers/activeEntries";
 // import queuesRouter from "./controllers/queues";
 
 const app = express();
@@ -31,8 +31,7 @@ mongoose
     console.log(`error connecting to MongoDB: ${err.message}`);
   });
 
-// app.use("/api/queues", queuesRouter);
-app.use("/api/student", studentRouter);
+app.use("/api", entriesRouter);
 
 // app.get("/api/archived", async (_req, res) => {
 //   const results = await entriesService.getArchivedEntries();
@@ -56,13 +55,8 @@ app.post("/api/login", async (req, res) => {
 
     const userInfo = parseLoginPayload(payload);
 
-    // FIXME: in future, need to involve frontend in selecting the relevant class
     const sessionObject = {
       user: userInfo,
-      selectedClass: {
-        name: "placeholder",
-        teacherEmail: "mr.scislowski@gmail.com",
-      },
     };
 
     const token = jwt.sign(sessionObject, config.SECRET);
