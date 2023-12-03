@@ -45,7 +45,7 @@ const authenticateToken = (
 
 router.use(authenticateToken);
 
-router.get("/classes/:classId/queues", async (req, res) => {
+router.get(":classId/queues", async (req, res) => {
   const classId = req.params.classId;
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -67,7 +67,7 @@ router.get("/classes/:classId/queues", async (req, res) => {
   }
 });
 
-router.post("/classes/:classId/queues/:queueId", async (req, res) => {
+router.post(":classId/queues/:queueId", async (req, res) => {
   try {
     const classId = req.params.classId;
     const queueId = req.params.queueId;
@@ -82,7 +82,7 @@ router.post("/classes/:classId/queues/:queueId", async (req, res) => {
   }
 });
 
-router.delete("/classes/:classId/queues/:queueId", async (req, res) => {
+router.delete(":classId/queues/:queueId", async (req, res) => {
   try {
     const classId = req.params.classId;
     const queueId = req.params.queueId;

@@ -3,8 +3,8 @@ import { Queue, ResolutionStatus, User } from "./types";
 
 const baseUrl =
   process.env.NODE_ENV === "development"
-    ? `http://localhost:3001/api/`
-    : "https://student-help-queue-backend-dbc8c16c81bf.herokuapp.com/api/";
+    ? `http://localhost:3001/api`
+    : "https://student-help-queue-backend-dbc8c16c81bf.herokuapp.com/api";
 
 let token: string | null = null;
 

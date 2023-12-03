@@ -31,7 +31,7 @@ mongoose
     console.log(`error connecting to MongoDB: ${err.message}`);
   });
 
-app.use("/api", entriesRouter);
+app.use("/api/classes", entriesRouter);
 
 // app.get("/api/archived", async (_req, res) => {
 //   const results = await entriesService.getArchivedEntries();
