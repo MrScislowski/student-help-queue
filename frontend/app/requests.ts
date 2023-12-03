@@ -1,10 +1,10 @@
 import axios from "axios";
 import { ActiveEntry, ResolutionStatus, User } from "./types";
 
-const activeEntriesUrl =
+const baseUrl =
   process.env.NODE_ENV === "development"
-    ? `http://localhost:3001/api/activeEntries`
-    : "https://student-help-queue-backend-dbc8c16c81bf.herokuapp.com/api/activeEntries";
+    ? `http://localhost:3001/api/`
+    : "https://student-help-queue-backend-dbc8c16c81bf.herokuapp.com/api/";
 
 let token: string | null = null;
 
@@ -16,7 +16,9 @@ export const setToken = (newValue: string | null) => {
   }
 };
 
-export const getActiveEntries = async (): Promise<{
+export const getActiveEntries = async (
+  endpoint: string
+): Promise<{
   timestamp: string;
   entries: ActiveEntry[];
 }> => {
@@ -26,21 +28,28 @@ export const getActiveEntries = async (): Promise<{
       headers: { Authorization: token },
     };
   }
-  return (await axios.get(`${activeEntriesUrl}`, config)).data;
+  return (await axios.get(`${baseUrl}/classes/${endpoint}/queues`, config))
+    .data;
 };
 
-export const addName = async (queueName: string): Promise<void> => {
+export const addName = async (
+  classId: string,
+  queueId: string
+): Promise<void> => {
   let config = {};
   if (token) {
     config = {
       headers: { Authorization: token },
     };
   }
-  return (await axios.post(`${activeEntriesUrl}`, { queueName }, config)).data;
+  return (
+    await axios.post(`${baseUrl}/classes/${classId}/queues/${queueId}`, config)
+  ).data;
 };
 
 export const resolveEntry = async (
-  entry: ActiveEntry,
+  classId: string,
+  queueId: string,
   resolutionStatus: ResolutionStatus
 ) => {
   let config = {};
@@ -49,12 +58,12 @@ export const resolveEntry = async (
       headers: { Authorization: token },
     };
   }
-  await axios.post(
-    `${activeEntriesUrl}/${entry._id}`,
+  await axios.delete(
+    `${baseUrl}/classes/${classId}/queues/${queueId}/resolve`,
     {
-      resolutionStatus,
-    },
-    config
+      ...config,
+      data: resolutionStatus,
+    }
   );
 };
 
@@ -62,16 +71,6 @@ const activeQueuesUrl =
   process.env.NODE_ENV === "development"
     ? `http://localhost:3001/api/queues/active`
     : "https://student-help-queue-backend-dbc8c16c81bf.herokuapp.com/api/queues/active";
-
-export const getActiveQueues = async (): Promise<string[]> => {
-  let config = {};
-  if (token) {
-    config = {
-      headers: { Authorization: token },
-    };
-  }
-  return (await axios.get(`${activeQueuesUrl}`, config)).data;
-};
 
 const loginUrl =
   process.env.NODE_ENV === "development"
@@ -83,68 +82,4 @@ export const attemptLogin = async (credential: string) => {
   const response = await axios.post(`${loginUrl}`, { credential: credential });
   setToken(response.data.token);
   return response.data;
-};
-
-const accountUrl =
-  process.env.NODE_ENV === "development"
-    ? `http://localhost:3001/api/account`
-    : "https://student-help-queue-backend-dbc8c16c81bf.herokuapp.com/api/account";
-
-export const getAccountInfo = async (): Promise<{
-  user: User;
-  activeQueues: string[];
-  archivedQueues: string[];
-}> => {
-  let config = {};
-  if (token) {
-    config = {
-      headers: { Authorization: token },
-    };
-  }
-
-  return (await axios.get(`${accountUrl}`, config)).data;
-};
-
-export const addQueue = async (queueName: string) => {
-  let config = {};
-  if (token) {
-    config = {
-      headers: { Authorization: token },
-    };
-  }
-
-  await axios.post(`${accountUrl}/queues`, { queueName }, config);
-};
-
-export const archiveQueue = async (queueName: string) => {
-  let config = {};
-  if (token) {
-    config = {
-      headers: { Authorization: token },
-    };
-  }
-
-  await axios.post(`${accountUrl}/queues/archive`, { queueName }, config);
-};
-
-export const activateQueue = async (queueName: string) => {
-  let config = {};
-  if (token) {
-    config = {
-      headers: { Authorization: token },
-    };
-  }
-
-  await axios.post(`${accountUrl}/queues/reactivate`, { queueName }, config);
-};
-
-export const deleteQueue = async (queueName: string) => {
-  let config = {};
-  if (token) {
-    config = {
-      headers: { Authorization: token },
-    };
-  }
-
-  await axios.post(`${accountUrl}/queues/delete`, { queueName }, config);
 };

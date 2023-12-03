@@ -1,29 +1,25 @@
 import { Fragment, useContext } from "react";
 import Queue from "./Queue";
 import { useQuery, useQueryClient } from "react-query";
-import { getActiveEntries, getActiveQueues } from "../requests";
+import { getActiveEntries } from "../requests";
 import SessionContext from "../SessionContext";
 import TimeOffsetContext from "../TimeOffsetContext";
 
-interface QueueSetProps {}
+interface QueueSetProps {
+  classId: string;
+}
 
 const QueueSet = (props: QueueSetProps) => {
   const session = useContext(SessionContext);
 
   const queryClient = useQueryClient();
-  const getQueuesQuery = useQuery({
-    queryKey: ["queues"],
-    queryFn: getActiveQueues,
-    retry: 2,
-  });
 
   const getEntriesQuery = useQuery({
     queryKey: ["entries"],
-    queryFn: async () => await getActiveEntries(),
-    retry: getQueuesQuery.isError ? false : true,
+    queryFn: async () => await getActiveEntries(props.classId),
   });
 
-  if (getEntriesQuery.isLoading || getQueuesQuery.isLoading) {
+  if (getEntriesQuery.isLoading) {
     return (
       <>
         <p> Loading data ... </p>
@@ -31,22 +27,10 @@ const QueueSet = (props: QueueSetProps) => {
     );
   }
 
-  if (getQueuesQuery.error || !getQueuesQuery.data) {
-    return (
-      <>
-        <p>
-          unable to get queues for class
-          {`"${session.selectedClass.name}"`}
-          with teacher email {session.selectedClass.teacherEmail}
-        </p>
-      </>
-    );
-  }
-
   if (getEntriesQuery.error) {
     return (
       <>
-        <p>unable to get entries in queues: {`${getQueuesQuery.data}`}</p>
+        <p>unable to get queue entries</p>
       </>
     );
   }
@@ -59,6 +43,7 @@ const QueueSet = (props: QueueSetProps) => {
 
   return (
     <TimeOffsetContext.Provider value={timeOffset}>
+      {getEntriesQuery.data.}
       {getQueuesQuery.data.map((queueName) => {
         return (
           <Queue
