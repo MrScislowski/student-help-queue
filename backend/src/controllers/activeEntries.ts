@@ -54,7 +54,10 @@ router.get("/classes/:classId/queues", async (req, res) => {
       classId
     );
 
-    res.send(queues);
+    res.send({
+      queues: queues,
+      timestamp: new Date().toISOString(),
+    });
   } catch (error: unknown) {
     let message = "";
     if (error instanceof Error) {
@@ -90,8 +93,6 @@ router.delete("/classes/:classId/queues/:queueId", async (req, res) => {
     const status: ResolutionStatus = parseResolutionStatus(
       req.body.resolutionStatus
     );
-
-    console.log("about to resolve status");
 
     await activeQueueService.resolveEntry(
       session.user,

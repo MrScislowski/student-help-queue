@@ -14,7 +14,7 @@ interface AppProps {
   classId: string;
 }
 
-const App = ({classId}: AppProps) => {
+const App = ({ classId }: AppProps) => {
   const [session, setSession] = useState<Session | null>(null);
 
   useEffect(() => {

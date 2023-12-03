@@ -58,12 +58,14 @@ const getEntryAge = (
 };
 
 interface QueueProps {
+  classId: string;
+  queueId: string;
   queueName: string;
   entries: ActiveEntry[];
 }
 
 const Queue = (props: QueueProps) => {
-  const { queueName, entries } = props;
+  const { queueName, entries, classId, queueId } = props;
   const [currentTime, setCurrentTime] = useState(new Date().getTime());
   const session = useContext(SessionContext);
 
@@ -71,7 +73,7 @@ const Queue = (props: QueueProps) => {
 
   const addNameMutation = useMutation({
     mutationFn: ({ queueName }: { queueName: string }) => {
-      return addName(queueName);
+      return addName(classId, queueId);
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["entries"]);
@@ -80,7 +82,7 @@ const Queue = (props: QueueProps) => {
 
   const resolveEntryMutation = useMutation({
     mutationFn: ({ entry }: { entry: ActiveEntry }) => {
-      return resolveEntry(entry, "resolve");
+      return resolveEntry(classId, queueId, "resolve");
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["entries"] });
@@ -89,7 +91,7 @@ const Queue = (props: QueueProps) => {
 
   const cancelEntryMutation = useMutation({
     mutationFn: ({ entry }: { entry: ActiveEntry }) => {
-      return resolveEntry(entry, "cancel");
+      return resolveEntry(classId, queueId, "cancel");
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["entries"] });
@@ -108,7 +110,7 @@ const Queue = (props: QueueProps) => {
 
   return (
     <>
-      <QueueTitle>{queueName} queue</QueueTitle>
+      <QueueTitle>{queueName}</QueueTitle>
 
       {entries.find((entry) => entry.user.email === session.user.email) ? (
         ""
@@ -129,7 +131,7 @@ const Queue = (props: QueueProps) => {
                 timeOffset
               )}
               )
-              {item._id && (
+              {item.user.email === session.user.email && (
                 <>
                   <ResolveButton
                     onClick={() => {

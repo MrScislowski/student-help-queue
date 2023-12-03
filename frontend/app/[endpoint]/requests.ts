@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ActiveEntry, ResolutionStatus, User } from "./types";
+import { Queue, ResolutionStatus, User } from "./types";
 
 const baseUrl =
   process.env.NODE_ENV === "development"
@@ -20,7 +20,7 @@ export const getActiveEntries = async (
   endpoint: string
 ): Promise<{
   timestamp: string;
-  entries: ActiveEntry[];
+  queues: Queue[];
 }> => {
   let config = {};
   if (token) {

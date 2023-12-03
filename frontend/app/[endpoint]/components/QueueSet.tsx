@@ -43,17 +43,14 @@ const QueueSet = (props: QueueSetProps) => {
 
   return (
     <TimeOffsetContext.Provider value={timeOffset}>
-      {getEntriesQuery.data.}
-      {getQueuesQuery.data.map((queueName) => {
+      {getEntriesQuery.data?.queues.map((queue) => {
         return (
           <Queue
-            key={queueName}
-            queueName={queueName}
-            entries={
-              getEntriesQuery.data?.entries.filter(
-                (entry) => entry.queueName === queueName
-              ) || []
-            }
+            key={queue._id}
+            classId={props.classId}
+            queueId={queue._id}
+            queueName={queue.displayName}
+            entries={queue.entries}
           />
         );
       })}
