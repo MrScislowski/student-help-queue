@@ -1,10 +1,4 @@
-import {
-  ActiveEntry,
-  ActiveQueue,
-  ResolutionStatus,
-  User,
-  ArchivedEntry,
-} from "../types";
+import { ActiveEntry, ActiveQueue, ResolutionStatus, User } from "../types";
 import { AccountModel } from "../models/account";
 import mongoose from "mongoose";
 import ArchivedModel from "../models/archived";
@@ -97,13 +91,13 @@ const resolveEntry = async (
     status: resolutionStatus,
   };
 
-  const archivedVersion: ArchivedEntry = {
+  const archivedVersion = new ArchivedModel({
     _id: new mongoose.Types.ObjectId(),
     request: removedEntry,
     resolution,
-  };
+  });
 
-  await ArchivedModel.insertMany([archivedVersion]);
+  await archivedVersion.save();
 };
 
 // // add a queue

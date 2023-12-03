@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { Router, Request, Response, NextFunction } from "express";
 import { ActiveQueue, Session } from "../types";
-import { parseBodyString, parseSession } from "../utils";
+import { parseSession } from "../utils";
 import jwt from "jsonwebtoken";
 import config from "../config";
 import activeQueueService from "../services/activeQueueService";
@@ -45,7 +45,7 @@ const authenticateToken = (
 
 router.use(authenticateToken);
 
-router.get("/:classId", async (req, res) => {
+router.get("/classes/:classId/queues", async (req, res) => {
   const classId = req.params.classId;
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -64,11 +64,10 @@ router.get("/:classId", async (req, res) => {
   }
 });
 
-router.post("/:classId", async (req, res) => {
+router.post("/classes/:classId/queues/:queueId", async (req, res) => {
   try {
     const classId = req.params.classId;
-
-    const queueId = parseBodyString(req.body, "queueId");
+    const queueId = req.params.queueId;
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const session: Session = res.locals.session;
