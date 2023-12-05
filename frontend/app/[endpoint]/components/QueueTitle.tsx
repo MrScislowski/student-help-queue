@@ -8,6 +8,22 @@ const Title = styled.h2`
   align-items: center;
 `;
 
+const TitleInput = styled.input`
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  border: none;
+  outline: none;
+  background: none;
+  flex-grow: 1;
+`;
+
+const EditContainer = styled.div`
+  display: flex;
+  align-items: left;
+`;
+
 interface QueueTitleProps {
   name: string;
   id: string;
@@ -32,6 +48,7 @@ const QueueTitle = (props: QueueTitleProps) => {
 
   const handleSave = () => {
     setIsEditing(false);
+    setOriginalTitle(title);
     // TODO: update queue name in database
   };
 
@@ -43,8 +60,8 @@ const QueueTitle = (props: QueueTitleProps) => {
   return (
     <Title>
       {isEditing ? (
-        <span>
-          <input
+        <EditContainer>
+          <TitleInput
             ref={inputRef}
             type="text"
             value={title}
@@ -57,7 +74,7 @@ const QueueTitle = (props: QueueTitleProps) => {
           />
           <button onClick={handleSave}>Save</button>
           <button onClick={handleCancel}>Cancel</button>
-        </span>
+        </EditContainer>
       ) : (
         <span>
           {title}
