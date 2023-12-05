@@ -107,6 +107,27 @@ const resolveEntry = async (
   await archivedVersion.save();
 };
 
+const renameQueue = async (
+  endpoint: string,
+  ownerEmail: string,
+  queueId: string,
+  newName: string
+): Promise<void> => {
+  // find the queue
+  await AccountModel.findOneAndUpdate(
+    {
+      "owner.endpoint": endpoint,
+      "owner.email": ownerEmail,
+      "activeQueues._id": queueId,
+    },
+    {
+      $set: {
+        "activeQueues.$.displayName": newName,
+      },
+    }
+  );
+};
+
 // // add a queue
 // const addQueue = (owner: Owner, queueName: string): void => {};
 
@@ -115,12 +136,6 @@ const resolveEntry = async (
 
 // const showQueue = (owner: Owner, queueId: string): void => {};
 
-// const renameQueue = (
-//   owner: Owner,
-//   queueId: string,
-//   newName: string
-// ): void => {};
-
 // const deleteQueue = (owner: Owner, queueId: string): void => {};
 
 export default {
@@ -128,4 +143,5 @@ export default {
   getQueuesForTeacher,
   addActiveEntry,
   resolveEntry,
+  renameQueue,
 };
