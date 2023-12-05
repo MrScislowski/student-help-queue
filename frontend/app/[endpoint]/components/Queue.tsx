@@ -5,6 +5,7 @@ import { resolveEntry, addName } from "../requests";
 import { useContext, useEffect, useState } from "react";
 import TimeOffsetContext from "../TimeOffsetContext";
 import SessionContext from "../SessionContext";
+import QueueTitle from "./QueueTitle";
 
 const EntriesContainer = styled.div`
   display: flex;
@@ -35,10 +36,6 @@ const CancelButton = styled.button`
 
 const AddNameButton = styled.button`
   border-radius: 10px;
-`;
-
-const QueueTitle = styled.h2`
-  padding: 10px;
 `;
 
 const getEntryAge = (
@@ -110,7 +107,7 @@ const Queue = (props: QueueProps) => {
 
   return (
     <>
-      <QueueTitle>{queueName}</QueueTitle>
+      <QueueTitle name={queueName} id={queueId} classId={classId} />
 
       {entries.find((entry) => entry.user.email === session.user.email) ? (
         ""
