@@ -125,25 +125,24 @@ const Queue = (props: QueueProps) => {
                 new Date(item.timestamp).getTime(),
                 timeOffset
               )}
+              ) (
+              <>
+                <ResolveButton
+                  onClick={() => {
+                    resolveEntryMutation.mutate();
+                  }}
+                >
+                  Resolve
+                </ResolveButton>
+                <CancelButton
+                  onClick={async () => {
+                    cancelEntryMutation.mutate();
+                  }}
+                >
+                  Cancel
+                </CancelButton>
+              </>
               )
-              {item.user.email === session.user.email && (
-                <>
-                  <ResolveButton
-                    onClick={() => {
-                      resolveEntryMutation.mutate();
-                    }}
-                  >
-                    Resolve
-                  </ResolveButton>
-                  <CancelButton
-                    onClick={async () => {
-                      cancelEntryMutation.mutate();
-                    }}
-                  >
-                    Cancel
-                  </CancelButton>
-                </>
-              )}
             </QueueItem>
           );
         })}
