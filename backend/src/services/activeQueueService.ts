@@ -45,7 +45,7 @@ const addActiveEntry = async (
     {
       "owner.endpoint": endpoint,
       "activeQueues._id": queueId,
-      "activeQueues.entries": {
+      "activeQueues.$.entries": {
         $not: {
           $elemMatch: {
             "user.email": user.email,
