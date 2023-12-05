@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import Queue from "./Queue";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 const Title = styled.h2`
   padding: 10px;
@@ -21,8 +21,13 @@ const QueueTitle = (props: QueueTitleProps) => {
   const [title, setTitle] = useState(name);
   const [originalTitle, setOriginalTitle] = useState(name);
 
+  const inputRef = useRef<HTMLInputElement>(null);
+
   const handleEdit = () => {
     setIsEditing(true);
+    setTimeout(() => {
+      inputRef.current?.focus();
+    }, 0);
   };
 
   const handleSave = () => {
@@ -40,16 +45,22 @@ const QueueTitle = (props: QueueTitleProps) => {
       {isEditing ? (
         <span>
           <input
+            ref={inputRef}
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                handleSave();
+              }
+            }}
           />
           <button onClick={handleSave}>Save</button>
           <button onClick={handleCancel}>Cancel</button>
         </span>
       ) : (
         <span>
-          <span>{title}</span>
+          {title}
           <button onClick={handleEdit}>Edit</button>
         </span>
       )}
