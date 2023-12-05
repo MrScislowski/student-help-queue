@@ -43,7 +43,11 @@ export const addName = async (
     };
   }
   return (
-    await axios.post(`${baseUrl}/classes/${classId}/queues/${queueId}`, config)
+    await axios.post(
+      `${baseUrl}/classes/${classId}/queues/${queueId}`,
+      {},
+      config
+    )
   ).data;
 };
 
@@ -56,15 +60,10 @@ export const resolveEntry = async (
   if (token) {
     config = {
       headers: { Authorization: token },
+      data: { resolutionStatus },
     };
   }
-  await axios.delete(
-    `${baseUrl}/classes/${classId}/queues/${queueId}/resolve`,
-    {
-      ...config,
-      data: resolutionStatus,
-    }
-  );
+  await axios.delete(`${baseUrl}/classes/${classId}/queues/${queueId}`, config);
 };
 
 const activeQueuesUrl =

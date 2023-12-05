@@ -72,7 +72,7 @@ const Queue = (props: QueueProps) => {
   const queryClient = useQueryClient();
 
   const addNameMutation = useMutation({
-    mutationFn: ({ queueName }: { queueName: string }) => {
+    mutationFn: () => {
       return addName(classId, queueId);
     },
     onSuccess: () => {
@@ -81,7 +81,7 @@ const Queue = (props: QueueProps) => {
   });
 
   const resolveEntryMutation = useMutation({
-    mutationFn: ({ entry }: { entry: ActiveEntry }) => {
+    mutationFn: () => {
       return resolveEntry(classId, queueId, "resolve");
     },
     onSuccess: () => {
@@ -90,7 +90,7 @@ const Queue = (props: QueueProps) => {
   });
 
   const cancelEntryMutation = useMutation({
-    mutationFn: ({ entry }: { entry: ActiveEntry }) => {
+    mutationFn: () => {
       return resolveEntry(classId, queueId, "cancel");
     },
     onSuccess: () => {
@@ -115,9 +115,7 @@ const Queue = (props: QueueProps) => {
       {entries.find((entry) => entry.user.email === session.user.email) ? (
         ""
       ) : (
-        <button onClick={() => addNameMutation.mutate({ queueName })}>
-          add name
-        </button>
+        <button onClick={() => addNameMutation.mutate()}>add name</button>
       )}
 
       <EntriesContainer>
@@ -135,18 +133,14 @@ const Queue = (props: QueueProps) => {
                 <>
                   <ResolveButton
                     onClick={() => {
-                      resolveEntryMutation.mutate({
-                        entry: item,
-                      });
+                      resolveEntryMutation.mutate();
                     }}
                   >
                     Resolve
                   </ResolveButton>
                   <CancelButton
                     onClick={async () => {
-                      cancelEntryMutation.mutate({
-                        entry: item,
-                      });
+                      cancelEntryMutation.mutate();
                     }}
                   >
                     Cancel
