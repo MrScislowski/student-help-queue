@@ -32,10 +32,6 @@ export interface Owner {
 
 export interface Session {
   user: User;
-  selectedClass: {
-    name: string;
-    teacherEmail: string;
-  };
 }
 
 export interface Account {

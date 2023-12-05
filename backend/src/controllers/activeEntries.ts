@@ -14,10 +14,6 @@ const mockSession: Session = {
     familyName: "smith",
     givenName: "john",
   },
-  selectedClass: {
-    name: "exampleClass",
-    teacherEmail: "teacherexample@gmail.com",
-  },
 };
 
 const authenticateToken = (
@@ -45,7 +41,8 @@ const authenticateToken = (
 
 router.use(authenticateToken);
 
-router.get(":classId/queues", async (req, res) => {
+router.get("/:classId/queues", async (req, res) => {
+  console.log("GET /api/queues/:classId/queues");
   const classId = req.params.classId;
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -67,7 +64,7 @@ router.get(":classId/queues", async (req, res) => {
   }
 });
 
-router.post(":classId/queues/:queueId", async (req, res) => {
+router.post("/:classId/queues/:queueId", async (req, res) => {
   try {
     const classId = req.params.classId;
     const queueId = req.params.queueId;
@@ -82,7 +79,7 @@ router.post(":classId/queues/:queueId", async (req, res) => {
   }
 });
 
-router.delete(":classId/queues/:queueId", async (req, res) => {
+router.delete("/:classId/queues/:queueId", async (req, res) => {
   try {
     const classId = req.params.classId;
     const queueId = req.params.queueId;

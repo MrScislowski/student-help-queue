@@ -57,25 +57,9 @@ export const parseSession = (data: unknown): Session => {
     throw new Error("missing user property");
   }
 
-  if (
-    "selectedClass" in data &&
-    data.selectedClass &&
-    typeof data.selectedClass === "object" &&
-    "name" in data.selectedClass &&
-    "teacherEmail" in data.selectedClass
-  ) {
-    return {
-      user: userInfo,
-      selectedClass: {
-        name: parseString(data.selectedClass.name),
-        teacherEmail: parseString(data.selectedClass.teacherEmail),
-      },
-    };
-  } else {
-    throw new Error(
-      "selectedClass property doesn't conform to required structure"
-    );
-  }
+  return {
+    user: userInfo,
+  };
 };
 
 export const parseResolutionStatus = (arg: unknown): ResolutionStatus => {
