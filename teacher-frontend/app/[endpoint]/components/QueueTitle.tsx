@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { useMutation, useQueryClient } from "react-query";
 import Queue from "./Queue";
 import { useRef, useState } from "react";
 
@@ -38,6 +39,9 @@ const QueueTitle = (props: QueueTitleProps) => {
   const [originalTitle, setOriginalTitle] = useState(name);
 
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const changeQueueName = useMutation({});
+  // TODO: rename the queue in the DB... maybe we need a backend endpoint for this?
 
   const handleEdit = () => {
     setIsEditing(true);
