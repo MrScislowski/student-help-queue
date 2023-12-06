@@ -63,7 +63,7 @@ async function createDBAccount(): Promise<void> {
 
   try {
     const activeAccount = await AccountModel.findOne({
-      "owner.email": "dscislowski@usd266.com",
+      "owner.email": "mr.scislowski@gmail.com",
     });
 
     if (!activeAccount) {
