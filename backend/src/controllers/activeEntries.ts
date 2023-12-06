@@ -42,7 +42,6 @@ const authenticateToken = (
 router.use(authenticateToken);
 
 router.get("/:classId/queues", async (req, res) => {
-  console.log("GET /api/queues/:classId/queues");
   const classId = req.params.classId;
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
