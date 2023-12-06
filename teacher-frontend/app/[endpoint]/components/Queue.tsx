@@ -78,8 +78,8 @@ const Queue = (props: QueueProps) => {
   });
 
   const resolveEntryMutation = useMutation({
-    mutationFn: () => {
-      return resolveEntry(classId, queueId, "resolve");
+    mutationFn: ({ studentEmail }: { studentEmail: string }) => {
+      return resolveEntry(classId, queueId, studentEmail, "resolve");
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["entries"] });
@@ -87,8 +87,8 @@ const Queue = (props: QueueProps) => {
   });
 
   const cancelEntryMutation = useMutation({
-    mutationFn: () => {
-      return resolveEntry(classId, queueId, "cancel");
+    mutationFn: ({ studentEmail }: { studentEmail: string }) => {
+      return resolveEntry(classId, queueId, studentEmail, "cancel");
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["entries"] });
@@ -129,14 +129,18 @@ const Queue = (props: QueueProps) => {
               <>
                 <ResolveButton
                   onClick={() => {
-                    resolveEntryMutation.mutate();
+                    resolveEntryMutation.mutate({
+                      studentEmail: item.user.email,
+                    });
                   }}
                 >
                   Resolve
                 </ResolveButton>
                 <CancelButton
                   onClick={async () => {
-                    cancelEntryMutation.mutate();
+                    cancelEntryMutation.mutate({
+                      studentEmail: item.user.email,
+                    });
                   }}
                 >
                   Cancel

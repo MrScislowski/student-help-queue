@@ -54,13 +54,14 @@ export const addName = async (
 export const resolveEntry = async (
   classId: string,
   queueId: string,
+  studentEmail: string,
   resolutionStatus: ResolutionStatus
 ) => {
   let config = {};
   if (token) {
     config = {
       headers: { Authorization: token },
-      data: { resolutionStatus },
+      data: { resolutionStatus, email: studentEmail },
     };
   }
   await axios.delete(`${baseUrl}/classes/${classId}/queues/${queueId}`, config);

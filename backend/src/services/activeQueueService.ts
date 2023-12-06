@@ -135,7 +135,7 @@ const resolveOthersEntry = async (
   // add it to the archived place
   const removedEntry = (
     queueContents.activeQueues as unknown as ActiveQueue[]
-  )[0].entries.find((entry) => entry.user.email === user.email);
+  )[0].entries.find((entry) => entry.user.email === otherEmail);
 
   if (!removedEntry) {
     throw new Error("could not find entry");
