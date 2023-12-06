@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { Router, Request, Response, NextFunction } from "express";
 import { ActiveQueue, ResolutionStatus, Session } from "../types";
-import { parseResolutionStatus, parseSession } from "../utils";
+import { parseResolutionStatus, parseSession, parseString } from "../utils";
 import jwt from "jsonwebtoken";
 import config from "../config";
 import activeQueueService from "../services/activeQueueService";
@@ -91,13 +91,26 @@ router.delete("/:classId/queues/:queueId", async (req, res) => {
       req.body.resolutionStatus
     );
 
-    await activeQueueService.resolveEntry(
-      session.user,
-      classId,
-      queueId,
-      status
-    );
-    res.status(200).send();
+    if (req.body.email) {
+      const email = parseString(req.body.email);
+      await activeQueueService.resolveOthersEntry(
+        session.user,
+        email,
+        classId,
+        queueId,
+        status
+      );
+      res.status(200).send();
+      return;
+    } else {
+      await activeQueueService.resolveMyEntry(
+        session.user,
+        classId,
+        queueId,
+        status
+      );
+      res.status(200).send();
+    }
   } catch (err) {
     res.status(400).send(err);
   }

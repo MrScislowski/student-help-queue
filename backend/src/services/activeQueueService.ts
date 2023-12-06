@@ -61,8 +61,8 @@ const addActiveEntry = async (
   );
 };
 
-// resolve an entry
-const resolveEntry = async (
+// resolve an entry belonging to me
+const resolveMyEntry = async (
   user: User,
   endpoint: string,
   queueId: string,
@@ -73,6 +73,55 @@ const resolveEntry = async (
   const queueContents = await AccountModel.findOneAndUpdate(
     { "owner.endpoint": endpoint, "activeQueues._id": queueId },
     { $pull: { "activeQueues.$.entries": { "user.email": user.email } } },
+    { new: false, projection: { "activeQueues.$": 1 } }
+  );
+
+  if (
+    !queueContents ||
+    !queueContents.activeQueues ||
+    queueContents.activeQueues.length === 0
+  ) {
+    throw new Error("could not find queue");
+  }
+  // add it to the archived place
+  const removedEntry = (
+    queueContents.activeQueues as unknown as ActiveQueue[]
+  )[0].entries.find((entry) => entry.user.email === user.email);
+
+  if (!removedEntry) {
+    throw new Error("could not find entry");
+  }
+
+  const resolution = {
+    user,
+    timestamp: new Date().toISOString(),
+    status: resolutionStatus,
+  };
+
+  const archivedVersion = new ArchivedModel({
+    _id: new mongoose.Types.ObjectId(),
+    request: removedEntry,
+    resolution,
+  });
+
+  await archivedVersion.save();
+};
+
+// resolve an entry belonging to someone else
+const resolveOthersEntry = async (
+  user: User,
+  otherEmail: string,
+  endpoint: string,
+  queueId: string,
+  resolutionStatus: ResolutionStatus
+): Promise<void> => {
+  const queueContents = await AccountModel.findOneAndUpdate(
+    {
+      "owner.endpoint": endpoint,
+      "owner.email": user.email,
+      "activeQueues._id": queueId,
+    },
+    { $pull: { "activeQueues.$.entries": { "user.email": otherEmail } } },
     { new: false, projection: { "activeQueues.$": 1 } }
   );
 
@@ -142,6 +191,7 @@ export default {
   getQueuesForStudent,
   getQueuesForTeacher,
   addActiveEntry,
-  resolveEntry,
+  resolveMyEntry,
+  resolveOthersEntry,
   renameQueue,
 };
