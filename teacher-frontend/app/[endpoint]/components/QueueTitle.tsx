@@ -1,7 +1,8 @@
 import styled from "styled-components";
-import { useMutation, useQueryClient } from "react-query";
 import Queue from "./Queue";
 import { useRef, useState } from "react";
+import { useMutation, useQueryClient } from "react-query";
+import { renameQueue } from "../requests";
 
 const Title = styled.h2`
   padding: 10px;
@@ -40,8 +41,16 @@ const QueueTitle = (props: QueueTitleProps) => {
 
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const changeQueueName = useMutation({});
-  // TODO: rename the queue in the DB... maybe we need a backend endpoint for this?
+  const queryClient = useQueryClient();
+
+  const renameQueueMutation = useMutation({
+    mutationFn: async ({ newName }: {newName: string} ) => {
+      await renameQueue(classId, id, newName);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["entries"]);
+    },
+  });
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -53,7 +62,7 @@ const QueueTitle = (props: QueueTitleProps) => {
   const handleSave = () => {
     setIsEditing(false);
     setOriginalTitle(title);
-    // TODO: update queue name in database
+    renameQueueMutation.mutate({ newName: title });
   };
 
   const handleCancel = () => {

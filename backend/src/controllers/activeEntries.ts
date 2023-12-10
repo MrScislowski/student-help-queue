@@ -115,4 +115,24 @@ router.delete("/:classId/queues/:queueId", async (req, res) => {
   }
 });
 
+router.patch("/:classId/queues/:queueId", async (req, res) => {
+  try {
+    const classId = req.params.classId;
+    const queueId = req.params.queueId;
+    const queueName = parseString(req.body.queueName);
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const session: Session = res.locals.session;
+
+    await activeQueueService.renameQueue(
+      classId,
+      session.user.email,
+      queueId,
+      queueName
+    );
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
 export default router;

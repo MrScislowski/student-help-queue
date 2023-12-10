@@ -67,6 +67,32 @@ export const resolveEntry = async (
   await axios.delete(`${baseUrl}/classes/${classId}/queues/${queueId}`, config);
 };
 
+export const renameQueue = async (
+  classId: string,
+  queueId: string,
+  newName: string
+) => {
+  let config = {
+    headers: {},
+  };
+
+  const data = {
+    queueName: newName,
+  };
+
+  if (token) {
+    config = {
+      headers: { Authorization: token },
+    };
+  }
+
+  await axios.patch(
+    `${baseUrl}/classes/${classId}/queues/${queueId}`,
+    data,
+    config
+  );
+};
+
 const activeQueuesUrl =
   process.env.NODE_ENV === "development"
     ? `http://localhost:3001/api/queues/active`
