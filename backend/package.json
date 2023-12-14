@@ -12,7 +12,7 @@
     "dev-sans-auth": "NODE_ENV=dev DISABLE_AUTH=true ts-node ./src/index.ts",
     "lint": "eslint --ext .ts .",
     "start": "NODE_ENV=production node build/index.js",
-    "postinstall": "npm run tsc"
+    "postinstall": "pnpm run tsc"
   },
   "keywords": [],
   "author": "",

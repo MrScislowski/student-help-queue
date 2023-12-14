@@ -14,10 +14,6 @@ const mockSession: Session = {
     familyName: "smith",
     givenName: "john",
   },
-  selectedClass: {
-    name: "exampleClass",
-    teacherEmail: "teacherexample@gmail.com",
-  },
 };
 
 const authenticateToken = (
