@@ -3,26 +3,12 @@ import { AccountModel } from "../models/account";
 import mongoose from "mongoose";
 import ArchivedModel from "../models/archived";
 
-const getQueuesForStudent = async (
+const getQueuesForClass = async (
   endpoint: string
-): Promise<ActiveQueue[]> => {
+): Promise<ActiveQueue[] | null> => {
   const allData = await AccountModel.findOne({ "owner.endpoint": endpoint });
   if (!allData) {
-    return [];
-  }
-
-  const returnData: ActiveQueue[] = allData.activeQueues;
-
-  return returnData;
-};
-
-// get active entries
-const getQueuesForTeacher = async (
-  teacherEmail: string
-): Promise<ActiveQueue[]> => {
-  const allData = await AccountModel.findOne({ "owner.email": teacherEmail });
-  if (!allData) {
-    return [];
+    return null;
   }
 
   const returnData: ActiveQueue[] = allData.activeQueues;
@@ -188,8 +174,7 @@ const renameQueue = async (
 // const deleteQueue = (owner: Owner, queueId: string): void => {};
 
 export default {
-  getQueuesForStudent,
-  getQueuesForTeacher,
+  getQueuesForClass,
   addActiveEntry,
   resolveMyEntry,
   resolveOthersEntry,

@@ -46,9 +46,11 @@ router.get("/:classId/queues", async (req, res) => {
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   try {
-    const queues: ActiveQueue[] = await activeQueueService.getQueuesForStudent(
-      classId
-    );
+    const queues = await activeQueueService.getQueuesForClass(classId);
+
+    if (queues === null) {
+      return res.status(404).send({ error: "Class not found" });
+    }
 
     res.send({
       queues: queues,
