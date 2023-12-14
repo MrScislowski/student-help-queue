@@ -148,8 +148,7 @@ const renameQueue = async (
   queueId: string,
   newName: string
 ): Promise<void> => {
-  // find the queue
-  await AccountModel.findOneAndUpdate(
+  const result = await AccountModel.findOneAndUpdate(
     {
       "owner.endpoint": endpoint,
       "owner.email": ownerEmail,
@@ -159,8 +158,13 @@ const renameQueue = async (
       $set: {
         "activeQueues.$.displayName": newName,
       },
-    }
+    },
+    { new: true }
   );
+
+  if (!result) {
+    throw new Error("User doesn't own queue, or could not find queue");
+  }
 };
 
 // // add a queue
