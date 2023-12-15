@@ -30,7 +30,7 @@ const QueueSet = (props: QueueSetProps) => {
   if (getEntriesQuery.error) {
     return (
       <>
-        <p>unable to get queue entries</p>
+        <p>unable to get queue entries: {JSON.stringify(getEntriesQuery.error)}</p>
       </>
     );
   }
