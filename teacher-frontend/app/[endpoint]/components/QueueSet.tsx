@@ -27,10 +27,10 @@ const QueueSet = (props: QueueSetProps) => {
     );
   }
 
-  if (getEntriesQuery.error) {
+  if (getEntriesQuery.isError) {
     return (
       <>
-        <p>unable to get queue entries</p>
+        <p>Error: {(getEntriesQuery.error as Error).message}</p>
       </>
     );
   }

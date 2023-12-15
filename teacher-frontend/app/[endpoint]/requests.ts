@@ -28,8 +28,19 @@ export const getActiveEntries = async (
       headers: { Authorization: token },
     };
   }
-  return (await axios.get(`${baseUrl}/classes/${endpoint}/queues`, config))
-    .data;
+  try {
+    const response = await axios.get(
+      `${baseUrl}/classes/${endpoint}/queues`,
+      config
+    );
+    return response.data;
+  } catch (error: any) {
+    if (error.response && error.response.data) {
+      throw new Error(error.response.data.error);
+    } else {
+      throw new Error(error.message);
+    }
+  }
 };
 
 export const addName = async (

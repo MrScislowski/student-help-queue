@@ -49,7 +49,7 @@ router.get("/:classId/queues", async (req, res) => {
     const queues = await activeQueueService.getQueuesForClass(classId);
 
     if (queues === null) {
-      return res.status(404).send({ error: "Class not found" });
+      return res.status(404).send({ error: `Class ${classId} not found` });
     }
 
     res.send({
