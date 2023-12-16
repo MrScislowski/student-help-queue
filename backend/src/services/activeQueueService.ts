@@ -176,6 +176,7 @@ const addQueue = async (
     _id: new mongoose.Types.ObjectId(),
     displayName: queueName,
     entries: [],
+    visible: true,
   };
 
   const result = await AccountModel.findOneAndUpdate(
