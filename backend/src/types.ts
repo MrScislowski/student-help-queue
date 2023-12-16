@@ -43,6 +43,6 @@ export interface Account {
 export interface ActiveQueue {
   _id: Types.ObjectId;
   displayName: string;
-  visible: boolean;
+  // visible: boolean;
   entries: ActiveEntry[];
 }

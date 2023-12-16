@@ -167,15 +167,30 @@ const renameQueue = async (
   }
 };
 
-// // add a queue
-// const addQueue = (owner: Owner, queueName: string): void => {};
+const addQueue = async (
+  endpoint: string,
+  ownerEmail: string,
+  queueName: string
+): Promise<void> => {
+  const newQueue: ActiveQueue = {
+    _id: new mongoose.Types.ObjectId(),
+    displayName: queueName,
+    entries: [],
+  };
 
-// // hide/show/rename/remove a queue
-// const hideQueue = (owner: Owner, queueId: string): void => {};
+  const result = await AccountModel.findOneAndUpdate(
+    { "owner.endpoint": endpoint, "owner.email": ownerEmail },
+    {
+      $push: {
+        activeQueues: newQueue,
+      },
+    }
+  );
 
-// const showQueue = (owner: Owner, queueId: string): void => {};
-
-// const deleteQueue = (owner: Owner, queueId: string): void => {};
+  if (!result) {
+    throw new Error("User doesn't own queue, or could not find queue");
+  }
+}
 
 export default {
   getQueuesForClass,
@@ -183,4 +198,5 @@ export default {
   resolveMyEntry,
   resolveOthersEntry,
   renameQueue,
+  addQueue,
 };

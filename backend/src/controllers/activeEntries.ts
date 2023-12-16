@@ -41,6 +41,7 @@ const authenticateToken = (
 
 router.use(authenticateToken);
 
+// Get all queues for a class
 router.get("/:classId/queues", async (req, res) => {
   const classId = req.params.classId;
 
@@ -65,6 +66,23 @@ router.get("/:classId/queues", async (req, res) => {
   }
 });
 
+// create a new queue for a class
+router.post("/:classId/queues", async (req, res) => {
+  try {
+    const classId = req.params.classId;
+    const queueName = parseString(req.body.queueName);
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const session: Session = res.locals.session;
+
+    await activeQueueService.addQueue(classId, session.user.email, queueName);
+    res.status(200).send();
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
+// add your name (or another's) to a queue
 router.post("/:classId/queues/:queueId", async (req, res) => {
   try {
     const classId = req.params.classId;
@@ -80,6 +98,7 @@ router.post("/:classId/queues/:queueId", async (req, res) => {
   }
 });
 
+// remove your name (or another's) from a queue
 router.delete("/:classId/queues/:queueId", async (req, res) => {
   try {
     const classId = req.params.classId;
@@ -117,6 +136,7 @@ router.delete("/:classId/queues/:queueId", async (req, res) => {
   }
 });
 
+// rename a queue
 router.patch("/:classId/queues/:queueId", async (req, res) => {
   try {
     const classId = req.params.classId;
