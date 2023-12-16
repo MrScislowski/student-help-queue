@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { createQueue } from '../requests';
+import { useMutation, useQueryClient } from 'react-query';
 
 interface AddQueueFormProps {
     classId: string;
@@ -8,11 +9,24 @@ interface AddQueueFormProps {
 const AddQueueForm = ({classId}: {classId: string}) => {
     const [queueName, setQueueName] = useState('');
 
+    const queryClient = useQueryClient();
+
+    const addQueueMutation = useMutation({
+        mutationFn: async ({ newName }: {newName: string} ) => {
+          await createQueue(classId, newName);
+        },
+        onSuccess: () => {
+          queryClient.invalidateQueries(["entries"]);
+        },
+      });
+
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        createQueue(classId, queueName);
+        addQueueMutation.mutate({newName: queueName});
         setQueueName('');
     };
+
+  
 
     return (
         <form onSubmit={handleSubmit}>
