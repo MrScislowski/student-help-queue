@@ -83,7 +83,7 @@ router.post("/:classId/queues", async (req, res) => {
 });
 
 // add your name (or another's) to a queue
-router.post("/:classId/queues/:queueId", async (req, res) => {
+router.post("/:classId/queues/:queueId/users", async (req, res) => {
   try {
     const classId = req.params.classId;
     const queueId = req.params.queueId;
@@ -99,7 +99,7 @@ router.post("/:classId/queues/:queueId", async (req, res) => {
 });
 
 // remove your name (or another's) from a queue
-router.delete("/:classId/queues/:queueId", async (req, res) => {
+router.delete("/:classId/queues/:queueId/users", async (req, res) => {
   try {
     const classId = req.params.classId;
     const queueId = req.params.queueId;

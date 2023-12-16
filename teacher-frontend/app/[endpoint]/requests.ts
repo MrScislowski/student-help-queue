@@ -55,7 +55,7 @@ export const addName = async (
   }
   return (
     await axios.post(
-      `${baseUrl}/classes/${classId}/queues/${queueId}`,
+      `${baseUrl}/classes/${classId}/queues/${queueId}/users`,
       {},
       config
     )
@@ -75,7 +75,7 @@ export const resolveEntry = async (
       data: { resolutionStatus, email: studentEmail },
     };
   }
-  await axios.delete(`${baseUrl}/classes/${classId}/queues/${queueId}`, config);
+  await axios.delete(`${baseUrl}/classes/${classId}/queues/${queueId}/users`, config);
 };
 
 export const createQueue = async (
