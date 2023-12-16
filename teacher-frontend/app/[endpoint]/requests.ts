@@ -78,6 +78,21 @@ export const resolveEntry = async (
   await axios.delete(`${baseUrl}/classes/${classId}/queues/${queueId}`, config);
 };
 
+export const createQueue = async (
+  classId: string,
+  queueName: string
+): Promise<void> => {
+  let config = {};
+  if (token) {
+    config = {
+      headers: { Authorization: token },
+    };
+  }
+  return (
+    await axios.post(`${baseUrl}/classes/${classId}/queues`, { queueName }, config)
+  ).data;
+};
+
 export const renameQueue = async (
   classId: string,
   queueId: string,

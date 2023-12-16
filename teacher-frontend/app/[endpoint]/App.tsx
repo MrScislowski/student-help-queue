@@ -7,6 +7,7 @@ import LoginButton from "./components/LoginButton";
 import QueueSet from "./components/QueueSet";
 import { Session } from "./types";
 import { QueryClient, QueryClientProvider } from "react-query";
+import AddQueueForm from "./components/AddQueueForm";
 
 const queryClient = new QueryClient();
 
@@ -41,6 +42,7 @@ const App = ({ classId }: AppProps) => {
     <QueryClientProvider client={queryClient}>
       <SessionContext.Provider value={session}>
         <Header handleLogout={handleLogout} />
+        <AddQueueForm classId={classId} />
         <QueueSet classId={classId} />
       </SessionContext.Provider>
     </QueryClientProvider>
