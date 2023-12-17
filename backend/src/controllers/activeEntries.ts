@@ -104,6 +104,28 @@ router.delete("/:classId/queues/:queueId", async (req, res) => {
   }
 });
 
+// change visibility of a queue
+router.patch("/:classId/queues/:queueId", async (req, res) => {
+  try {
+    const classId = req.params.classId;
+    const queueId = req.params.queueId;
+    const visibility = req.body.visibility;
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const session: Session = res.locals.session;
+
+    await activeQueueService.changeVisibility(
+      classId,
+      session.user.email,
+      queueId,
+      visibility
+    );
+    res.status(200).send();
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
 // add your name (or another's) to a queue
 router.post("/:classId/queues/:queueId/users", async (req, res) => {
   try {

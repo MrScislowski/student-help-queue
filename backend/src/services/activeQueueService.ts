@@ -236,6 +236,31 @@ const deleteQueue = async (
   }
 };
 
+const changeVisibility = async (
+  endpoint: string,
+  ownerEmail: string,
+  queueId: string,
+  visibility: boolean
+): Promise<void> => {
+  const result = await AccountModel.findOneAndUpdate(
+    {
+      "owner.endpoint": endpoint,
+      "owner.email": ownerEmail,
+      "activeQueues._id": queueId,
+    },
+    {
+      $set: {
+        "activeQueues.$.visible": visibility,
+      },
+    },
+    { new: true }
+  );
+
+  if (!result) {
+    throw new Error("User doesn't own queue, or could not find queue");
+  }
+};
+
 export default {
   getQueuesForClass,
   addActiveEntry,
@@ -244,4 +269,5 @@ export default {
   renameQueue,
   addQueue,
   deleteQueue,
+  changeVisibility,
 };
