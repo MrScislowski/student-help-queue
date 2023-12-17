@@ -4,14 +4,37 @@ import mongoose from "mongoose";
 import ArchivedModel from "../models/archived";
 
 const getQueuesForClass = async (
-  endpoint: string
+  endpoint: string,
+  userEmail: string
 ): Promise<ActiveQueue[] | null> => {
-  const allData = await AccountModel.findOne({ "owner.endpoint": endpoint });
-  if (!allData) {
+  const allData = await AccountModel.aggregate([
+    {
+      $match: { "owner.endpoint": endpoint },
+    },
+    {
+      $project: {
+        activeQueues: {
+          $cond: {
+            if: { $eq: ["$owner.email", userEmail] },
+            then: "$activeQueues",
+            else: {
+              $filter: {
+                input: "$activeQueues",
+                as: "queue",
+                cond: { $eq: ["$$queue.visible", true] },
+              },
+            },
+          },
+        },
+      },
+    },
+  ]);
+
+  if (!allData || allData.length === 0) {
     return null;
   }
 
-  const returnData: ActiveQueue[] = allData.activeQueues;
+  const returnData: ActiveQueue[] = allData[0].activeQueues;
 
   return returnData;
 };

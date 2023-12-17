@@ -45,14 +45,20 @@ router.use(authenticateToken);
 router.get("/:classId/queues", async (req, res) => {
   const classId = req.params.classId;
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   try {
-    const queues = await activeQueueService.getQueuesForClass(classId);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const session: Session = res.locals.session;
+
+    const queues = await activeQueueService.getQueuesForClass(
+      classId,
+      session.user.email
+    );
 
     if (queues === null) {
       return res.status(404).send({ error: `Class ${classId} not found` });
     }
 
+    // TODO: when the database model is refactored, only return non
     res.send({
       queues: queues,
       timestamp: new Date().toISOString(),
