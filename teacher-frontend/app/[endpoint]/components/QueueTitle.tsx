@@ -2,7 +2,7 @@ import styled from "styled-components";
 import Queue from "./Queue";
 import { useRef, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
-import { deleteQueue, renameQueue } from "../requests";
+import { changeQueueVisibility, deleteQueue, renameQueue } from "../requests";
 import { Queue as QueueType } from "../types";
 
 const Title = styled.h2`
@@ -63,6 +63,15 @@ const QueueTitle = (props: QueueTitleProps) => {
     },
   });
 
+  const changeVisibilityMutation = useMutation({
+    mutationFn: async () => {
+      await changeQueueVisibility(classId, id, !queue.visible);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["entries"]);
+    },
+  });
+
   const handleEdit = () => {
     setIsEditing(true);
     setTimeout(() => {
@@ -83,6 +92,10 @@ const QueueTitle = (props: QueueTitleProps) => {
 
   const handleDelete = () => {
     deleteQueueMutation.mutate();
+  }
+
+  const handleChangeVisibility = () => {
+    changeVisibilityMutation.mutate();
   }
 
   return (
@@ -107,7 +120,7 @@ const QueueTitle = (props: QueueTitleProps) => {
         <span>
           {title}
           <button onClick={handleEdit}>Edit</button>
-          <button >{queue.visible ? "Hide" : "Show"}</button>
+          <button onClick={handleChangeVisibility}>{queue.visible ? "Hide" : "Show"}</button>
           <button onClick={handleDelete}>Delete</button>
         </span>
       )}

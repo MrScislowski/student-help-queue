@@ -109,7 +109,7 @@ router.patch("/:classId/queues/:queueId", async (req, res) => {
   try {
     const classId = req.params.classId;
     const queueId = req.params.queueId;
-    const visibility = req.body.visibility;
+    const visible = req.body.visible;
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const session: Session = res.locals.session;
@@ -118,7 +118,7 @@ router.patch("/:classId/queues/:queueId", async (req, res) => {
       classId,
       session.user.email,
       queueId,
-      visibility
+      visible
     );
     res.status(200).send();
   } catch (err) {

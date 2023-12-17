@@ -240,7 +240,7 @@ const changeVisibility = async (
   endpoint: string,
   ownerEmail: string,
   queueId: string,
-  visibility: boolean
+  visible: boolean
 ): Promise<void> => {
   const result = await AccountModel.findOneAndUpdate(
     {
@@ -250,7 +250,7 @@ const changeVisibility = async (
     },
     {
       $set: {
-        "activeQueues.$.visible": visibility,
+        "activeQueues.$.visible": visible,
       },
     },
     { new: true }

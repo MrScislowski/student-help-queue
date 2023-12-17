@@ -144,6 +144,26 @@ export const deleteQueue = async (
   ).data;
 };
 
+export const changeQueueVisibility = async (
+  classId: string,
+  queueId: string,
+  visible: boolean
+): Promise<void> => {
+  let config = {};
+  if (token) {
+    config = {
+      headers: { Authorization: token },
+    };
+  }
+  return (
+    await axios.patch(
+      `${baseUrl}/classes/${classId}/queues/${queueId}`,
+      { visible },
+      config
+    )
+  ).data;
+};
+
 const activeQueuesUrl =
   process.env.NODE_ENV === "development"
     ? `http://localhost:3001/api/queues/active`
