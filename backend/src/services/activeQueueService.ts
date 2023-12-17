@@ -7,6 +7,7 @@ const getQueuesForClass = async (
   endpoint: string,
   userEmail: string
 ): Promise<ActiveQueue[] | null> => {
+  // TODO: simplify this once Mongo schema is improved
   const allData = await AccountModel.aggregate([
     {
       $match: { "owner.endpoint": endpoint },

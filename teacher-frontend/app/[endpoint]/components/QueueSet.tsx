@@ -48,9 +48,7 @@ const QueueSet = (props: QueueSetProps) => {
           <Queue
             key={queue._id}
             classId={props.classId}
-            queueId={queue._id}
-            queueName={queue.displayName}
-            entries={queue.entries}
+            queue={queue}
           />
         );
       })}

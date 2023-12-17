@@ -3,6 +3,7 @@ import Queue from "./Queue";
 import { useRef, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { deleteQueue, renameQueue } from "../requests";
+import { Queue as QueueType } from "../types";
 
 const Title = styled.h2`
   padding: 10px;
@@ -27,13 +28,14 @@ const EditContainer = styled.div`
 `;
 
 interface QueueTitleProps {
-  name: string;
-  id: string;
   classId: string;
+  queue: QueueType;
 }
 
 const QueueTitle = (props: QueueTitleProps) => {
-  const { name, id, classId } = props;
+  const { classId, queue } = props;
+  const name = queue.displayName;
+  const id = queue._id;
 
   const [isEditing, setIsEditing] = useState(false);
   const [title, setTitle] = useState(name);
@@ -105,6 +107,7 @@ const QueueTitle = (props: QueueTitleProps) => {
         <span>
           {title}
           <button onClick={handleEdit}>Edit</button>
+          <button >{queue.visible ? "Hide" : "Show"}</button>
           <button onClick={handleDelete}>Delete</button>
         </span>
       )}

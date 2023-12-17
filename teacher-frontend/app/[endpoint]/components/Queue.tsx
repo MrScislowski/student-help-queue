@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { ActiveEntry, ResolutionStatus } from "../types";
+import { ActiveEntry, Queue, ResolutionStatus } from "../types";
 import { useMutation, useQueryClient } from "react-query";
 import { resolveEntry, addName } from "../requests";
 import { useContext, useEffect, useState } from "react";
@@ -56,13 +56,15 @@ const getEntryAge = (
 
 interface QueueProps {
   classId: string;
-  queueId: string;
-  queueName: string;
-  entries: ActiveEntry[];
+  queue: Queue;
 }
 
 const Queue = (props: QueueProps) => {
-  const { queueName, entries, classId, queueId } = props;
+  const { classId, queue } = props;
+  const queueName = queue.displayName;
+  const queueId = queue._id;
+  const entries = queue.entries;
+
   const [currentTime, setCurrentTime] = useState(new Date().getTime());
   const session = useContext(SessionContext);
 
@@ -107,7 +109,7 @@ const Queue = (props: QueueProps) => {
 
   return (
     <>
-      <QueueTitle name={queueName} id={queueId} classId={classId} />
+      <QueueTitle classId={classId} queue={queue} />
 
       {entries.find((entry) => entry.user.email === session.user.email) ? (
         ""
