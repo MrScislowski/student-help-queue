@@ -2,7 +2,7 @@ import styled from "styled-components";
 import Queue from "./Queue";
 import { useRef, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
-import { renameQueue } from "../requests";
+import { deleteQueue, renameQueue } from "../requests";
 
 const Title = styled.h2`
   padding: 10px;
@@ -52,6 +52,15 @@ const QueueTitle = (props: QueueTitleProps) => {
     },
   });
 
+  const deleteQueueMutation = useMutation({
+    mutationFn: async () => {
+      await deleteQueue(classId, id);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["entries"]);
+    },
+  });
+
   const handleEdit = () => {
     setIsEditing(true);
     setTimeout(() => {
@@ -69,6 +78,10 @@ const QueueTitle = (props: QueueTitleProps) => {
     setIsEditing(false);
     setTitle(originalTitle);
   };
+
+  const handleDelete = () => {
+    deleteQueueMutation.mutate();
+  }
 
   return (
     <Title>
@@ -92,6 +105,7 @@ const QueueTitle = (props: QueueTitleProps) => {
         <span>
           {title}
           <button onClick={handleEdit}>Edit</button>
+          <button onClick={handleDelete}>Delete</button>
         </span>
       )}
     </Title>

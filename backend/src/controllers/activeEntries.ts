@@ -82,6 +82,22 @@ router.post("/:classId/queues", async (req, res) => {
   }
 });
 
+// delete a queue
+router.delete("/:classId/queues/:queueId", async (req, res) => {
+  try {
+    const classId = req.params.classId;
+    const queueId = req.params.queueId;
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const session: Session = res.locals.session;
+
+    await activeQueueService.deleteQueue(classId, session.user.email, queueId);
+    res.status(200).send();
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
 // add your name (or another's) to a queue
 router.post("/:classId/queues/:queueId/users", async (req, res) => {
   try {

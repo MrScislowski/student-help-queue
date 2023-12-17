@@ -75,7 +75,10 @@ export const resolveEntry = async (
       data: { resolutionStatus, email: studentEmail },
     };
   }
-  await axios.delete(`${baseUrl}/classes/${classId}/queues/${queueId}/users`, config);
+  await axios.delete(
+    `${baseUrl}/classes/${classId}/queues/${queueId}/users`,
+    config
+  );
 };
 
 export const createQueue = async (
@@ -89,7 +92,11 @@ export const createQueue = async (
     };
   }
   return (
-    await axios.post(`${baseUrl}/classes/${classId}/queues`, { queueName }, config)
+    await axios.post(
+      `${baseUrl}/classes/${classId}/queues`,
+      { queueName },
+      config
+    )
   ).data;
 };
 
@@ -117,6 +124,24 @@ export const renameQueue = async (
     data,
     config
   );
+};
+
+export const deleteQueue = async (
+  classId: string,
+  queueId: string
+): Promise<void> => {
+  let config = {};
+  if (token) {
+    config = {
+      headers: { Authorization: token },
+    };
+  }
+  return (
+    await axios.delete(
+      `${baseUrl}/classes/${classId}/queues/${queueId}`,
+      config
+    )
+  ).data;
 };
 
 const activeQueuesUrl =

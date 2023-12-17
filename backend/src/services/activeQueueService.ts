@@ -191,7 +191,26 @@ const addQueue = async (
   if (!result) {
     throw new Error("User doesn't own queue, or could not find queue");
   }
-}
+};
+
+const deleteQueue = async (
+  endpoint: string,
+  ownerEmail: string,
+  queueId: string
+): Promise<void> => {
+  const result = await AccountModel.findOneAndUpdate(
+    { "owner.endpoint": endpoint, "owner.email": ownerEmail },
+    {
+      $pull: {
+        activeQueues: { _id: queueId },
+      },
+    }
+  );
+
+  if (!result) {
+    throw new Error("User doesn't own queue, or could not find queue");
+  }
+};
 
 export default {
   getQueuesForClass,
@@ -200,4 +219,5 @@ export default {
   resolveOthersEntry,
   renameQueue,
   addQueue,
+  deleteQueue,
 };
