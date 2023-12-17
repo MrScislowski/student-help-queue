@@ -5,6 +5,7 @@ import { resolveEntry, addName } from "../requests";
 import { useContext, useEffect, useState } from "react";
 import TimeOffsetContext from "../TimeOffsetContext";
 import SessionContext from "../SessionContext";
+import QueueTitle from "./QueueTitle";
 
 const EntriesContainer = styled.div`
   display: flex;
@@ -37,10 +38,6 @@ const AddNameButton = styled.button`
   border-radius: 10px;
 `;
 
-const QueueTitle = styled.h2`
-  padding: 10px;
-`;
-
 const getEntryAge = (
   currentTime: number,
   entryTime: number,
@@ -58,20 +55,22 @@ const getEntryAge = (
 };
 
 interface QueueProps {
+  classId: string;
+  queueId: string;
   queueName: string;
   entries: ActiveEntry[];
 }
 
 const Queue = (props: QueueProps) => {
-  const { queueName, entries } = props;
+  const { queueName, entries, classId, queueId } = props;
   const [currentTime, setCurrentTime] = useState(new Date().getTime());
   const session = useContext(SessionContext);
 
   const queryClient = useQueryClient();
 
   const addNameMutation = useMutation({
-    mutationFn: ({ queueName }: { queueName: string }) => {
-      return addName(queueName);
+    mutationFn: () => {
+      return addName(classId, queueId);
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["entries"]);
@@ -79,8 +78,8 @@ const Queue = (props: QueueProps) => {
   });
 
   const resolveEntryMutation = useMutation({
-    mutationFn: ({ entry }: { entry: ActiveEntry }) => {
-      return resolveEntry(entry, "resolve");
+    mutationFn: () => {
+      return resolveEntry(classId, queueId, "resolve");
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["entries"] });
@@ -88,8 +87,8 @@ const Queue = (props: QueueProps) => {
   });
 
   const cancelEntryMutation = useMutation({
-    mutationFn: ({ entry }: { entry: ActiveEntry }) => {
-      return resolveEntry(entry, "cancel");
+    mutationFn: () => {
+      return resolveEntry(classId, queueId, "cancel");
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["entries"] });
@@ -108,14 +107,12 @@ const Queue = (props: QueueProps) => {
 
   return (
     <>
-      <QueueTitle>{queueName} queue</QueueTitle>
+      <QueueTitle name={queueName} id={queueId} classId={classId} />
 
       {entries.find((entry) => entry.user.email === session.user.email) ? (
         ""
       ) : (
-        <button onClick={() => addNameMutation.mutate({ queueName })}>
-          add name
-        </button>
+        <button onClick={() => addNameMutation.mutate()}>add name</button>
       )}
 
       <EntriesContainer>
@@ -129,22 +126,18 @@ const Queue = (props: QueueProps) => {
                 timeOffset
               )}
               )
-              {item._id && (
+              {item.user.email === session.user.email && (
                 <>
                   <ResolveButton
                     onClick={() => {
-                      resolveEntryMutation.mutate({
-                        entry: item,
-                      });
+                      resolveEntryMutation.mutate();
                     }}
                   >
                     Resolve
                   </ResolveButton>
                   <CancelButton
                     onClick={async () => {
-                      cancelEntryMutation.mutate({
-                        entry: item,
-                      });
+                      cancelEntryMutation.mutate();
                     }}
                   >
                     Cancel

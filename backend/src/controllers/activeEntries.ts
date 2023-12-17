@@ -1,87 +1,203 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import { Router } from "express";
-import { Session } from "../types";
-import { ActiveEntry } from "../types";
+import { Router, Request, Response, NextFunction } from "express";
+import { ActiveQueue, ResolutionStatus, Session } from "../types";
+import { parseResolutionStatus, parseSession, parseString } from "../utils";
 import jwt from "jsonwebtoken";
-import { parseArchivedEntry, parseString, parseSession } from "../utils";
-import entriesService from "../services/entriesService";
 import config from "../config";
+import activeQueueService from "../services/activeQueueService";
 
 const router = Router();
 
-router.use((req, res, next) => {
-  if (!req.headers.authorization) {
-    return res.status(400).send("token required in authorization header");
+const mockSession: Session = {
+  user: {
+    email: "testuser@gmail.com",
+    familyName: "smith",
+    givenName: "john",
+  },
+};
+
+const authenticateToken = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void | Response => {
+  let sessionInfo;
+
+  if (config.DISABLE_AUTH) {
+    sessionInfo = mockSession;
+  } else {
+    if (!req.headers.authorization) {
+      return res.status(400).send("Token required in authorization header");
+    }
+
+    const token = req.headers.authorization.substring(7);
+    sessionInfo = parseSession(jwt.verify(token, config.SECRET));
   }
-  const token = req.headers.authorization.substring(7);
 
-  const sessionInfo = parseSession(jwt.verify(token, config.SECRET));
-
-  // this seemed too intense: https://stackoverflow.com/questions/55362741/overwrite-any-in-typescript-when-merging-interfaces
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   res.locals.session = sessionInfo;
   next();
-});
+};
 
-router.get("/", async (req, res) => {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const session: Session = res.locals.session;
+router.use(authenticateToken);
 
-  const results: Omit<ActiveEntry, "_id">[] =
-    await entriesService.getActiveEntries(session);
-  res.send({
-    timestamp: new Date().toISOString(),
-    entries: results,
-  });
-});
-
-router.post("/", async (req, res) => {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const session: Session = res.locals.session;
+// Get all queues for a class
+router.get("/:classId/queues", async (req, res) => {
+  const classId = req.params.classId;
 
   try {
-    if (!("queueName" in req.body) || !req.body.queueName) {
-      throw new Error("queueName not specified");
-    }
-    const queueName = parseString(req.body.queueName);
-    const newEntry = await entriesService.addActiveEntry(session, queueName);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const session: Session = res.locals.session;
 
+    const queues = await activeQueueService.getQueuesForClass(
+      classId,
+      session.user.email
+    );
+
+    if (queues === null) {
+      return res.status(404).send({ error: `Class ${classId} not found` });
+    }
+
+    // TODO: when the database model is refactored, only return non
     res.send({
+      queues: queues,
       timestamp: new Date().toISOString(),
-      entry: newEntry,
     });
   } catch (error: unknown) {
-    let errorMessage = "Error occurred. ";
+    let message = "";
     if (error instanceof Error) {
-      errorMessage += error.message;
+      message += error.message;
     }
-    res.status(400).send(errorMessage);
+    return res.status(500).send({ error: message });
   }
 });
 
-router.post("/:id", async (req, res) => {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const session: Session = res.locals.session;
-
-  const entryId = req.params.id;
-
+// create a new queue for a class
+router.post("/:classId/queues", async (req, res) => {
   try {
-    const resolutionData = parseArchivedEntry(req.body);
-    const archivedVersion = await entriesService.resolveActiveEntry(
-      entryId,
-      session,
-      resolutionData
+    const classId = req.params.classId;
+    const queueName = parseString(req.body.queueName);
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const session: Session = res.locals.session;
+
+    await activeQueueService.addQueue(classId, session.user.email, queueName);
+    res.status(200).send();
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
+// delete a queue
+router.delete("/:classId/queues/:queueId", async (req, res) => {
+  try {
+    const classId = req.params.classId;
+    const queueId = req.params.queueId;
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const session: Session = res.locals.session;
+
+    await activeQueueService.deleteQueue(classId, session.user.email, queueId);
+    res.status(200).send();
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
+// change visibility of a queue
+router.patch("/:classId/queues/:queueId", async (req, res) => {
+  try {
+    const classId = req.params.classId;
+    const queueId = req.params.queueId;
+    const visible = req.body.visible;
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const session: Session = res.locals.session;
+
+    await activeQueueService.changeVisibility(
+      classId,
+      session.user.email,
+      queueId,
+      visible
     );
-    return res.send({
-      timestamp: new Date().toISOString(),
-      entry: archivedVersion,
-    });
-  } catch (e: unknown) {
-    let errorMessage = "Error occurred. ";
-    if (e instanceof Error) {
-      errorMessage += e.message;
+    res.status(200).send();
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
+// add your name (or another's) to a queue
+router.post("/:classId/queues/:queueId/users", async (req, res) => {
+  try {
+    const classId = req.params.classId;
+    const queueId = req.params.queueId;
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const session: Session = res.locals.session;
+
+    await activeQueueService.addActiveEntry(session.user, classId, queueId);
+    res.status(200).send();
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
+// remove your name (or another's) from a queue
+router.delete("/:classId/queues/:queueId/users", async (req, res) => {
+  try {
+    const classId = req.params.classId;
+    const queueId = req.params.queueId;
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const session: Session = res.locals.session;
+
+    const status: ResolutionStatus = parseResolutionStatus(
+      req.body.resolutionStatus
+    );
+
+    if (req.body.email) {
+      const email = parseString(req.body.email);
+      await activeQueueService.resolveOthersEntry(
+        session.user,
+        email,
+        classId,
+        queueId,
+        status
+      );
+      res.status(200).send();
+      return;
+    } else {
+      await activeQueueService.resolveMyEntry(
+        session.user,
+        classId,
+        queueId,
+        status
+      );
+      res.status(200).send();
     }
-    return res.status(400).send(errorMessage);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
+// rename a queue
+router.patch("/:classId/queues/:queueId", async (req, res) => {
+  try {
+    const classId = req.params.classId;
+    const queueId = req.params.queueId;
+    const queueName = parseString(req.body.queueName);
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const session: Session = res.locals.session;
+
+    await activeQueueService.renameQueue(
+      classId,
+      session.user.email,
+      queueId,
+      queueName
+    );
+  } catch (err) {
+    res.status(400).send(err);
   }
 });
 

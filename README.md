@@ -1,104 +1,21 @@
-git remote add heroku-backend https://git.heroku.com/student-help-queue-backend.git
-git remote add heroku-frontend https://git.heroku.com/student-help-queue-frontend.git
+# API Endpoints
 
+| Method | Endpoint                                | Description                                                                                  | Parameters                                                       | Request Body                                                                      | Response                  |
+| ------ | --------------------------------------- | -------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- | --------------------------------------------------------------------------------- | ------------------------- |
+| GET    | /classes/:classId/queues                | Get all the queues for a class                                                               | `classId`: The ID of the class                                   | None                                                                              | An array of queue objects |
+| POST   | /classes/:classId/queues                | Create a new queue for a class                                                               | `classId`: The ID of the class                                   | {queueName: "new queue name"}                                                     | The created queue object  |
+| DELETE | /classes/:classId/queues/:queueId       | Delete a queue from a class                                                                  | `classId`: The ID of the class<br>`queueId`: The ID of the queue | None                                                                              | The deleted queue object  |
+| PATCH  | /classes/:classId/queues/:queueId       | Change the visibility of a queue                                                             | `classId`: The ID of the class<br>`queueId`: The ID of the queue | `{ visible: true\|false}`                                                         | The updated queue object  |
+| POST   | /classes/:classId/queues/:queueId/users | Add your name or another user's name to a queue of a class (admin only for other users)      | `classId`: The ID of the class<br>`queueId`: The ID of the queue | {email: "user@example.com"} (optional)                                            | The updated queue object  |
+| DELETE | /classes/:classId/queues/:queueId/users | Remove your name or another user's name from a queue of a class (admin only for other users) | `classId`: The ID of the class<br>`queueId`: The ID of the queue | {email: "user@example.com"} (optional), {resolutionStatus: "cancel" \| "resolve"} | The updated queue object  |
+| PATCH  | /classes/:classId/queues/:queueId       | Rename a queue                                                                               | `classId`: The ID of the class<br>`queueId`: The ID of the queue | {queueName: "completed 8.1a"}                                                     | The updated queueName     |
 
-git subtree push --prefix frontend heroku-frontend main
-git subtree push --prefix backend heroku-backend main
+# Push Instructions
 
-# backend
+## backend
 
-https://fullstackopen.com/en/part9/typing_an_express_app
+## student-frontend
 
-```
-pnpm init
-pnpm install typescript --save-dev
-# add tsc to package.json
-npm run tsc -- --init # generate tsconfig
-npm install express
-npm install --save-dev eslint @types/express @typescript-eslint/eslint-plugin @typescript-eslint/parser ts-node-dev
-```
+## teacher-frontend
 
-package.json
-
-```
-"scripts": {
-"tsc": "tsc",
-"dev": "ts-node-dev index.ts",
-"lint": "eslint --ext .ts .",
-"start": "node build/index.js"
-...
-}
-```
-
-.eslintrc
-
-```
-{
-  "extends": [
-    "eslint:recommended",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:@typescript-eslint/recommended-requiring-type-checking"
-  ],
-  "plugins": ["@typescript-eslint"],
-  "env": {
-    "browser": true,
-    "es6": true,
-    "node": true
-  },
-  "rules": {
-    "@typescript-eslint/semi": ["error"],
-    "@typescript-eslint/explicit-function-return-type": "off",
-    "@typescript-eslint/explicit-module-boundary-types": "off",
-    "@typescript-eslint/restrict-template-expressions": "off",
-    "@typescript-eslint/restrict-plus-operands": "off",
-    "@typescript-eslint/no-unsafe-member-access": "off",
-    "@typescript-eslint/no-unused-vars": [
-      "error",
-      { "argsIgnorePattern": "^_" }
-    ],
-    "no-case-declarations": "off"
-  },
-  "parser": "@typescript-eslint/parser",
-  "parserOptions": {
-    "project": "./tsconfig.json"
-  }
-}
-```
-
-DB schema:
-
-```
-CURRENT REQUEST:
-{
-  id,
-  requestorId,
-  requestorDisplayName,
-  requestTimestamp
-}
-
-RESOLVED REQUEST:
-{
-  id,
-  requestorId,
-  requestorDisplayName,
-  requestTimestamp,
-  resolverId,
-  resolverDisplayName,
-  resolveTimestamp,
-  resolutionStatus (cancel | resolve),
-
-}
-```
-
-Endpoints:
-Create
-
-POST /api/queue
-
-Read
-
-GET /api/queue
-
-Update/Delete
-
-POST /api/queue/:id
+git subtree push --prefix teacher-frontend heroku-teacher-frontend main

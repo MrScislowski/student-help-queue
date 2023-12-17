@@ -6,10 +6,13 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "tsc": "tsc",
-    "dev": "NODE_ENV=dev ts-node-dev ./src/index.ts",
+    "dev": "cross-env NODE_ENV=dev ts-node-dev ./src/index.ts",
+    "dev-populate-db": "cross-env NODE_ENV=dev ts-node ./src/dev-utils.ts",
+    "test-db-stuff": "cross-env NODE_ENV=dev ts-node ./src/db-test.ts",
+    "dev-sans-auth": "cross-env NODE_ENV=dev DISABLE_AUTH=true ts-node ./src/index.ts",
     "lint": "eslint --ext .ts .",
-    "start": "NODE_ENV=production node build/index.js",
-    "postinstall": "npm run tsc"
+    "start": "cross-env NODE_ENV=production node build/index.js",
+    "postinstall": "pnpm run tsc"
   },
   "keywords": [],
   "author": "",
@@ -20,7 +23,9 @@
     "@types/jsonwebtoken": "^9.0.2",
     "@typescript-eslint/eslint-plugin": "^6.3.0",
     "@typescript-eslint/parser": "^6.3.0",
+    "cross-env": "^7.0.3",
     "eslint": "^8.47.0",
+    "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.1.6"
   },

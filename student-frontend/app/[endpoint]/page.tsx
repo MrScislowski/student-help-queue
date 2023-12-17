@@ -12,7 +12,7 @@ const queryClient = new QueryClient({
   },
 });
 
-export default function Home() {
+export default function Home({ params }: { params: { endpoint: string } }) {
   return (
     <GoogleOAuthProvider
       clientId={
@@ -21,7 +21,7 @@ export default function Home() {
       }
     >
       <QueryClientProvider client={queryClient}>
-        <App />
+        <App classId={params.endpoint} />
       </QueryClientProvider>
     </GoogleOAuthProvider>
   );

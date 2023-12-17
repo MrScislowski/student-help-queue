@@ -3,17 +3,13 @@ import { Types } from "mongoose";
 export type ResolutionStatus = "cancel" | "resolve";
 
 export interface ActiveEntry {
-  _id: Types.ObjectId;
   user: User;
   timestamp: string;
-  queueName: string;
 }
-
-export type ActiveEntryStub = Omit<ActiveEntry, "_id" | "request.timestamp">;
 
 export interface ArchivedEntry {
   _id: Types.ObjectId;
-  request: Omit<ActiveEntry, "_id">;
+  request: ActiveEntry;
   resolution: {
     user: User;
     timestamp: string;
@@ -27,16 +23,26 @@ export interface User {
   familyName: string;
 }
 
+export interface Owner {
+  email: string;
+  givenName: string;
+  familyName: string;
+  endpoint: string;
+}
+
 export interface Session {
   user: User;
-  selectedClass: {
-    name: string;
-    teacherEmail: string;
-  };
 }
 
 export interface Account {
-  user: User;
-  activeQueues: string[];
-  archivedQueues: string[];
+  owner: Owner;
+  activeQueues: ActiveQueue[];
+  archivedQueues: Types.ObjectId[];
+}
+
+export interface ActiveQueue {
+  _id: Types.ObjectId;
+  displayName: string;
+  visible: boolean;
+  entries: ActiveEntry[];
 }

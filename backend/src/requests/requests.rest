@@ -1,38 +1,14 @@
+###
+GET http://localhost:3001/api/classes/scislowski-usd266/queues
+
 
 ###
-GET http://localhost:3001/api/queue
-
-### 
-GET http://localhost:3001/api/archived
+POST http://localhost:3001/api/classes/scislowski-usd266/queues/656c991ce03d7c894cc03626
 
 ###
-POST http://localhost:3001/api/queue
+DELETE http://localhost:3001/api/classes/scislowski-usd266/queues/656c991ce03d7c894cc03626
 Content-Type: application/json
 
 {
-  "user": {
-    "id": "b",
-    "displayName": "b"
-  }
+  "resolutionStatus": "resolve"
 }
-
-###
-POST http://localhost:3001/api/queue/64db7a1b2fc5cff00d792e05
-Content-Type: application/json
-
-{
-  "user": {
-    "id": "b",
-    "displayName": "b"
-  },
-  "resolutionStatus": "cancel"
-}
-
-###
-POST http://localhost:3001/api/clear
-
-###
-POST http://localhost:3001/api/fillrandom
-
-###
-POST http://localhost:3001/api/login

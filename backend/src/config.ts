@@ -22,4 +22,6 @@ const PORT = process.env.PORT || 3001;
 const GOOGLE_OAUTH_CLIENT_ID = process.env.GOOGLE_OAUTH_CLIENT_ID;
 const SECRET = process.env.SECRET || "";
 
-export default { DB_URL, PORT, GOOGLE_OAUTH_CLIENT_ID, SECRET };
+const DISABLE_AUTH = process.env.DISABLE_AUTH === "true";
+
+export default { DB_URL, PORT, GOOGLE_OAUTH_CLIENT_ID, SECRET, DISABLE_AUTH };

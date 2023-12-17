@@ -57,25 +57,9 @@ export const parseSession = (data: unknown): Session => {
     throw new Error("missing user property");
   }
 
-  if (
-    "selectedClass" in data &&
-    data.selectedClass &&
-    typeof data.selectedClass === "object" &&
-    "name" in data.selectedClass &&
-    "teacherEmail" in data.selectedClass
-  ) {
-    return {
-      user: userInfo,
-      selectedClass: {
-        name: parseString(data.selectedClass.name),
-        teacherEmail: parseString(data.selectedClass.teacherEmail),
-      },
-    };
-  } else {
-    throw new Error(
-      "selectedClass property doesn't conform to required structure"
-    );
-  }
+  return {
+    user: userInfo,
+  };
 };
 
 export const parseResolutionStatus = (arg: unknown): ResolutionStatus => {
@@ -100,6 +84,28 @@ export const parseArchivedEntry = (body: unknown): ResolutionStatus => {
   }
 
   return parseResolutionStatus(body.resolutionStatus);
+};
+
+export const parseBodyString = (
+  body: unknown,
+  propertyName: string
+): string => {
+  if (!body || typeof body !== "object") {
+    throw new Error(`body does not contain property ${propertyName}`);
+  }
+
+  if (!(propertyName in body)) {
+    throw new Error(`body does not contain property ${propertyName}`);
+  }
+
+  const bodyObject = body as { [key: string]: unknown };
+  const value = bodyObject[propertyName];
+
+  if (!isString(value)) {
+    throw new Error(`property ${propertyName} is not a string`);
+  }
+
+  return value;
 };
 
 const administratorsList = [

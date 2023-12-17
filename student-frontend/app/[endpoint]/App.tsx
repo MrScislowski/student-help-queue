@@ -11,7 +11,11 @@ import { isSession } from "./utils";
 
 const queryClient = new QueryClient();
 
-const App = () => {
+interface AppProps {
+  classId: string;
+}
+
+const App = ({ classId }: AppProps) => {
   const [session, setSession] = useState<Session | null>(null);
 
   useEffect(() => {
@@ -42,7 +46,7 @@ const App = () => {
     <QueryClientProvider client={queryClient}>
       <SessionContext.Provider value={session}>
         <Header handleLogout={handleLogout} />
-        <QueueSet />
+        <QueueSet classId={classId} />
       </SessionContext.Provider>
     </QueryClientProvider>
   );
