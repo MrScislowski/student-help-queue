@@ -14,8 +14,13 @@
 
 ## backend
 
+git subtree push --prefix backend heroku-backend main
+
 ## student-frontend
+
+git subtree push --prefix student-frontend heroku-teacher-frontend main
 
 ## teacher-frontend
 
+https://help-queue-teacher-frontend-239b686a3dfd.herokuapp.com/
 git subtree push --prefix teacher-frontend heroku-teacher-frontend main

@@ -3,3 +3,4 @@ backend/build
 .env
 .DS_Store
 .env.local
+database_backup.json
