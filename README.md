@@ -10,6 +10,10 @@
 | DELETE | /classes/:classId/queues/:queueId/users | Remove your name or another user's name from a queue of a class (admin only for other users) | `classId`: The ID of the class<br>`queueId`: The ID of the queue | {email: "user@example.com"} (optional), {resolutionStatus: "cancel" \| "resolve"} | The updated queue object  |
 | PATCH  | /classes/:classId/queues/:queueId       | Rename a queue                                                                               | `classId`: The ID of the class<br>`queueId`: The ID of the queue | {queueName: "completed 8.1a"}                                                     | The updated queueName     |
 
+# Initial setup for deployment
+
+git remote add heroku-teacher-frontend https://git.heroku.com/help-queue-teacher-frontend.git
+
 # Push Instructions
 
 ## backend
