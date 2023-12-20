@@ -19,9 +19,20 @@ if (NODE_ENV === "dev") {
 }
 
 const PORT = process.env.PORT || 3001;
-const GOOGLE_OAUTH_CLIENT_ID = process.env.GOOGLE_OAUTH_CLIENT_ID;
+const GOOGLE_OAUTH_CLIENT_ID_STUDENT =
+  process.env.GOOGLE_OAUTH_CLIENT_ID_STUDENT;
+const GOOGLE_OAUTH_CLIENT_ID_TEACHER =
+  process.env.GOOGLE_OAUTH_CLIENT_ID_TEACHER;
+
 const SECRET = process.env.SECRET || "";
 
 const DISABLE_AUTH = process.env.DISABLE_AUTH === "true";
 
-export default { DB_URL, PORT, GOOGLE_OAUTH_CLIENT_ID, SECRET, DISABLE_AUTH };
+export default {
+  DB_URL,
+  PORT,
+  GOOGLE_OAUTH_CLIENT_ID_STUDENT,
+  GOOGLE_OAUTH_CLIENT_ID_TEACHER,
+  SECRET,
+  DISABLE_AUTH,
+};

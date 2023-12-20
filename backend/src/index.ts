@@ -43,12 +43,20 @@ app.use("/api/classes", entriesRouter);
 
 app.post("/api/login", async (req, res) => {
   try {
-    const client = new OAuth2Client(config.GOOGLE_OAUTH_CLIENT_ID);
+    const role = req.body.role;
+    let clientId;
+    if (role === "student") {
+      clientId = config.GOOGLE_OAUTH_CLIENT_ID_STUDENT;
+    } else {
+      clientId = config.GOOGLE_OAUTH_CLIENT_ID_TEACHER;
+    }
+
+    const client = new OAuth2Client(clientId);
 
     const ticket = await client.verifyIdToken({
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       idToken: req.body.credential,
-      audience: config.GOOGLE_OAUTH_CLIENT_ID,
+      audience: clientId,
     });
 
     const payload = ticket.getPayload();

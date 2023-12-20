@@ -23,5 +23,20 @@ git subtree push --prefix student-frontend heroku-teacher-frontend main
 ## teacher-frontend
 
 git commit --allow-empty -m "Trigger Heroku rebuild"
-https://help-queue-teacher-frontend-239b686a3dfd.herokuapp.com/
+https://help-queue-teacher-frontend-239b686a3dfd.herokuapp.com
 git subtree push --prefix teacher-frontend heroku-teacher-frontend main
+
+# Google credentials for student frontend:
+
+## authorized javascript origins
+
+https://localhost:3000
+https://localhost
+https://student-help-queue-frontend-f91c0ecec0d2.herokuapp.com
+
+## redirect URLs
+
+https://localhost:3000
+https://localhost
+https://student-help-queue-frontend-f91c0ecec0d2.herokuapp.com
+https://student-help-queue-backend-dbc8c16c81bf.herokuapp.com/api/login

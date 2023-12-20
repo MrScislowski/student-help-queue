@@ -78,7 +78,10 @@ const loginUrl =
 // TODO: in future I think this info should be sent directly to the backend via the stored callback url in Google so that we never see it on the user end
 
 export const attemptLogin = async (credential: string) => {
-  const response = await axios.post(`${loginUrl}`, { credential: credential });
+  const response = await axios.post(`${loginUrl}`, {
+    role: "student",
+    credential: credential,
+  });
   setToken(response.data.token);
   return response.data;
 };
