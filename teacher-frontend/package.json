@@ -23,5 +23,8 @@
     "react-query": "^3.39.3",
     "styled-components": "^6.0.7",
     "typescript": "5.2.2"
+  },
+  "engines": {
+    "node": "16.19.x"
   }
 }
