@@ -43,6 +43,7 @@ app.use("/api/classes", entriesRouter);
 
 app.post("/api/login", async (req, res) => {
   try {
+    console.log(`login endpoint called with req.body: ${JSON.stringify(req.body)}`);
     const role = req.body.role;
     let clientId;
     if (role === "student") {
@@ -52,15 +53,20 @@ app.post("/api/login", async (req, res) => {
     }
 
     const client = new OAuth2Client(clientId);
+    console.log(`formed client with clientId: ${clientId}`);
+    
 
     const ticket = await client.verifyIdToken({
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       idToken: req.body.credential,
       audience: clientId,
     });
+    console.log(`ticket: ${JSON.stringify(ticket)}`);
+    
 
     const payload = ticket.getPayload();
 
+    console.log(`payload: ${JSON.stringify(payload)}`);
     const userInfo = parseLoginPayload(payload);
 
     const sessionObject = {
@@ -71,6 +77,7 @@ app.post("/api/login", async (req, res) => {
 
     return res.send({ ...sessionObject, token });
   } catch (error) {
+    console.log(`error: ${JSON.stringify(error)}`);
     return res.status(500).json(error);
   }
 });
