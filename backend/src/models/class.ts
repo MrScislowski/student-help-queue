@@ -25,3 +25,7 @@ const classSchema = new mongoose.Schema<Class>({
 
   queues: [queueSchema],
 });
+
+const ClassModel = mongoose.model<Class>("Class", classSchema);
+
+export { classSchema, ClassModel };
