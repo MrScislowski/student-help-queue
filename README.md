@@ -56,4 +56,41 @@ The student frontend allows students to view the active queues in their class, a
 
 The teacher frontend allows the teacher to remove names from queues, but also to rename queues, change their visibility, and add/remove queues.
 
-I am wondering how to handle the adding of a new teacher account. Should this be part of the teacher frontend? Or should I have a third frontend - an admin frontend?
+I am wondering how to structure the database. Specifically, whether to embed the queues, or references to them. Whenever students access a class, they will need all the (visible) queues for that class. However, when a teacher renames or deletes a queue, they will not need all of the queues. Do you think embedding or referencing the queues would be better? A partial schema is shown below.
+
+# Database Schema
+
+1. Teachers Collection
+
+- `_id`: ObjectId - unique identifier for the user
+- `email`: String - email address of the user
+- `username`: String - username of the user
+- `classes`: ObjectId[] - array of class IDs that the user is a teacher of
+
+2. Classes Collection
+
+- `_id`: ObjectId - unique identifier for the class
+- `className`: String - name of the class
+- `teacherId`: ObjectId - ID of the teacher who created the class
+- `teacherEmail`: String - email address of the teacher who created the class
+- `queues`: Queue[] - array of queues for the class
+
+3. Queue Object
+
+- `_id`: ObjectId - unique identifier for the queue
+- `queueName`: String - name of the queue
+- `visible`: Boolean - whether the queue is visible to students
+- `entries`: Entry[] - array of entries in the queue
+
+4. Entry Object
+
+- `timeAdded`: String - time the entry was added to the queue
+- `user`: User - user who added the entry to the queue
+
+5. User Object
+
+- `email`: String - email address of the user
+- `givenName`: String - given name of the user
+- `familyName`: String - family name of the user
+
+6. ResolvedEntry Object
