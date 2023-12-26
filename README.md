@@ -26,6 +26,10 @@ git commit --allow-empty -m "Trigger Heroku rebuild"
 https://help-queue-teacher-frontend-239b686a3dfd.herokuapp.com
 git subtree push --prefix teacher-frontend heroku-teacher-frontend main
 
+# Debugging instructions
+
+heroku logs --tail --app student-help-queue-backend
+
 # Google credentials for student frontend:
 
 ## authorized javascript origins
