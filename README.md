@@ -70,8 +70,7 @@ I am wondering how to structure the database. Specifically, whether to embed the
 2. Classes Collection
 
 - `_id`: ObjectId - unique identifier for the class
-- `classSlug`: String - name of the class
-- `classEndpoint`: String - endpoint for the class
+- `classSlug`: String - endpoint of the class
 - `teacherId`: ObjectId - ID of the teacher who created the class
 - `queues`: Queue[] - array of queues for the class
 

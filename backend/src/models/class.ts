@@ -8,23 +8,13 @@ const classSchema = new mongoose.Schema<Class>({
     required: true,
   },
 
-  classEndpoint: {
-    type: String,
-    required: true,
-  },
-
-  className: {
+  classSlug: {
     type: String,
     required: true,
   },
 
   teacherId: {
     type: mongoose.Schema.Types.ObjectId,
-    required: true,
-  },
-
-  teacherEmail: {
-    type: String,
     required: true,
   },
 
