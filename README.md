@@ -64,16 +64,15 @@ I am wondering how to structure the database. Specifically, whether to embed the
 
 - `_id`: ObjectId - unique identifier for the user
 - `email`: String - email address of the user
-- `username`: String - username of the user
+- `slug`: String - username of the user
 - `classes`: ObjectId[] - array of class IDs that the user is a teacher of
 
 2. Classes Collection
 
 - `_id`: ObjectId - unique identifier for the class
-- `className`: String - name of the class
+- `classSlug`: String - name of the class
 - `classEndpoint`: String - endpoint for the class
-- `teacherSlug`: ObjectId - ID of the teacher who created the class
-- `teacherEmail`: String - email address of the teacher who created the class
+- `teacherId`: ObjectId - ID of the teacher who created the class
 - `queues`: Queue[] - array of queues for the class
 
 3. Queue Object
@@ -93,5 +92,3 @@ I am wondering how to structure the database. Specifically, whether to embed the
 - `email`: String - email address of the user
 - `givenName`: String - given name of the user
 - `familyName`: String - family name of the user
-
-6. ResolvedEntry Object
