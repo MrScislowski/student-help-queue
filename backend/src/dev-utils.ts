@@ -23,8 +23,8 @@ async function createTeachers(): Promise<Teacher[]> {
 
   const teacher2: Teacher = {
     _id: new mongoose.Types.ObjectId(),
-    email: "mr.scislowski@gmail.com",
-    username: "mrscislowski",
+    email: "dscislowski@usd266.com",
+    username: "dscislowski",
     classes: [],
   };
 

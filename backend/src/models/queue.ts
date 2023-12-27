@@ -24,6 +24,4 @@ const queueSchema = new mongoose.Schema<Queue>({
   },
 });
 
-const QueueModel = mongoose.model<Queue>("Queue", queueSchema);
-
-export { queueSchema, QueueModel };
+export { queueSchema };
