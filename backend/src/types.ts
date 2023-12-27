@@ -57,6 +57,7 @@ export interface Teacher {
 export interface Class {
   _id: Types.ObjectId;
   className: string;
+  classEndpoint: string;
   teacherId: Types.ObjectId;
   teacherEmail: string;
   queues: Queue[];

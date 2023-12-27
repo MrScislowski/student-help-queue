@@ -4,15 +4,15 @@ import { ActiveQueue, ResolutionStatus, Session } from "../types";
 import { parseResolutionStatus, parseSession, parseString } from "../utils";
 import jwt from "jsonwebtoken";
 import config from "../config";
-import activeQueueService from "../services/activeQueueService";
+import activeQueueService from "../services/classService";
 
 const router = Router();
 
 const mockSession: Session = {
   user: {
-    email: "testuser@gmail.com",
-    familyName: "smith",
-    givenName: "john",
+    email: "mrscislowski@gmail.com",
+    familyName: "Daniel",
+    givenName: "Scislowski",
   },
 };
 

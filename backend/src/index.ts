@@ -6,8 +6,9 @@ mongoose.set("strictQuery", false);
 import cors from "cors";
 import { OAuth2Client } from "google-auth-library";
 import jwt from "jsonwebtoken";
-import entriesRouter from "./controllers/activeEntries";
-// import queuesRouter from "./controllers/queues";
+import classesRouter from "./controllers/classes";
+import teachersRouter from "./controllers/teachers";
+import queuesRouter from "./controllers/queues";
 
 const app = express();
 app.use(express.json());
@@ -31,7 +32,7 @@ mongoose
     console.log(`error connecting to MongoDB: ${err.message}`);
   });
 
-app.use("/api/classes", entriesRouter);
+app.use("/api/teachers/:teacherId/classes", classesRouter);
 
 // app.get("/api/archived", async (_req, res) => {
 //   const results = await entriesService.getArchivedEntries();
@@ -43,7 +44,9 @@ app.use("/api/classes", entriesRouter);
 
 app.post("/api/login", async (req, res) => {
   try {
-    console.log(`login endpoint called with req.body: ${JSON.stringify(req.body)}`);
+    console.log(
+      `login endpoint called with req.body: ${JSON.stringify(req.body)}`
+    );
     const role = req.body.role;
     let clientId;
     if (role === "student") {
@@ -54,7 +57,6 @@ app.post("/api/login", async (req, res) => {
 
     const client = new OAuth2Client(clientId);
     console.log(`formed client with clientId: ${clientId}`);
-    
 
     const ticket = await client.verifyIdToken({
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -62,7 +64,6 @@ app.post("/api/login", async (req, res) => {
       audience: clientId,
     });
     console.log(`ticket: ${JSON.stringify(ticket)}`);
-    
 
     const payload = ticket.getPayload();
 

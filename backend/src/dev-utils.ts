@@ -44,6 +44,8 @@ async function createTeachers(): Promise<Teacher[]> {
 }
 
 async function createClasses(teachers: Teacher[]): Promise<void> {
+  await ClassModel.deleteMany({});
+
   const class1: Class = {
     _id: new mongoose.Types.ObjectId(),
     className: "AP Computer Science A",

@@ -8,6 +8,11 @@ const classSchema = new mongoose.Schema<Class>({
     required: true,
   },
 
+  classEndpoint: {
+    type: String,
+    required: true,
+  },
+
   className: {
     type: String,
     required: true,
