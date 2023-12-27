@@ -49,6 +49,7 @@ async function createClasses(teachers: Teacher[]): Promise<void> {
   const class1: Class = {
     _id: new mongoose.Types.ObjectId(),
     className: "AP Computer Science A",
+    classEndpoint: "apcsa",
     teacherId: teachers[0]._id,
     teacherEmail: teachers[0].email,
     queues: [],
@@ -57,6 +58,7 @@ async function createClasses(teachers: Teacher[]): Promise<void> {
   const class2: Class = {
     _id: new mongoose.Types.ObjectId(),
     className: "Computer Programming",
+    classEndpoint: "computer-programming",
     teacherId: teachers[0]._id,
     teacherEmail: teachers[0].email,
     queues: [],

@@ -13,7 +13,7 @@ const teacherSchema = new mongoose.Schema<Teacher>({
     required: true,
   },
 
-  username: {
+  slug: {
     type: String,
     required: true,
   },

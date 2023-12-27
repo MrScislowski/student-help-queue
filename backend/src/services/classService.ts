@@ -3,11 +3,11 @@ import { ActiveEntry, Class, Queue, ResolutionStatus, User } from "../types";
 import mongoose from "mongoose";
 
 const getClassData = async (
-  teacherId: string,
+  teacherSlug: string,
   classEndpoint: string
 ): Promise<Class | null> => {
   const allData = await ClassModel.findOne({
-    teacherId: teacherId,
+    slug: teacherSlug,
     classEndpoint: classEndpoint,
   });
 

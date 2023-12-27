@@ -1,14 +1,2 @@
 ###
-GET http://localhost:3001/api/classes/scislowski-usd266/queues
-
-
-###
-POST http://localhost:3001/api/classes/scislowski-usd266/queues/656c991ce03d7c894cc03626
-
-###
-DELETE http://localhost:3001/api/classes/scislowski-usd266/queues/656c991ce03d7c894cc03626
-Content-Type: application/json
-
-{
-  "resolutionStatus": "resolve"
-}
+GET http://localhost:3001/api/teachers/mrscislowski/classes/apcsa/queues

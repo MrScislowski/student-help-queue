@@ -1,48 +1,61 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { Router, Request, Response, NextFunction } from "express";
-import { Session } from "../types";
+import { Queue, Session } from "../types";
 import activeQueueService from "../services/classService";
 import { authenticateToken } from "../middlewares/authMiddleware";
 
 // router is using baseUrl /api/teachers/:teacherId/classes
-interface RequestWithTeacherId extends Request {
+interface RequestWithTeacherSlug extends Request {
   params: {
-    teacherId: string;
+    teacherSlug: string;
     classId: string;
   };
 }
 
-const router = Router();
+const router = Router({ mergeParams: true });
 router.use(authenticateToken);
 
 // Get all queues for a class
-router.get("/:classId/queues", async (req: RequestWithTeacherId, res) => {
-  const teacherId = req.params.teacherId;
-  const classId = req.params.classId;
+router.get(
+  "/:classId/queues",
+  async (req: RequestWithTeacherSlug, res: Response) => {
+    const teacherId = req.params.teacherSlug;
+    const classId = req.params.classId;
 
-  try {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const session: Session = res.locals.session;
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      const session: Session = res.locals.session;
 
-    const queues = await activeQueueService.getClassData(teacherId, classId);
+      const classData = await activeQueueService.getClassData(
+        teacherId,
+        classId
+      );
 
-    if (queues === null) {
-      return res.status(404).send({ error: `Class ${classId} not found` });
+      if (classData === null) {
+        return res.status(404).send({
+          error: `Class ${classId} with teacher ${teacherId} not found`,
+        });
+      }
+
+      const ownsClass = classData.teacherEmail === session.user.email;
+
+      const queues: Queue[] = classData.queues.filter((queue) => {
+        return queue.visible || ownsClass;
+      });
+
+      res.send({
+        queues: queues,
+        timestamp: new Date().toISOString(),
+      });
+    } catch (error: unknown) {
+      let message = "";
+      if (error instanceof Error) {
+        message += error.message;
+      }
+      return res.status(500).send({ error: message });
     }
-
-    // TODO: when the database model is refactored, only return non
-    res.send({
-      queues: queues,
-      timestamp: new Date().toISOString(),
-    });
-  } catch (error: unknown) {
-    let message = "";
-    if (error instanceof Error) {
-      message += error.message;
-    }
-    return res.status(500).send({ error: message });
   }
-});
+);
 
 // // create a new queue for a class
 // router.post("/:classId/queues", async (req, res) => {

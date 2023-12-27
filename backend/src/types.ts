@@ -50,7 +50,7 @@ export interface ActiveQueue {
 export interface Teacher {
   _id: Types.ObjectId;
   email: string;
-  username: string;
+  slug: string;
   classes: Types.ObjectId[];
 }
 
