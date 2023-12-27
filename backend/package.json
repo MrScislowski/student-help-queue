@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "tsc": "tsc",
     "dev": "cross-env NODE_ENV=dev ts-node-dev ./src/index.ts",
-    "dev-populate-db": "cross-env NODE_ENV=dev ts-node ./src/dev-utils.ts",
+    "dev-populate-db": "cross-env NODE_ENV=dev ts-node ./src/utils/dev-utils.ts",
     "test-db-stuff": "cross-env NODE_ENV=dev ts-node ./src/db-test.ts",
     "dev-sans-auth": "cross-env NODE_ENV=dev DISABLE_AUTH=true ts-node ./src/index.ts",
     "lint": "eslint --ext .ts .",

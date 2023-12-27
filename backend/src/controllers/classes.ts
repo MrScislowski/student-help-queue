@@ -17,7 +17,7 @@ router.use(authenticateToken);
 
 // Get all queues for a class
 router.get(
-  "/:classId/queues",
+  "/:classSlug/queues",
   async (req: RequestWithTeacherSlug, res: Response) => {
     const teacherSlug = req.params.teacherSlug;
     const classSlug = req.params.classSlug;

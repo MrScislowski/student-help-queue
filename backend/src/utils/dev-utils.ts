@@ -48,19 +48,27 @@ async function createClasses(teachers: Teacher[]): Promise<void> {
 
   const class1: ClassBase = {
     _id: new mongoose.Types.ObjectId(),
-    classSlug: "AP Computer Science A",
+    classSlug: "apcsa",
     teacher: teachers[0]._id,
     queues: [],
   };
+
+  await ClassModel.insertMany([class1]);
+  await TeacherModel.findByIdAndUpdate(teachers[0]._id, {
+    $push: { classes: class1._id },
+  });
 
   const class2: ClassBase = {
     _id: new mongoose.Types.ObjectId(),
-    classSlug: "Computer Programming",
+    classSlug: "computer_programming",
     teacher: teachers[0]._id,
     queues: [],
   };
 
-  await ClassModel.insertMany([class1, class2]);
+  await ClassModel.insertMany([class2]);
+  await TeacherModel.findByIdAndUpdate(teachers[0]._id, {
+    $push: { classes: class2._id },
+  });
 }
 
 async function fillQueues(): Promise<void> {
