@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
-import { Class } from "../types";
+import { ClassBase } from "../types";
 import { queueSchema } from "./queue";
 
-const classSchema = new mongoose.Schema<Class>({
+const classSchema = new mongoose.Schema<ClassBase>({
   _id: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
@@ -13,7 +13,7 @@ const classSchema = new mongoose.Schema<Class>({
     required: true,
   },
 
-  teacherId: {
+  teacher: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
   },
@@ -21,6 +21,6 @@ const classSchema = new mongoose.Schema<Class>({
   queues: [queueSchema],
 });
 
-const ClassModel = mongoose.model<Class>("Class", classSchema);
+const ClassModel = mongoose.model<ClassBase>("Class", classSchema);
 
 export { classSchema, ClassModel };

@@ -4,11 +4,11 @@ import { Queue, Session } from "../types";
 import activeQueueService from "../services/classService";
 import { authenticateToken } from "../middlewares/authMiddleware";
 
-// router is using baseUrl /api/teachers/:teacherId/classes
+// router is using baseUrl /api/teachers/:teacherSlug/classes
 interface RequestWithTeacherSlug extends Request {
   params: {
     teacherSlug: string;
-    classId: string;
+    classSlug: string;
   };
 }
 
@@ -19,25 +19,25 @@ router.use(authenticateToken);
 router.get(
   "/:classId/queues",
   async (req: RequestWithTeacherSlug, res: Response) => {
-    const teacherId = req.params.teacherSlug;
-    const classId = req.params.classId;
+    const teacherSlug = req.params.teacherSlug;
+    const classSlug = req.params.classSlug;
 
     try {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const session: Session = res.locals.session;
 
       const classData = await activeQueueService.getClassData(
-        teacherId,
-        classId
+        teacherSlug,
+        classSlug
       );
 
       if (classData === null) {
         return res.status(404).send({
-          error: `Class ${classId} with teacher ${teacherId} not found`,
+          error: `Class ${classSlug} with teacher ${teacherSlug} not found`,
         });
       }
 
-      const ownsClass = classData.teacherEmail === session.user.email;
+      const ownsClass = classData.teacher.email === session.user.email;
 
       const queues: Queue[] = classData.queues.filter((queue) => {
         return queue.visible || ownsClass;

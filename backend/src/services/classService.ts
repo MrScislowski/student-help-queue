@@ -1,21 +1,38 @@
 import { ClassModel } from "../models/class";
-import { ActiveEntry, Class, Queue, ResolutionStatus, User } from "../types";
-import mongoose from "mongoose";
+import { TeacherModel } from "../models/teacher";
+import { Class, Queue, ResolutionStatus, User } from "../types";
+import { handleDatabaseError } from "../utils/errorHandlers";
 
 const getClassData = async (
   teacherSlug: string,
-  classEndpoint: string
-): Promise<Class | null> => {
-  const allData = await ClassModel.findOne({
-    slug: teacherSlug,
-    classEndpoint: classEndpoint,
-  });
-
-  if (!allData) {
-    return null;
+  classSlug: string
+): Promise<Class> => {
+  let teacher;
+  try {
+    teacher = await TeacherModel.findOne({ slug: teacherSlug });
+  } catch (err: any) {
+    handleDatabaseError(err);
   }
 
-  return allData;
+  if (!teacher) {
+    throw new Error(`teacher ${teacherSlug} not found}`);
+  }
+
+  let classData;
+  try {
+    classData = await ClassModel.findOne({
+      teacher: teacher._id,
+      classSlug: classSlug,
+    }).populate("teacher");
+  } catch (err) {
+    handleDatabaseError(err);
+  }
+
+  if (!classData) {
+    throw new Error("ClassNotFound");
+  }
+
+  return classData as unknown as Class;
 };
 
 // // add an entry
