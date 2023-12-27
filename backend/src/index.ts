@@ -17,7 +17,7 @@ app.use((_req: Request, _res: Response, next: NextFunction) => {
 }, cors({ maxAge: 84600 }));
 
 // import { parseLoginPayload, parseString, parseUser } from "./utils";
-import { parseLoginPayload } from "./utils";
+import { parseLoginPayload } from "./utils/utils";
 // import accountsService from "./services/accountsService";
 
 const PORT = config.PORT;
@@ -32,7 +32,7 @@ mongoose
     console.log(`error connecting to MongoDB: ${err.message}`);
   });
 
-app.use("/api/teachers/:teacherId/classes", classesRouter);
+app.use("/api/teachers/:teacherSlug/classes", classesRouter);
 
 // app.get("/api/archived", async (_req, res) => {
 //   const results = await entriesService.getArchivedEntries();

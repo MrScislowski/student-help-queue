@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
-import config from "./config";
-import { TeacherModel } from "./models/teacher";
-import { ClassModel } from "./models/class";
-import { Class, Teacher } from "./types";
+import config from "../config";
+import { TeacherModel } from "../models/teacher";
+import { ClassModel } from "../models/class";
+import { Class, ClassBase, Teacher } from "../types";
 
 mongoose
   .connect(config.DB_URL)
@@ -17,14 +17,14 @@ async function createTeachers(): Promise<Teacher[]> {
   const teacher1: Teacher = {
     _id: new mongoose.Types.ObjectId(),
     email: "mr.scislowski@gmail.com",
-    username: "mrscislowski",
+    slug: "mrscislowski",
     classes: [],
   };
 
   const teacher2: Teacher = {
     _id: new mongoose.Types.ObjectId(),
     email: "dscislowski@usd266.com",
-    username: "dscislowski",
+    slug: "dscislowski",
     classes: [],
   };
 
@@ -46,21 +46,17 @@ async function createTeachers(): Promise<Teacher[]> {
 async function createClasses(teachers: Teacher[]): Promise<void> {
   await ClassModel.deleteMany({});
 
-  const class1: Class = {
+  const class1: ClassBase = {
     _id: new mongoose.Types.ObjectId(),
-    className: "AP Computer Science A",
-    classEndpoint: "apcsa",
-    teacherId: teachers[0]._id,
-    teacherEmail: teachers[0].email,
+    classSlug: "AP Computer Science A",
+    teacher: teachers[0]._id,
     queues: [],
   };
 
-  const class2: Class = {
+  const class2: ClassBase = {
     _id: new mongoose.Types.ObjectId(),
-    className: "Computer Programming",
-    classEndpoint: "computer-programming",
-    teacherId: teachers[0]._id,
-    teacherEmail: teachers[0].email,
+    classSlug: "Computer Programming",
+    teacher: teachers[0]._id,
     queues: [],
   };
 

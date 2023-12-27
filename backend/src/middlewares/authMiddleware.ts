@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { Session } from "../types";
 import config from "../config";
-import { parseSession } from "../utils";
+import { parseSession } from "../utils/utils";
 import jwt from "jsonwebtoken";
 
 const mockSession: Session = {
