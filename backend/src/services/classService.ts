@@ -50,20 +50,11 @@ const addQueue = async (
     classSlug: classSlug,
   });
 
-  console.log("classData:");
-  console.log(classData);
-
-  console.log("unpopulatedClassData:");
-  console.log(unpopulatedClassData);
-
   if (!classData) {
     throw new Error("ClassNotFound");
   }
 
-  console.log("about to check teacher email");
-
   if ((classData.teacher as unknown as Teacher).email !== email) {
-    console.log("teacher email doesn't match");
     throw new Error("Unauthorized");
   }
 
@@ -82,11 +73,7 @@ const addQueue = async (
 
   try {
     await classData.save();
-    console.log("saved class data");
   } catch (err) {
-    console.log("error while saving class data");
-    console.log(err);
-
     handleDatabaseError(err);
   }
 };

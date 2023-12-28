@@ -63,12 +63,6 @@ router.post("/:classSlug/queues", async (req, res) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const session: Session = res.locals.session;
 
-    console.log(
-      `got the following info: ${classSlug}, ${queueName}, ${JSON.stringify(
-        session
-      )}`
-    );
-
     await classService.addQueue(session.user.email, classSlug, queueName);
     res.status(200).send();
   } catch (err) {
