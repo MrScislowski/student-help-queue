@@ -24,4 +24,4 @@ Content-Type: application/json
 
 ### Delete a queue for a class
 ### DELETE	/teachers/:teacherSlug/classes/:classSlug/queues/:queueId
-DELETE http://localhost:3001/api/teachers/mrscislowski/classes/apcsa/queues/658dd28dc76062075ef0068f
+DELETE http://localhost:3001/api/teachers/mrscislowski/classes/apcsa/queues/658dd402aeb2ed3e96b36801

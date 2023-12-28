@@ -98,7 +98,10 @@ const deleteQueue = async (
     throw new Error("Unauthorized");
   }
 
-  classData.queues.filter((queue) => queue._id.toString() !== queueId);
+  // FIXME: maybe use mongoose's $pull instead of doing it locally then .save()?
+  classData.queues = classData.queues.filter(
+    (queue) => queue._id.toString() !== queueId
+  );
 
   try {
     await classData.save();
