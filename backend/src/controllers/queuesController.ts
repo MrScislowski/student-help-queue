@@ -1,8 +1,11 @@
 import { Router, Request, Response, NextFunction } from "express";
 import classService from "../services/classService";
 import { Session } from "../types";
+import { authenticateToken } from "../middlewares/authMiddleware";
 
 const router = Router({ mergeParams: true });
+
+router.use(authenticateToken);
 
 interface RequestWithTeacherAndClassSlug extends Request {
   params: {
@@ -22,7 +25,8 @@ router.delete("/:queueId", async (req: RequestWithTeacherAndClassSlug, res) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const session: Session = res.locals.session;
 
-    classService.deleteQueue(session.user.email, classSlug, queueId);
+    await classService.deleteQueue(session.user.email, classSlug, queueId);
+    return res.status(204).send();
   } catch (error: unknown) {
     let message = "";
     if (error instanceof Error) {
