@@ -30,7 +30,11 @@ router.post("/", async (req: Request, res: Response) => {
 
     res.send(createdTeacher);
   } catch (error: unknown) {
-    handleDatabaseError(error);
+    let message = "";
+    if (error instanceof Error) {
+      message += error.message;
+    }
+    return res.status(500).send({ error: message });
   }
 });
 
