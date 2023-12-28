@@ -9,7 +9,7 @@
     "dev": "cross-env NODE_ENV=dev ts-node-dev ./src/index.ts",
     "dev-populate-db": "cross-env NODE_ENV=dev ts-node ./src/utils/dev-utils.ts",
     "test-db-stuff": "cross-env NODE_ENV=dev ts-node ./src/db-test.ts",
-    "dev-sans-auth": "cross-env NODE_ENV=dev DISABLE_AUTH=true ts-node ./src/index.ts",
+    "dev-sans-auth": "cross-env NODE_ENV=dev DISABLE_AUTH=true ts-node-dev ./src/index.ts",
     "lint": "eslint --ext .ts .",
     "start": "cross-env NODE_ENV=production node build/index.js",
     "postinstall": "npm run tsc"
