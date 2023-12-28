@@ -4,6 +4,7 @@ import { TeacherModel } from "../models/teacher";
 import { Class, Queue, ResolutionStatus, Teacher, User } from "../types";
 import { handleDatabaseError } from "../utils/errorHandlers";
 
+// Get all the queues for a class
 const getClassData = async (
   teacherSlug: string,
   classSlug: string
@@ -78,6 +79,34 @@ const addQueue = async (
   }
 };
 
+// delete a queue
+const deleteQueue = async (
+  email: string,
+  classSlug: string,
+  queueId: string
+): Promise<void> => {
+  const classData = await ClassModel.findOne({
+    classSlug: classSlug,
+    "queues._id": queueId,
+  }).populate("teacher");
+
+  if (!classData) {
+    throw new Error("No queue found in that class");
+  }
+
+  if ((classData.teacher as unknown as Teacher).email !== email) {
+    throw new Error("Unauthorized");
+  }
+
+  classData.queues.filter((queue) => queue._id.toString() !== queueId);
+
+  try {
+    await classData.save();
+  } catch (err) {
+    handleDatabaseError(err);
+  }
+};
+
 export default {
   // getQueuesForClass,
   // addActiveEntry,
@@ -89,6 +118,7 @@ export default {
   // changeVisibility,
   getClassData,
   addQueue,
+  deleteQueue,
 };
 
 // // add an entry
