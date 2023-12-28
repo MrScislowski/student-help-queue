@@ -70,22 +70,6 @@ router.post("/:classSlug/queues", async (req, res) => {
   }
 });
 
-// // create a new queue for a class
-// router.post("/:classId/queues", async (req, res) => {
-//   try {
-//     const classId = req.params.classId;
-//     const queueName = parseString(req.body.queueName);
-
-//     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-//     const session: Session = res.locals.session;
-
-//     await activeQueueService.addQueue(classId, session.user.email, queueName);
-//     res.status(200).send();
-//   } catch (err) {
-//     res.status(400).send(err);
-//   }
-// });
-
 // // delete a queue
 // router.delete("/:classId/queues/:queueId", async (req, res) => {
 //   try {
