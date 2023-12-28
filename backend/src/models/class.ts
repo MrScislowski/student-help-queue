@@ -15,6 +15,7 @@ const classSchema = new mongoose.Schema<ClassBase>({
 
   teacher: {
     type: mongoose.Schema.Types.ObjectId,
+    ref: "Teacher",
     required: true,
   },
 
