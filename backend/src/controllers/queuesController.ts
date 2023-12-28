@@ -75,6 +75,32 @@ router.patch("/:queueId", async (req: RequestWithTeacherAndClassSlug, res) => {
 });
 
 // TODO: Add a user to a queue
+router.post(
+  "/:queueId/users",
+  async (req: RequestWithTeacherAndClassSlug, res) => {
+    try {
+      const classSlug = req.params.classSlug;
+      const queueId = req.params.queueId;
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      const session: Session = res.locals.session;
+
+      await classService.addUserToQueue(
+        classSlug,
+        queueId,
+        session.user,
+        session.user
+      );
+      return res.status(204).send();
+    } catch (error: unknown) {
+      let message = "";
+      if (error instanceof Error) {
+        message += error.message;
+      }
+      return res.status(500).send({ error: message });
+    }
+  }
+);
 
 // TODO: Remove a user from a queue
 

@@ -43,3 +43,7 @@ Content-Type: application/json
 {
   "queueName": "updated queue name"
 }
+
+### Add yourself (or another student) to a queue
+### POST	/teachers/:teacherSlug/classes/:classSlug/queues/:queueId/users
+POST http://localhost:3001/api/teachers/mrscislowski/classes/apcsa/queues/658dd44aaeb2ed3e96b3681a/users

@@ -178,6 +178,46 @@ const renameQueue = async (
   }
 };
 
+const addUserToQueue = async (
+  classSlug: string,
+  queueId: string,
+  userToAdd: User,
+  userAdding: User
+): Promise<void> => {
+  const classData = await ClassModel.findOne({
+    classSlug: classSlug,
+    "queues._id": queueId,
+  }).populate("teacher");
+
+  if (!classData) {
+    throw new Error("No queue found in that class");
+  }
+
+  if (
+    userToAdd.email !== userAdding.email &&
+    userAdding.email !== (classData.teacher as unknown as Teacher).email
+  ) {
+    throw new Error("Insufficient permissions");
+  }
+
+  // FIXME: I'm pretty sure $push is superior here (race conditions, etc.)
+  classData.queues = classData.queues.map((queue) => {
+    if (queue._id.toString() === queueId) {
+      queue.entries.push({
+        user: userToAdd,
+        timeAdded: new Date().toISOString(),
+      });
+    }
+    return queue;
+  });
+
+  try {
+    await classData.save();
+  } catch (err) {
+    handleDatabaseError(err);
+  }
+};
+
 export default {
   // getQueuesForClass,
   // addActiveEntry,
@@ -192,6 +232,7 @@ export default {
   deleteQueue,
   setVisibility,
   renameQueue,
+  addUserToQueue,
 };
 
 // // add an entry
