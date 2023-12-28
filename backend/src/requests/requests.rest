@@ -1,4 +1,5 @@
-### 
+### Make a new teacher account
+### POST	/teachers
 POST http://localhost:3001/api/teachers
 Content-Type: application/json
 
@@ -7,5 +8,17 @@ Content-Type: application/json
   "slug": "hewo"
 }
 
-###
+### Get all queues for a class
+### GET	/teachers/:teacherSlug/classes/:classSlug/queues
 GET http://localhost:3001/api/teachers/mrscislowski/classes/apcsa/queues
+
+
+### Create a new queue for a class
+# POST	/teachers/:teacherSlug/classes/:classSlug/queues
+POST http://localhost:3001/api/teachers/mrscislowski/classes/apcsa/queues
+Content-Type: application/json
+
+{
+  "queueName": "new queue name"
+}
+

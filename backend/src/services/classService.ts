@@ -1,6 +1,7 @@
+import mongoose from "mongoose";
 import { ClassModel } from "../models/class";
 import { TeacherModel } from "../models/teacher";
-import { Class, Queue, ResolutionStatus, User } from "../types";
+import { Class, Queue, ResolutionStatus, Teacher, User } from "../types";
 import { handleDatabaseError } from "../utils/errorHandlers";
 
 const getClassData = async (
@@ -33,6 +34,74 @@ const getClassData = async (
   }
 
   return classData as unknown as Class;
+};
+
+// create a new queue for a class
+const addQueue = async (
+  email: string,
+  classSlug: string,
+  queueName: string
+): Promise<void> => {
+  const classData = await ClassModel.findOne({ classSlug: classSlug }).populate(
+    "teacher"
+  );
+
+  const unpopulatedClassData = await ClassModel.findOne({
+    classSlug: classSlug,
+  });
+
+  console.log("classData:");
+  console.log(classData);
+
+  console.log("unpopulatedClassData:");
+  console.log(unpopulatedClassData);
+
+  if (!classData) {
+    throw new Error("ClassNotFound");
+  }
+
+  console.log("about to check teacher email");
+
+  if ((classData.teacher as unknown as Teacher).email !== email) {
+    console.log("teacher email doesn't match");
+    throw new Error("Unauthorized");
+  }
+
+  // FIXME: should maybe check if the displayName is already taken
+
+  // FIXME: is it better to do this as a $push operation in Mongo, or do it locally then .save()?
+
+  const newQueue: Queue = {
+    _id: new mongoose.Types.ObjectId(),
+    displayName: queueName,
+    entries: [],
+    visible: true,
+  };
+
+  classData.queues.push(newQueue);
+
+  try {
+    await classData.save();
+    console.log("saved class data");
+  } catch (err) {
+    console.log("error while saving class data");
+    console.log(err);
+
+    handleDatabaseError(err);
+  }
+};
+
+export default {
+  // getQueuesForClass,
+  // addActiveEntry,
+  // resolveMyEntry,
+  // resolveOthersEntry,
+  // renameQueue,
+  // addQueue,
+  // deleteQueue,
+  // changeVisibility,
+  getClassData,
+  addQueue,
 };
 
 // // add an entry
@@ -255,15 +324,3 @@ const getClassData = async (
 //     throw new Error("User doesn't own queue, or could not find queue");
 //   }
 // };
-
-export default {
-  // getQueuesForClass,
-  // addActiveEntry,
-  // resolveMyEntry,
-  // resolveOthersEntry,
-  // renameQueue,
-  // addQueue,
-  // deleteQueue,
-  // changeVisibility,
-  getClassData,
-};

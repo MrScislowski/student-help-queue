@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { Router, Request, Response, NextFunction } from "express";
 import { Queue, Session } from "../types";
-import activeQueueService from "../services/classService";
+import classService from "../services/classService";
 import { authenticateToken } from "../middlewares/authMiddleware";
 
 // router is using baseUrl /api/teachers/:teacherSlug/classes
@@ -26,10 +26,7 @@ router.get(
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const session: Session = res.locals.session;
 
-      const classData = await activeQueueService.getClassData(
-        teacherSlug,
-        classSlug
-      );
+      const classData = await classService.getClassData(teacherSlug, classSlug);
 
       if (classData === null) {
         return res.status(404).send({
@@ -58,6 +55,26 @@ router.get(
 );
 
 // TODO: Create a new queue for a class
+router.post("/:classSlug/queues", async (req, res) => {
+  try {
+    const classSlug = req.params.classSlug;
+    const queueName = req.body.queueName;
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const session: Session = res.locals.session;
+
+    console.log(
+      `got the following info: ${classSlug}, ${queueName}, ${JSON.stringify(
+        session
+      )}`
+    );
+
+    await classService.addQueue(session.user.email, classSlug, queueName);
+    res.status(200).send();
+  } catch (err) {
+    res.status(400).send(JSON.stringify(err));
+  }
+});
 
 // // create a new queue for a class
 // router.post("/:classId/queues", async (req, res) => {
