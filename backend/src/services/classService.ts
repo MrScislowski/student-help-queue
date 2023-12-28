@@ -145,6 +145,39 @@ const setVisibility = async (
   }
 };
 
+const renameQueue = async (
+  email: string,
+  classSlug: string,
+  queueId: string,
+  newName: string
+): Promise<void> => {
+  const classData = await ClassModel.findOne({
+    classSlug: classSlug,
+    "queues._id": queueId,
+  }).populate("teacher");
+
+  if (!classData) {
+    throw new Error("No queue found in that class");
+  }
+
+  if ((classData.teacher as unknown as Teacher).email !== email) {
+    throw new Error("Unauthorized");
+  }
+
+  classData.queues = classData.queues.map((queue) => {
+    if (queue._id.toString() === queueId) {
+      queue.displayName = newName;
+    }
+    return queue;
+  });
+
+  try {
+    await classData.save();
+  } catch (err) {
+    handleDatabaseError(err);
+  }
+};
+
 export default {
   // getQueuesForClass,
   // addActiveEntry,
@@ -158,6 +191,7 @@ export default {
   addQueue,
   deleteQueue,
   setVisibility,
+  renameQueue,
 };
 
 // // add an entry

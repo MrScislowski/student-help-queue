@@ -36,23 +36,34 @@ router.delete("/:queueId", async (req: RequestWithTeacherAndClassSlug, res) => {
   }
 });
 
-// TODO: Change visibility of a queue
+// Change visibility  of a queue {visible: true/false}
+// Or rename a queue {queueName: newName}
 // PATCH	/teachers/:teacherSlug/classes/:classSlug/queues/:queueId
 router.patch("/:queueId", async (req: RequestWithTeacherAndClassSlug, res) => {
   try {
     const classSlug = req.params.classSlug;
     const queueId = req.params.queueId;
-    const visible = req.body.visible;
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const session: Session = res.locals.session;
 
-    await classService.setVisibility(
-      session.user.email,
-      classSlug,
-      queueId,
-      visible
-    );
+    if (req.body.visible !== undefined) {
+      await classService.setVisibility(
+        session.user.email,
+        classSlug,
+        queueId,
+        req.body.visible
+      );
+    }
+
+    if (req.body.queueName !== undefined) {
+      await classService.renameQueue(
+        session.user.email,
+        classSlug,
+        queueId,
+        req.body.queueName
+      );
+    }
     return res.status(204).send();
   } catch (error: unknown) {
     let message = "";
@@ -62,8 +73,6 @@ router.patch("/:queueId", async (req: RequestWithTeacherAndClassSlug, res) => {
     return res.status(500).send({ error: message });
   }
 });
-
-// TODO: Rename a queue
 
 // TODO: Add a user to a queue
 

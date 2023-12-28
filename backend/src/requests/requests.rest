@@ -34,3 +34,12 @@ Content-Type: application/json
 {
   "visible": true
 }
+
+### Rename a queue
+### PATCH	/teachers/:teacherSlug/classes/:classSlug/queues/:queueId
+PATCH http://localhost:3001/api/teachers/mrscislowski/classes/apcsa/queues/658dd44aaeb2ed3e96b3681a
+Content-Type: application/json
+
+{
+  "queueName": "updated queue name"
+}
