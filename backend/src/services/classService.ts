@@ -110,6 +110,41 @@ const deleteQueue = async (
   }
 };
 
+// set visibility of a queue
+const setVisibility = async (
+  email: string,
+  classSlug: string,
+  queueId: string,
+  visible: boolean
+): Promise<void> => {
+  const classData = await ClassModel.findOne({
+    classSlug: classSlug,
+    "queues._id": queueId,
+  }).populate("teacher");
+
+  if (!classData) {
+    throw new Error("No queue found in that class");
+  }
+
+  if ((classData.teacher as unknown as Teacher).email !== email) {
+    throw new Error("Unauthorized");
+  }
+
+  // FIXME: maybe use mongoose's $set and positional operator directly
+  classData.queues = classData.queues.map((queue) => {
+    if (queue._id.toString() === queueId) {
+      queue.visible = visible;
+    }
+    return queue;
+  });
+
+  try {
+    await classData.save();
+  } catch (err) {
+    handleDatabaseError(err);
+  }
+};
+
 export default {
   // getQueuesForClass,
   // addActiveEntry,
@@ -122,6 +157,7 @@ export default {
   getClassData,
   addQueue,
   deleteQueue,
+  setVisibility,
 };
 
 // // add an entry

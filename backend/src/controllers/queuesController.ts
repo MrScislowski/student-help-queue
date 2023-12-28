@@ -15,7 +15,7 @@ interface RequestWithTeacherAndClassSlug extends Request {
   };
 }
 
-// TODO: Delete a queue
+// Delete a queue
 // DELETE	/teachers/:teacherSlug/classes/:classSlug/queues/:queueId
 router.delete("/:queueId", async (req: RequestWithTeacherAndClassSlug, res) => {
   try {
@@ -37,6 +37,31 @@ router.delete("/:queueId", async (req: RequestWithTeacherAndClassSlug, res) => {
 });
 
 // TODO: Change visibility of a queue
+// PATCH	/teachers/:teacherSlug/classes/:classSlug/queues/:queueId
+router.patch("/:queueId", async (req: RequestWithTeacherAndClassSlug, res) => {
+  try {
+    const classSlug = req.params.classSlug;
+    const queueId = req.params.queueId;
+    const visible = req.body.visible;
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const session: Session = res.locals.session;
+
+    await classService.setVisibility(
+      session.user.email,
+      classSlug,
+      queueId,
+      visible
+    );
+    return res.status(204).send();
+  } catch (error: unknown) {
+    let message = "";
+    if (error instanceof Error) {
+      message += error.message;
+    }
+    return res.status(500).send({ error: message });
+  }
+});
 
 // TODO: Rename a queue
 
