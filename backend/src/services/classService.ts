@@ -203,6 +203,10 @@ const addUserToQueue = async (
   // FIXME: I'm pretty sure $push is superior here (race conditions, etc.)
   classData.queues = classData.queues.map((queue) => {
     if (queue._id.toString() === queueId) {
+      if (queue.entries.find((entry) => entry.user.email === userToAdd.email)) {
+        throw new Error("User already in queue");
+      }
+
       queue.entries.push({
         user: userToAdd,
         timeAdded: new Date().toISOString(),
