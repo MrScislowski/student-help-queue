@@ -222,6 +222,46 @@ const addUserToQueue = async (
   }
 };
 
+// remove user from queue
+const removeUserFromQueue = async (
+  classSlug: string,
+  queueId: string,
+  userToRemove: User,
+  userRemoving: User,
+  resolutionStatus: ResolutionStatus
+): Promise<void> => {
+  const classDetails = await ClassModel.findOne({
+    classSlug: classSlug,
+    "queues._id": queueId,
+  }).populate("teacher");
+
+  if (!classDetails) {
+    throw new Error("No queue found in that class");
+  }
+
+  if (
+    userRemoving.email !== userToRemove.email &&
+    userRemoving.email !== (classDetails.teacher as unknown as Teacher).email
+  ) {
+    throw new Error("Insufficient permissions");
+  }
+
+  classDetails.queues = classDetails.queues.map((queue) => {
+    if (queue._id.toString() === queueId) {
+      queue.entries = queue.entries.filter(
+        (entry) => entry.user.email !== userToRemove.email
+      );
+    }
+    return queue;
+  });
+
+  try {
+    await classDetails.save();
+  } catch (err) {
+    handleDatabaseError(err);
+  }
+};
+
 export default {
   // getQueuesForClass,
   // addActiveEntry,
@@ -237,6 +277,7 @@ export default {
   setVisibility,
   renameQueue,
   addUserToQueue,
+  removeUserFromQueue,
 };
 
 // // add an entry

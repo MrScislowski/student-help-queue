@@ -2,6 +2,7 @@ import { Router, Request, Response, NextFunction } from "express";
 import classService from "../services/classService";
 import { Session } from "../types";
 import { authenticateToken } from "../middlewares/authMiddleware";
+import { parseResolutionStatus } from "../utils/utils";
 
 const router = Router({ mergeParams: true });
 
@@ -74,7 +75,7 @@ router.patch("/:queueId", async (req: RequestWithTeacherAndClassSlug, res) => {
   }
 });
 
-// TODO: Add a user to a queue
+// Add a user to a queue
 router.post(
   "/:queueId/users",
   async (req: RequestWithTeacherAndClassSlug, res) => {
@@ -103,5 +104,48 @@ router.post(
 );
 
 // TODO: Remove a user from a queue
+router.delete(
+  "/:queueId/users",
+  async (req: RequestWithTeacherAndClassSlug, res) => {
+    try {
+      const classSlug = req.params.classSlug;
+      const queueId = req.params.queueId;
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      const session: Session = res.locals.session;
+
+      let userToRemove = session.user;
+
+      if (!req.body.resolutionStatus) {
+        throw new Error("resolutionStatus is required");
+      }
+
+      const resolutionStatus = parseResolutionStatus(req.body.resolutionStatus);
+
+      if (req.body.email) {
+        userToRemove = {
+          email: req.body.email,
+          givenName: "unknown",
+          familyName: "unknown",
+        };
+      }
+
+      await classService.removeUserFromQueue(
+        classSlug,
+        queueId,
+        session.user,
+        session.user,
+        resolutionStatus
+      );
+      return res.status(204).send();
+    } catch (error: unknown) {
+      let message = "";
+      if (error instanceof Error) {
+        message += error.message;
+      }
+      return res.status(500).send({ error: message });
+    }
+  }
+);
 
 export default router;

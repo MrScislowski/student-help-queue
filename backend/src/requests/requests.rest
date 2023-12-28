@@ -44,6 +44,26 @@ Content-Type: application/json
   "queueName": "updated queue name"
 }
 
-### Add yourself (or another student) to a queue
+### Add yourself to a queue
 ### POST	/teachers/:teacherSlug/classes/:classSlug/queues/:queueId/users
 POST http://localhost:3001/api/teachers/mrscislowski/classes/apcsa/queues/658dd44aaeb2ed3e96b3681a/users
+
+
+### Remove yourself from a queue
+### DELETE	/teachers/:teacherSlug/classes/:classSlug/queues/:queueId/users
+DELETE	http://localhost:3001/api/teachers/mrscislowski/classes/apcsa/queues/658dd44aaeb2ed3e96b3681a/users
+Content-Type: application/json
+
+{
+  "resolutionStatus": "resolve"
+}
+
+### Remove another from a queue
+### DELETE	/teachers/:teacherSlug/classes/:classSlug/queues/:queueId/users w/ body { email: 'email' }
+DELETE	http://localhost:3001/api/teachers/mrscislowski/classes/apcsa/queues/658dd44aaeb2ed3e96b3681a/users
+Content-Type: application/json
+
+{
+  "email": "",
+  "resolutionStatus": "resolved"
+}
