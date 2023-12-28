@@ -1,2 +1,11 @@
+### 
+POST http://localhost:3001/api/teachers
+Content-Type: application/json
+
+{
+  "email": "mrscislowski@gmail.com",
+  "slug": "hewo"
+}
+
 ###
 GET http://localhost:3001/api/teachers/mrscislowski/classes/apcsa/queues

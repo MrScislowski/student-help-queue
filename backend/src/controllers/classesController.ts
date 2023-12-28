@@ -57,6 +57,8 @@ router.get(
   }
 );
 
+// TODO: Create a new queue for a class
+
 // // create a new queue for a class
 // router.post("/:classId/queues", async (req, res) => {
 //   try {

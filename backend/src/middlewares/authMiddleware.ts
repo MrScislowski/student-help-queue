@@ -6,7 +6,7 @@ import jwt from "jsonwebtoken";
 
 const mockSession: Session = {
   user: {
-    email: "mrscislowski@gmail.com",
+    email: "mr.scislowski@gmail.com",
     familyName: "Daniel",
     givenName: "Scislowski",
   },

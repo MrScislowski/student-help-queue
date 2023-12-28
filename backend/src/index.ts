@@ -6,9 +6,9 @@ mongoose.set("strictQuery", false);
 import cors from "cors";
 import { OAuth2Client } from "google-auth-library";
 import jwt from "jsonwebtoken";
-import classesRouter from "./controllers/classes";
-import teachersRouter from "./controllers/teachers";
-import queuesRouter from "./controllers/queues";
+import classesRouter from "./controllers/classesController";
+import teachersRouter from "./controllers/teachersController";
+import queuesRouter from "./controllers/queuesController";
 
 const app = express();
 app.use(express.json());
@@ -32,7 +32,9 @@ mongoose
     console.log(`error connecting to MongoDB: ${err.message}`);
   });
 
+app.use("/api/teachers/:teacherSlug/classes/:classSlug/queues", queuesRouter);
 app.use("/api/teachers/:teacherSlug/classes", classesRouter);
+app.use("/api/teachers", teachersRouter);
 
 // app.get("/api/archived", async (_req, res) => {
 //   const results = await entriesService.getArchivedEntries();

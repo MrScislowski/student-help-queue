@@ -3,19 +3,16 @@ import mongoose from "mongoose";
 import { Teacher } from "../types";
 
 const teacherSchema = new mongoose.Schema<Teacher>({
-  _id: {
-    type: mongoose.Schema.Types.ObjectId,
-    required: true,
-  },
-
   email: {
     type: String,
     required: true,
+    unique: true,
   },
 
   slug: {
     type: String,
     required: true,
+    unique: true,
   },
 
   classes: [mongoose.Schema.Types.ObjectId],
