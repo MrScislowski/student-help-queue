@@ -6,6 +6,7 @@ import LoginButton from "./LoginButton";
 import { Session } from "../types";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { isSession } from "../utils";
+import TeacherPage from "./TeacherPage";
 
 const queryClient = new QueryClient();
 
@@ -42,7 +43,7 @@ const App = ({ }: AppProps) => {
   return (
     <QueryClientProvider client={queryClient}>
       <SessionContext.Provider value={session}>
-        <p>TODO: show all the teacher emails that are created so far... have a textbox to create a new one.</p>
+        <TeacherPage />
       </SessionContext.Provider>
     </QueryClientProvider>
   );

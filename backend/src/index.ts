@@ -46,9 +46,6 @@ app.use("/api/teachers", teachersRouter);
 
 app.post("/api/login", async (req, res) => {
   try {
-    console.log(
-      `login endpoint called with req.body: ${JSON.stringify(req.body)}`
-    );
     const role = req.body.role;
     let clientId;
     if (role === "student") {

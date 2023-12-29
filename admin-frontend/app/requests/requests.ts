@@ -29,3 +29,24 @@ export const attemptLogin = async (credential: string) => {
   setToken(response.data.token);
   return response.data;
 };
+
+export const getTeachers = async () => {
+  const response = await axios.get(`${baseUrl}/teachers`, {
+    headers: { Authorization: token },
+  });
+  return response.data;
+};
+
+export const createTeacher = async (email: string, slug: string) => {
+  const response = await axios.post(
+    `${baseUrl}/teachers`,
+    {
+      email: email,
+      slug: slug,
+    },
+    {
+      headers: { Authorization: token },
+    }
+  );
+  return response.data;
+};
