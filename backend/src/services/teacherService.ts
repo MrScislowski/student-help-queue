@@ -28,6 +28,18 @@ const createNewAccount = async (
   return newTeacher;
 };
 
+const listTeachers = async (requestorEmail: string) => {
+  if (!adminService.isAdmin(requestorEmail)) {
+    throw new Error(
+      "You are not an administrator, so you cannot see teacher accounts"
+    );
+  }
+
+  const teachers = await TeacherModel.find({});
+  return teachers;
+}
+
 export default {
   createNewAccount,
+  listTeachers,
 };

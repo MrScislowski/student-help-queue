@@ -8,7 +8,7 @@ const router = Router();
 
 router.use(authenticateToken);
 
-// TODO: Create a new teacher account
+// Create a new teacher account
 router.post("/", async (req: Request, res: Response) => {
   const email = req.body.email;
   const slug = req.body.slug;
@@ -35,6 +35,19 @@ router.post("/", async (req: Request, res: Response) => {
       message += error.message;
     }
     return res.status(500).send({ error: message });
+  }
+});
+
+// List teachers
+router.get("/", async (req: Request, res: Response) => {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const session: Session = res.locals.session;
+
+    const teachers = await teacherService.listTeachers(session.user.email);
+    res.send(teachers);
+  } catch (error: unknown) {
+    handleDatabaseError(error);
   }
 });
 

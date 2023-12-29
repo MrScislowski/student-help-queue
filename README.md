@@ -2,7 +2,8 @@
 
 | Method | Endpoint                                                        | Description                                                                                  | Parameters                                                         | Request Body                                                                      | Response                   |
 | ------ | --------------------------------------------------------------- | -------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ | --------------------------------------------------------------------------------- | -------------------------- |
-| POST   | /teachers                                                       | Create a new teacher account                                                                 | None                                                               | {email: "teacher email", slug: "proposed teacher slug"}                           | The created teacher object |
+| GET    | /teachers                                                       | List teacher accounts (admin only)                                                           | None                                                               |                                                                                   | Array of Teacher objects   |
+| POST   | /teachers                                                       | Create a new teacher account (admin only)                                                    | None                                                               | {email: "teacher email", slug: "proposed teacher slug"}                           | The created teacher object |
 | GET    | /teachers/:teacherSlug/classes/:classSlug/queues                | Get all the queues for a class                                                               | `classSlug`: The ID of the class                                   | None                                                                              | An array of queue objects  |
 | POST   | /teachers/:teacherSlug/classes/:classSlug/queues                | Create a new queue for a class                                                               | `classSlug`: The ID of the class                                   | {queueName: "new queue name"}                                                     | The created queue object   |
 | DELETE | /teachers/:teacherSlug/classes/:classSlug/queues/:queueId       | Delete a queue from a class                                                                  | `classSlug`: The ID of the class<br>`queueId`: The ID of the queue | None                                                                              | The deleted queue object   |
@@ -14,6 +15,7 @@
 # Google Cloud Settings
 
 ## teacher frontend
+
 ### Authorized Javascript origins
 
 - `https://help-queue-teacher-frontend-239b686a3dfd.herokuapp.com`
@@ -28,6 +30,7 @@
 - `https://localhost`
 
 ## admin frontend
+
 ### Authorized Javascript origins
 
 - `https://localhost:3000`
@@ -39,7 +42,6 @@
 - `https://help-queue-teacher-frontend-239b686a3dfd.herokuapp.com`
 - `https://localhost:3000`
 - `https://localhost`
-
 
 # Push Instructions
 
