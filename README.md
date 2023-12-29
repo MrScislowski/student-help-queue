@@ -11,6 +11,36 @@
 | POST   | /teachers/:teacherSlug/classes/:classSlug/queues/:queueId/users | Add your name to a queue                                                                     | `classSlug`: The ID of the class<br>`queueId`: The ID of the queue |                                                                                   | The updated queue object   |
 | DELETE | /teachers/:teacherSlug/classes/:classSlug/queues/:queueId/users | Remove your name or another user's name from a queue of a class (admin only for other users) | `classSlug`: The ID of the class<br>`queueId`: The ID of the queue | {email: "user@example.com"} (optional), {resolutionStatus: "cancel" \| "resolve"} | The updated queue object   |
 
+# Google Cloud Settings
+
+## teacher frontend
+### Authorized Javascript origins
+
+- `https://help-queue-teacher-frontend-239b686a3dfd.herokuapp.com`
+- `https://localhost:3000`
+- `https://localhost`
+
+### Authorized redirect URIs
+
+- `https://student-help-queue-backend-dbc8c16c81bf.herokuapp.com/api/login`
+- `https://help-queue-teacher-frontend-239b686a3dfd.herokuapp.com`
+- `https://localhost:3000`
+- `https://localhost`
+
+## admin frontend
+### Authorized Javascript origins
+
+- `https://localhost:3000`
+- `https://localhost`
+
+### Authorized redirect URIs
+
+- `https://student-help-queue-backend-dbc8c16c81bf.herokuapp.com/api/login`
+- `https://help-queue-teacher-frontend-239b686a3dfd.herokuapp.com`
+- `https://localhost:3000`
+- `https://localhost`
+
+
 # Push Instructions
 
 ## backend
@@ -55,8 +85,6 @@ The structure of the web app is a backend in nodeJS using express that communica
 The student frontend allows students to view the active queues in their class, and they can add and remove the names from those queues.
 
 The teacher frontend allows the teacher to remove names from queues, but also to rename queues, change their visibility, and add/remove queues.
-
-I am wondering how to structure the database. Specifically, whether to embed the queues, or references to them. Whenever students access a class, they will need all the (visible) queues for that class. However, when a teacher renames or deletes a queue, they will not need all of the queues. Do you think embedding or referencing the queues would be better? A partial schema is shown below.
 
 # Database Schema
 
