@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useEffect, useContext } from "react";
 import SessionContext from "@components/SessionContext";
 
@@ -9,6 +11,7 @@ import { Session } from "@appTypes/types";
 import { QueryClient, QueryClientProvider } from "react-query";
 import AddQueueForm from "@components/AddQueueForm";
 import config from "@config/config";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const queryClient = new QueryClient();
 
@@ -36,17 +39,33 @@ const App = ({ classId }: AppProps) => {
   };
 
   if (!session) {
-    return <LoginButton setSession={setSession} />;
+    return (
+      <GoogleOAuthProvider
+        clientId={
+          process.env.NEXT_PUBLIC_GOOGLE_OAUTH_CLIENT_ID ||
+          "client_id_not_supplied_from_environment_variable"
+        }
+      >
+        <LoginButton setSession={setSession} />;
+      </GoogleOAuthProvider>
+    );
   }
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <SessionContext.Provider value={session}>
-        <Header handleLogout={handleLogout} />
-        <AddQueueForm classId={classId} />
-        <QueueSet classId={classId} />
-      </SessionContext.Provider>
-    </QueryClientProvider>
+    <GoogleOAuthProvider
+      clientId={
+        process.env.NEXT_PUBLIC_GOOGLE_OAUTH_CLIENT_ID ||
+        "client_id_not_supplied_from_environment_variable"
+      }
+    >
+      <QueryClientProvider client={queryClient}>
+        <SessionContext.Provider value={session}>
+          <Header handleLogout={handleLogout} />
+          <AddQueueForm classId={classId} />
+          <QueueSet classId={classId} />
+        </SessionContext.Provider>
+      </QueryClientProvider>
+    </GoogleOAuthProvider>
   );
 };
 
