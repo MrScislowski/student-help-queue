@@ -66,7 +66,8 @@ export const addName = async (
 };
 
 export const resolveEntry = async (
-  classId: string,
+  teacherSlug: string,
+  classSlug: string,
   queueId: string,
   studentEmail: string,
   resolutionStatus: ResolutionStatus
@@ -79,7 +80,7 @@ export const resolveEntry = async (
     };
   }
   await axios.delete(
-    `${baseUrl}/classes/${classId}/queues/${queueId}/users`,
+    `${baseUrl}/teachers/${teacherSlug}/classes/${classSlug}/queues/${queueId}/users`,
     config
   );
 };
