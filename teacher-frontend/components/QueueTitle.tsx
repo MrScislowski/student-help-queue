@@ -32,12 +32,13 @@ const EditContainer = styled.div`
 `;
 
 interface QueueTitleProps {
-  classId: string;
+  teacherSlug: string;
+  classSlug: string;
   queue: QueueType;
 }
 
 const QueueTitle = (props: QueueTitleProps) => {
-  const { classId, queue } = props;
+  const { teacherSlug, classSlug, queue } = props;
   const name = queue.displayName;
   const id = queue._id;
 
@@ -51,7 +52,7 @@ const QueueTitle = (props: QueueTitleProps) => {
 
   const renameQueueMutation = useMutation({
     mutationFn: async ({ newName }: { newName: string }) => {
-      await renameQueue(classId, id, newName);
+      await renameQueue(classSlug, id, newName);
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["entries"]);
@@ -60,7 +61,7 @@ const QueueTitle = (props: QueueTitleProps) => {
 
   const deleteQueueMutation = useMutation({
     mutationFn: async () => {
-      await deleteQueue(classId, id);
+      await deleteQueue(teacherSlug, classSlug, id);
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["entries"]);
@@ -69,7 +70,7 @@ const QueueTitle = (props: QueueTitleProps) => {
 
   const changeVisibilityMutation = useMutation({
     mutationFn: async () => {
-      await changeQueueVisibility(classId, id, !queue.visible);
+      await changeQueueVisibility(classSlug, id, !queue.visible);
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["entries"]);

@@ -131,7 +131,8 @@ export const renameQueue = async (
 };
 
 export const deleteQueue = async (
-  classId: string,
+  teacherSlug: string,
+  classSlug: string,
   queueId: string
 ): Promise<void> => {
   let config = {};
@@ -142,7 +143,7 @@ export const deleteQueue = async (
   }
   return (
     await axios.delete(
-      `${baseUrl}/classes/${classId}/queues/${queueId}`,
+      `${baseUrl}/teachers/${teacherSlug}/classes/${classSlug}/queues/${queueId}`,
       config
     )
   ).data;

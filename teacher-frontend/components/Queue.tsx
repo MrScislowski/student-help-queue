@@ -55,12 +55,13 @@ const getEntryAge = (
 };
 
 interface QueueProps {
-  classId: string;
+  teacherSlug: string;
+  classSlug: string;
   queue: Queue;
 }
 
 const Queue = (props: QueueProps) => {
-  const { classId, queue } = props;
+  const { teacherSlug, classSlug, queue } = props;
   const queueName = queue.displayName;
   const queueId = queue._id;
   const entries = queue.entries;
@@ -72,7 +73,7 @@ const Queue = (props: QueueProps) => {
 
   const addNameMutation = useMutation({
     mutationFn: () => {
-      return addName(classId, queueId);
+      return addName(classSlug, queueId);
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["entries"]);
@@ -81,7 +82,7 @@ const Queue = (props: QueueProps) => {
 
   const resolveEntryMutation = useMutation({
     mutationFn: ({ studentEmail }: { studentEmail: string }) => {
-      return resolveEntry(classId, queueId, studentEmail, "resolve");
+      return resolveEntry(classSlug, queueId, studentEmail, "resolve");
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["entries"] });
@@ -90,7 +91,7 @@ const Queue = (props: QueueProps) => {
 
   const cancelEntryMutation = useMutation({
     mutationFn: ({ studentEmail }: { studentEmail: string }) => {
-      return resolveEntry(classId, queueId, studentEmail, "cancel");
+      return resolveEntry(classSlug, queueId, studentEmail, "cancel");
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["entries"] });
@@ -109,7 +110,11 @@ const Queue = (props: QueueProps) => {
 
   return (
     <>
-      <QueueTitle classId={classId} queue={queue} />
+      <QueueTitle
+        teacherSlug={teacherSlug}
+        classSlug={classSlug}
+        queue={queue}
+      />
 
       {entries.find((entry) => entry.user.email === session.user.email) ? (
         ""
