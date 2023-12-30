@@ -52,7 +52,7 @@ const QueueTitle = (props: QueueTitleProps) => {
 
   const renameQueueMutation = useMutation({
     mutationFn: async ({ newName }: { newName: string }) => {
-      await renameQueue(classSlug, id, newName);
+      await renameQueue(teacherSlug, classSlug, id, newName);
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["entries"]);

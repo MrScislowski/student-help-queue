@@ -105,7 +105,8 @@ export const createQueue = async (
 };
 
 export const renameQueue = async (
-  classId: string,
+  teacherSlug: string,
+  classSlug: string,
   queueId: string,
   newName: string
 ) => {
@@ -124,7 +125,7 @@ export const renameQueue = async (
   }
 
   await axios.patch(
-    `${baseUrl}/classes/${classId}/queues/${queueId}`,
+    `${baseUrl}/teachers/${teacherSlug}/classes/${classSlug}/queues/${queueId}`,
     data,
     config
   );
