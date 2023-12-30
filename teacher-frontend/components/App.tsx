@@ -1,14 +1,14 @@
 import { useState, useEffect, useContext } from "react";
 import SessionContext from "./SessionContext";
 
-import { setToken } from "./requests";
-import Header from "./components/Header";
-import LoginButton from "./components/LoginButton";
-import QueueSet from "./components/QueueSet";
-import { Session } from "./types";
+import { setToken } from "../utils/requests";
+import Header from "./Header";
+import LoginButton from "./LoginButton";
+import QueueSet from "./QueueSet";
+import { Session } from "../types/types";
 import { QueryClient, QueryClientProvider } from "react-query";
-import AddQueueForm from "./components/AddQueueForm";
-import config from "../config";
+import AddQueueForm from "./AddQueueForm";
+import config from "../config/config";
 
 const queryClient = new QueryClient();
 

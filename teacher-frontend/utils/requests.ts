@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Queue, ResolutionStatus, User } from "./types";
+import { Queue, ResolutionStatus, User } from "../types/types";
 
 const baseUrl =
   process.env.NODE_ENV === "development"

@@ -1,10 +1,10 @@
 import styled from "styled-components";
-import { ActiveEntry, Queue, ResolutionStatus } from "../types";
+import { ActiveEntry, Queue, ResolutionStatus } from "../types/types";
 import { useMutation, useQueryClient } from "react-query";
-import { resolveEntry, addName } from "../requests";
+import { resolveEntry, addName } from "../utils/requests";
 import { useContext, useEffect, useState } from "react";
-import TimeOffsetContext from "../TimeOffsetContext";
-import SessionContext from "../SessionContext";
+import TimeOffsetContext from "./TimeOffsetContext";
+import SessionContext from "./SessionContext";
 import QueueTitle from "./QueueTitle";
 
 const EntriesContainer = styled.div`

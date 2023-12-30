@@ -2,8 +2,12 @@ import styled from "styled-components";
 import Queue from "./Queue";
 import { useRef, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
-import { changeQueueVisibility, deleteQueue, renameQueue } from "../requests";
-import { Queue as QueueType } from "../types";
+import {
+  changeQueueVisibility,
+  deleteQueue,
+  renameQueue,
+} from "../utils/requests";
+import { Queue as QueueType } from "../types/types";
 
 const Title = styled.h2`
   padding: 10px;
@@ -46,7 +50,7 @@ const QueueTitle = (props: QueueTitleProps) => {
   const queryClient = useQueryClient();
 
   const renameQueueMutation = useMutation({
-    mutationFn: async ({ newName }: {newName: string} ) => {
+    mutationFn: async ({ newName }: { newName: string }) => {
       await renameQueue(classId, id, newName);
     },
     onSuccess: () => {
@@ -92,11 +96,11 @@ const QueueTitle = (props: QueueTitleProps) => {
 
   const handleDelete = () => {
     deleteQueueMutation.mutate();
-  }
+  };
 
   const handleChangeVisibility = () => {
     changeVisibilityMutation.mutate();
-  }
+  };
 
   return (
     <Title>
@@ -120,7 +124,9 @@ const QueueTitle = (props: QueueTitleProps) => {
         <span>
           {title}
           <button onClick={handleEdit}>Edit</button>
-          <button onClick={handleChangeVisibility}>{queue.visible ? "Hide" : "Show"}</button>
+          <button onClick={handleChangeVisibility}>
+            {queue.visible ? "Hide" : "Show"}
+          </button>
           <button onClick={handleDelete}>Delete</button>
         </span>
       )}

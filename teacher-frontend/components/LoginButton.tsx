@@ -1,7 +1,7 @@
-import { attemptLogin } from "../requests";
+import { attemptLogin } from "../utils/requests";
 import { GoogleLogin } from "@react-oauth/google";
-import { Session, User } from "../types";
-import config from "../../config";
+import { Session, User } from "../types/types";
+import config from "../config/config";
 
 interface LoginButtonProps {
   setSession: (session: Session | null) => void;

@@ -1,9 +1,9 @@
 import { Fragment, useContext } from "react";
 import Queue from "./Queue";
 import { useQuery, useQueryClient } from "react-query";
-import { getActiveEntries } from "../requests";
-import SessionContext from "../SessionContext";
-import TimeOffsetContext from "../TimeOffsetContext";
+import { getActiveEntries } from "../utils/requests";
+import SessionContext from "./SessionContext";
+import TimeOffsetContext from "./TimeOffsetContext";
 
 interface QueueSetProps {
   classId: string;
@@ -44,13 +44,7 @@ const QueueSet = (props: QueueSetProps) => {
   return (
     <TimeOffsetContext.Provider value={timeOffset}>
       {getEntriesQuery.data?.queues.map((queue) => {
-        return (
-          <Queue
-            key={queue._id}
-            classId={props.classId}
-            queue={queue}
-          />
-        );
+        return <Queue key={queue._id} classId={props.classId} queue={queue} />;
       })}
     </TimeOffsetContext.Provider>
   );
