@@ -2,7 +2,7 @@ export type ResolutionStatus = "cancel" | "resolve";
 
 export interface ActiveEntry {
   user: User;
-  timestamp: string;
+  timeAdded: string;
 }
 
 export interface Queue {

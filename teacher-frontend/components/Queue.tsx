@@ -141,7 +141,7 @@ const Queue = (props: QueueProps) => {
               {item.user.givenName} {item.user.familyName} (
               {getEntryAge(
                 currentTime,
-                new Date(item.timestamp).getTime(),
+                new Date(item.timeAdded).getTime(),
                 timeOffset
               )}
               ) (
