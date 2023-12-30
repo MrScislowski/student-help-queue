@@ -150,7 +150,8 @@ export const deleteQueue = async (
 };
 
 export const changeQueueVisibility = async (
-  classId: string,
+  teacherSlug: string,
+  classSlug: string,
   queueId: string,
   visible: boolean
 ): Promise<void> => {
@@ -162,7 +163,7 @@ export const changeQueueVisibility = async (
   }
   return (
     await axios.patch(
-      `${baseUrl}/classes/${classId}/queues/${queueId}`,
+      `${baseUrl}/teachers/${teacherSlug}/classes/${classSlug}/queues/${queueId}`,
       { visible },
       config
     )

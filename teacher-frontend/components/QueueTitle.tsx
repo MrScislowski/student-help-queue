@@ -70,7 +70,7 @@ const QueueTitle = (props: QueueTitleProps) => {
 
   const changeVisibilityMutation = useMutation({
     mutationFn: async () => {
-      await changeQueueVisibility(classSlug, id, !queue.visible);
+      await changeQueueVisibility(teacherSlug, classSlug, id, !queue.visible);
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["entries"]);
