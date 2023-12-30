@@ -44,7 +44,7 @@ const App = ({ classId }: AppProps) => {
       <SessionContext.Provider value={session}>
         <Header handleLogout={handleLogout} />
         <AddQueueForm classId={classId} />
-        <QueueSet classId={classId} />
+        <QueueSet classSlug={classId} />
       </SessionContext.Provider>
     </QueryClientProvider>
   );

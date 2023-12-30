@@ -1,12 +1,13 @@
 import { Fragment, useContext } from "react";
 import Queue from "./Queue";
 import { useQuery, useQueryClient } from "react-query";
-import { getActiveEntries } from "../utils/requests";
+import { getQueuesForClass } from "../utils/requests";
 import SessionContext from "./SessionContext";
 import TimeOffsetContext from "./TimeOffsetContext";
 
 interface QueueSetProps {
-  classId: string;
+  teacherSlug: string;
+  classSlug: string;
 }
 
 const QueueSet = (props: QueueSetProps) => {
@@ -16,7 +17,8 @@ const QueueSet = (props: QueueSetProps) => {
 
   const getEntriesQuery = useQuery({
     queryKey: ["entries"],
-    queryFn: async () => await getActiveEntries(props.classId),
+    queryFn: async () =>
+      await getQueuesForClass(props.teacherSlug, props.classSlug),
   });
 
   if (getEntriesQuery.isLoading) {
@@ -44,7 +46,9 @@ const QueueSet = (props: QueueSetProps) => {
   return (
     <TimeOffsetContext.Provider value={timeOffset}>
       {getEntriesQuery.data?.queues.map((queue) => {
-        return <Queue key={queue._id} classId={props.classId} queue={queue} />;
+        return (
+          <Queue key={queue._id} classId={props.classSlug} queue={queue} />
+        );
       })}
     </TimeOffsetContext.Provider>
   );

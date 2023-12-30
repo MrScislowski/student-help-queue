@@ -16,8 +16,9 @@ export const setToken = (newValue: string | null) => {
   }
 };
 
-export const getActiveEntries = async (
-  endpoint: string
+export const getQueuesForClass = async (
+  teacherSlug: string,
+  classSlug: string
 ): Promise<{
   timestamp: string;
   queues: Queue[];
@@ -30,9 +31,10 @@ export const getActiveEntries = async (
   }
   try {
     const response = await axios.get(
-      `${baseUrl}/classes/${endpoint}/queues`,
+      `${baseUrl}/teachers/${teacherSlug}/classes/${classSlug}/queues`,
       config
     );
+
     return response.data;
   } catch (error: any) {
     if (error.response && error.response.data) {

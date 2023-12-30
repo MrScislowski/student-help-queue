@@ -1,5 +1,5 @@
 {
   "editor.formatOnSave": true,
-  "search.useIgnoreFiles": false,
-  "search.useParentIgnoreFiles": false
+  "search.useIgnoreFiles": true,
+  "search.useParentIgnoreFiles": true
 }

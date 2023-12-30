@@ -3,17 +3,18 @@ import { createQueue } from "../utils/requests";
 import { useMutation, useQueryClient } from "react-query";
 
 interface AddQueueFormProps {
-  classId: string;
+  teacherSlug: string;
+  classSlug: string;
 }
 
-const AddQueueForm = ({ classId }: { classId: string }) => {
+const AddQueueForm = ({ teacherSlug, classSlug }: AddQueueFormProps) => {
   const [queueName, setQueueName] = useState("");
 
   const queryClient = useQueryClient();
 
   const addQueueMutation = useMutation({
     mutationFn: async ({ newName }: { newName: string }) => {
-      await createQueue(classId, newName);
+      await createQueue(classSlug, newName);
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["entries"]);

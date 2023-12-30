@@ -16,11 +16,15 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 const queryClient = new QueryClient();
 
 interface AppProps {
-  classId: string;
+  params: {
+    teacherSlug: string;
+    classSlug: string;
+  };
 }
 
-const App = ({ classId }: AppProps) => {
+const App = ({ params }: AppProps) => {
   const [session, setSession] = useState<Session | null>(null);
+  const { teacherSlug, classSlug } = params;
 
   useEffect(() => {
     const storedUserInfo = window.localStorage.getItem(config.cookieName);
@@ -61,8 +65,8 @@ const App = ({ classId }: AppProps) => {
       <QueryClientProvider client={queryClient}>
         <SessionContext.Provider value={session}>
           <Header handleLogout={handleLogout} />
-          <AddQueueForm classId={classId} />
-          <QueueSet classId={classId} />
+          <AddQueueForm teacherSlug={teacherSlug} classSlug={classSlug} />
+          <QueueSet teacherSlug={teacherSlug} classSlug={classSlug} />
         </SessionContext.Provider>
       </QueryClientProvider>
     </GoogleOAuthProvider>
