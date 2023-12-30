@@ -14,7 +14,7 @@ const AddQueueForm = ({ teacherSlug, classSlug }: AddQueueFormProps) => {
 
   const addQueueMutation = useMutation({
     mutationFn: async ({ newName }: { newName: string }) => {
-      await createQueue(classSlug, newName);
+      await createQueue(teacherSlug, classSlug, newName);
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["entries"]);

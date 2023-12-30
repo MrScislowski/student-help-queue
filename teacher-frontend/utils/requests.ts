@@ -84,7 +84,8 @@ export const resolveEntry = async (
 };
 
 export const createQueue = async (
-  classId: string,
+  teacherSlug: string,
+  classSlug: string,
   queueName: string
 ): Promise<void> => {
   let config = {};
@@ -93,9 +94,10 @@ export const createQueue = async (
       headers: { Authorization: token },
     };
   }
+
   return (
     await axios.post(
-      `${baseUrl}/classes/${classId}/queues`,
+      `${baseUrl}/teachers/${teacherSlug}/classes/${classSlug}/queues`,
       { queueName },
       config
     )
