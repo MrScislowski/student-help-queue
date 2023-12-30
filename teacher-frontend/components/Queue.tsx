@@ -73,7 +73,7 @@ const Queue = (props: QueueProps) => {
 
   const addNameMutation = useMutation({
     mutationFn: () => {
-      return addName(classSlug, queueId);
+      return addName(teacherSlug, classSlug, queueId);
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["entries"]);

@@ -46,7 +46,8 @@ export const getQueuesForClass = async (
 };
 
 export const addName = async (
-  classId: string,
+  teacherSlug: string,
+  classSlug: string,
   queueId: string
 ): Promise<void> => {
   let config = {};
@@ -57,7 +58,7 @@ export const addName = async (
   }
   return (
     await axios.post(
-      `${baseUrl}/classes/${classId}/queues/${queueId}/users`,
+      `${baseUrl}/teachers/${teacherSlug}/classes/${classSlug}/queues/${queueId}/users`,
       {},
       config
     )
