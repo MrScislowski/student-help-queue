@@ -1,3 +1,11 @@
+# Table Of Contents
+
+1. [API Endpoints](#api-endpoints)
+1. [Google Cloud Settings](#google-cloud-settings)
+1. [Deployment Instructions](#deployment-instructions)
+1. [Database Schema](#database-schema)
+1. [ChatGPT prompt](#chatgpt-prompt)
+
 # API Endpoints
 
 | Method | Endpoint                                                        | Description                                                                                  | Parameters                                                                                                                       | Request Body                                                                      | Response                   |
@@ -14,79 +22,35 @@
 
 # Google Cloud Settings
 
-## teacher frontend
+| App name         | JS origins                                                                                                                            | Redirect URIs                                                                                                                                                                                                                      |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| teacher frontend | <ul><li>`https://help-queue-teacher-frontend-239b686a3dfd.herokuapp.com`</li><li>`https://localhost:3000`</li><li>`https://localhost` | <ul><li>`https://student-help-queue-backend-dbc8c16c81bf.herokuapp.com/api/login`</li><li>`https://help-queue-teacher-frontend-239b686a3dfd.herokuapp.com`</li><li>`https://localhost:3000`</li><li>`https://localhost`</li>       |
+| admin frontend   | <ul><li>`https://localhost:3000`</li><li>`https://localhost`</li></ul>                                                                | <ul><li>`https://student-help-queue-backend-dbc8c16c81bf.herokuapp.com/api/login`</li><li>`https://help-queue-teacher-frontend-239b686a3dfd.herokuapp.com`</li><li>`https://localhost:3000`</li><li>`https://localhost`</li> </ul> |
+| student frontend | <ul><li>`https://student-help-queue-frontend-f91c0ecec0d2.herokuapp.com`</li><li>`https://localhost:3000`</li><li>`https://localhost` | <ul><li>`https://student-help-queue-backend-dbc8c16c81bf.herokuapp.com/api/login`</li><li>`https://student-help-queue-frontend-f91c0ecec0d2.herokuapp.com`</li><li>`https://localhost:3000`</li><li>`https://localhost`</li>       |
 
-### Authorized Javascript origins
+# Deployment Instructions
 
-- `https://help-queue-teacher-frontend-239b686a3dfd.herokuapp.com`
-- `https://localhost:3000`
-- `https://localhost`
+## URL references
 
-### Authorized redirect URIs
+| App              | Hosted URL                                                     | Git remote              | Heroku URL                                             |
+| ---------------- | -------------------------------------------------------------- | ----------------------- | ------------------------------------------------------ |
+| student-frontend | https://help-queue-student-frontend-71154636b8a6.herokuapp.com | heroku-student-frontend | https://git.heroku.com/help-queue-student-frontend.git |
+| teacher-frontend | https://help-queue-teacher-frontend-239b686a3dfd.herokuapp.com | heroku-teacher-frontend | https://git.heroku.com/help-queue-teacher-frontend.git |
+| backend          | https://help-queue-backend-cb8730ae9c9f.herokuapp.com          | heroku-backend          | https://git.heroku.com/help-queue-backend.git          |
+| admin-frontend   | https://help-queue-admin-frontend-a43b988e9d22.herokuapp.com   | heroku-admin-frontend   | https://git.heroku.com/help-queue-backend.git          |
 
-- `https://student-help-queue-backend-dbc8c16c81bf.herokuapp.com/api/login`
-- `https://help-queue-teacher-frontend-239b686a3dfd.herokuapp.com`
-- `https://localhost:3000`
-- `https://localhost`
+## Pushing to Heroku
 
-## admin frontend
+(When you want to trigger a rebuild of the Heroku app):
 
-### Authorized Javascript origins
+`git commit --allow-empty -m "Trigger Heroku rebuild"`
 
-- `https://localhost:3000`
-- `https://localhost`
-
-### Authorized redirect URIs
-
-- `https://student-help-queue-backend-dbc8c16c81bf.herokuapp.com/api/login`
-- `https://help-queue-teacher-frontend-239b686a3dfd.herokuapp.com`
-- `https://localhost:3000`
-- `https://localhost`
-
-# Push Instructions
-
-## backend
-
-git subtree push --prefix backend heroku-backend main
-
-## student-frontend
-
-git subtree push --prefix student-frontend heroku-teacher-frontend main
-
-## teacher-frontend
-
-git commit --allow-empty -m "Trigger Heroku rebuild"
-https://help-queue-teacher-frontend-239b686a3dfd.herokuapp.com
-git subtree push --prefix teacher-frontend heroku-teacher-frontend main
-
-# Debugging instructions
-
-heroku logs --tail --app student-help-queue-backend
-
-# Google credentials for student frontend:
-
-## authorized javascript origins
-
-https://localhost:3000
-https://localhost
-https://student-help-queue-frontend-f91c0ecec0d2.herokuapp.com
-
-## redirect URLs
-
-https://localhost:3000
-https://localhost
-https://student-help-queue-frontend-f91c0ecec0d2.herokuapp.com
-https://student-help-queue-backend-dbc8c16c81bf.herokuapp.com/api/login
-
-# ChatGPT prompt
-
-I am writing a web app that is like a ticketing systems for teachers and students to use. Teachers can create classes, and separate queues within each class. Queues could represent immediate requests for assistance, or indicate that an assignment has been completed. Students can then add their names to these queues, and they (or their teacher) can remove their name once the request has been resolved.
-
-The structure of the web app is a backend in nodeJS using express that communicates with a MongoDB database. There are two frontend apps - one for use by teachers, and one for use by students.
-
-The student frontend allows students to view the active queues in their class, and they can add and remove the names from those queues.
-
-The teacher frontend allows the teacher to remove names from queues, but also to rename queues, change their visibility, and add/remove queues.
+| App              | Git command                                                               | Debug command                                          |
+| ---------------- | ------------------------------------------------------------------------- | ------------------------------------------------------ |
+| student-frontend | `git subtree push --prefix student-frontend heroku-student-frontend main` | `heroku logs --tail --app help-queue-student-frontend` |
+| teacher-frontend | `git subtree push --prefix teacher-frontend heroku-teacher-frontend main` | `heroku logs --tail --app help-queue-teacher-frontend` |
+| backend          | `git subtree push --prefix backend heroku-backend main`                   | `heroku logs --tail --app help-queue-backend`          |
+| admin-frontend   | `git subtree push --prefix admin-frontend heroku-admin-frontend main`     | `heroku logs --tail --app help-queue-admin-frontend`   |
 
 # Database Schema
 
@@ -121,3 +85,13 @@ The teacher frontend allows the teacher to remove names from queues, but also to
 - `email`: String - email address of the user
 - `givenName`: String - given name of the user
 - `familyName`: String - family name of the user
+
+# ChatGPT prompt
+
+I am writing a web app that is like a ticketing systems for teachers and students to use. Teachers can create classes, and separate queues within each class. Queues could represent immediate requests for assistance, or indicate that an assignment has been completed. Students can then add their names to these queues, and they (or their teacher) can remove their name once the request has been resolved.
+
+The structure of the web app is a backend in nodeJS using express that communicates with a MongoDB database. There are two frontend apps - one for use by teachers, and one for use by students.
+
+The student frontend allows students to view the active queues in their class, and they can add and remove the names from those queues.
+
+The teacher frontend allows the teacher to remove names from queues, but also to rename queues, change their visibility, and add/remove queues.
