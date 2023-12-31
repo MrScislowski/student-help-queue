@@ -24,9 +24,9 @@
 
 | App name         | JS origins                                                                                                                            | Redirect URIs                                                                                                                                                                                                                      |
 | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| student frontend | <ul><li>`https://student-help-queue-frontend-f91c0ecec0d2.herokuapp.com`</li><li>`https://localhost:3000`</li><li>`https://localhost` | <ul><li>`https://student-help-queue-backend-dbc8c16c81bf.herokuapp.com/api/login`</li><li>`https://student-help-queue-frontend-f91c0ecec0d2.herokuapp.com`</li><li>`https://localhost:3000`</li><li>`https://localhost`</li>       |
 | teacher frontend | <ul><li>`https://help-queue-teacher-frontend-239b686a3dfd.herokuapp.com`</li><li>`https://localhost:3000`</li><li>`https://localhost` | <ul><li>`https://student-help-queue-backend-dbc8c16c81bf.herokuapp.com/api/login`</li><li>`https://help-queue-teacher-frontend-239b686a3dfd.herokuapp.com`</li><li>`https://localhost:3000`</li><li>`https://localhost`</li>       |
 | admin frontend   | <ul><li>`https://localhost:3000`</li><li>`https://localhost`</li></ul>                                                                | <ul><li>`https://student-help-queue-backend-dbc8c16c81bf.herokuapp.com/api/login`</li><li>`https://help-queue-teacher-frontend-239b686a3dfd.herokuapp.com`</li><li>`https://localhost:3000`</li><li>`https://localhost`</li> </ul> |
-| student frontend | <ul><li>`https://student-help-queue-frontend-f91c0ecec0d2.herokuapp.com`</li><li>`https://localhost:3000`</li><li>`https://localhost` | <ul><li>`https://student-help-queue-backend-dbc8c16c81bf.herokuapp.com/api/login`</li><li>`https://student-help-queue-frontend-f91c0ecec0d2.herokuapp.com`</li><li>`https://localhost:3000`</li><li>`https://localhost`</li>       |
 
 # Deployment Instructions
 
@@ -36,8 +36,8 @@
 | ---------------- | -------------------------------------------------------------- | ----------------------- | ------------------------------------------------------ |
 | student-frontend | https://help-queue-student-frontend-71154636b8a6.herokuapp.com | heroku-student-frontend | https://git.heroku.com/help-queue-student-frontend.git |
 | teacher-frontend | https://help-queue-teacher-frontend-239b686a3dfd.herokuapp.com | heroku-teacher-frontend | https://git.heroku.com/help-queue-teacher-frontend.git |
-| backend          | https://help-queue-backend-cb8730ae9c9f.herokuapp.com          | heroku-backend          | https://git.heroku.com/help-queue-backend.git          |
 | admin-frontend   | https://help-queue-admin-frontend-a43b988e9d22.herokuapp.com   | heroku-admin-frontend   | https://git.heroku.com/help-queue-admin-frontend.git   |
+| backend          | https://help-queue-backend-cb8730ae9c9f.herokuapp.com          | heroku-backend          | https://git.heroku.com/help-queue-backend.git          |
 
 ## Pushing to Heroku
 
@@ -49,8 +49,8 @@
 | ---------------- | ------------------------------------------------------------------------- | ------------------------------------------------------ |
 | student-frontend | `git subtree push --prefix student-frontend heroku-student-frontend main` | `heroku logs --tail --app help-queue-student-frontend` |
 | teacher-frontend | `git subtree push --prefix teacher-frontend heroku-teacher-frontend main` | `heroku logs --tail --app help-queue-teacher-frontend` |
-| backend          | `git subtree push --prefix backend heroku-backend main`                   | `heroku logs --tail --app help-queue-backend`          |
 | admin-frontend   | `git subtree push --prefix admin-frontend heroku-admin-frontend main`     | `heroku logs --tail --app help-queue-admin-frontend`   |
+| backend          | `git subtree push --prefix backend heroku-backend main`                   | `heroku logs --tail --app help-queue-backend`          |
 
 # Database Schema
 
