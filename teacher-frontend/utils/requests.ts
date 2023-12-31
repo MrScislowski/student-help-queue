@@ -4,7 +4,7 @@ import { Queue, ResolutionStatus, User } from "../types/types";
 const baseUrl =
   process.env.NODE_ENV === "development"
     ? `http://localhost:3001/api`
-    : "https://student-help-queue-backend-dbc8c16c81bf.herokuapp.com/api";
+    : "https://help-queue-backend-cb8730ae9c9f.herokuapp.com/api";
 
 let token: string | null = null;
 
@@ -173,15 +173,7 @@ export const changeQueueVisibility = async (
   ).data;
 };
 
-const activeQueuesUrl =
-  process.env.NODE_ENV === "development"
-    ? `http://localhost:3001/api/queues/active`
-    : "https://student-help-queue-backend-dbc8c16c81bf.herokuapp.com/api/queues/active";
-
-const loginUrl =
-  process.env.NODE_ENV === "development"
-    ? `http://localhost:3001/api/login`
-    : "https://student-help-queue-backend-dbc8c16c81bf.herokuapp.com/api/login";
+const loginUrl = `${baseUrl}/login`;
 // TODO: in future I think this info should be sent directly to the backend via the stored callback url in Google so that we never see it on the user end
 
 export const attemptLogin = async (credential: string) => {
