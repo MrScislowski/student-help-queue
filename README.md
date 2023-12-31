@@ -37,7 +37,7 @@
 | student-frontend | https://help-queue-student-frontend-71154636b8a6.herokuapp.com | heroku-student-frontend | https://git.heroku.com/help-queue-student-frontend.git |
 | teacher-frontend | https://help-queue-teacher-frontend-239b686a3dfd.herokuapp.com | heroku-teacher-frontend | https://git.heroku.com/help-queue-teacher-frontend.git |
 | backend          | https://help-queue-backend-cb8730ae9c9f.herokuapp.com          | heroku-backend          | https://git.heroku.com/help-queue-backend.git          |
-| admin-frontend   | https://help-queue-admin-frontend-a43b988e9d22.herokuapp.com   | heroku-admin-frontend   | https://git.heroku.com/help-queue-backend.git          |
+| admin-frontend   | https://help-queue-admin-frontend-a43b988e9d22.herokuapp.com   | heroku-admin-frontend   | https://git.heroku.com/help-queue-admin-frontend.git   |
 
 ## Pushing to Heroku
 
