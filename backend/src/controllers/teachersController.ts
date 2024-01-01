@@ -1,5 +1,5 @@
 import { Router, Request, Response, NextFunction } from "express";
-import { handleDatabaseError } from "../utils/errorHandlers";
+import { handleDatabaseError, handleError } from "../utils/errorHandlers";
 import { Session, Teacher } from "../types";
 import teacherService from "../services/teacherService";
 import { authenticateToken } from "../middlewares/authMiddleware";
@@ -30,11 +30,7 @@ router.post("/", async (req: Request, res: Response) => {
 
     res.send(createdTeacher);
   } catch (error: unknown) {
-    let message = "";
-    if (error instanceof Error) {
-      message += error.message;
-    }
-    return res.status(500).send({ error: message });
+    handleError(error, res);
   }
 });
 
@@ -47,7 +43,7 @@ router.get("/", async (req: Request, res: Response) => {
     const teachers = await teacherService.listTeachers(session.user.email);
     res.send(teachers);
   } catch (error: unknown) {
-    handleDatabaseError(error);
+    handleError(error, res);
   }
 });
 
@@ -64,7 +60,7 @@ router.get("/:slug", async (req: Request, res: Response) => {
 
     res.send(teacher);
   } catch (error: unknown) {
-    handleDatabaseError(error);
+    handleError(error, res);
   }
 });
 
