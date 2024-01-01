@@ -50,8 +50,12 @@ app.post("/api/login", async (req, res) => {
     let clientId;
     if (role === "student") {
       clientId = config.GOOGLE_OAUTH_CLIENT_ID_STUDENT;
-    } else {
+    } else if (role === "teacher") {
       clientId = config.GOOGLE_OAUTH_CLIENT_ID_TEACHER;
+    } else if (role === "admin") {
+      clientId = config.GOOGLE_OAUTH_CLIENT_ID_ADMIN;
+    } else {
+      return res.status(400).send("role required in request body");
     }
 
     console.log(`clientId: ${clientId}, role: ${role}`);
