@@ -1,9 +1,7 @@
-import { Fragment, useContext } from "react";
-import Queue from "./Queue";
+import { useContext } from "react";
 import { useQuery, useQueryClient } from "react-query";
 import { getTeacherInfo } from "../utils/requests";
 import SessionContext from "./SessionContext";
-import TimeOffsetContext from "./TimeOffsetContext";
 
 interface TeacherPageProps {
   teacherSlug: string;
@@ -16,6 +14,7 @@ const TeacherPage = (props: TeacherPageProps) => {
 
   const getTeacherInfoQuery = useQuery({
     queryKey: ["entries"],
+    retry: false,
     queryFn: async () => await getTeacherInfo(props.teacherSlug),
   });
 
@@ -28,9 +27,14 @@ const TeacherPage = (props: TeacherPageProps) => {
   }
 
   if (getTeacherInfoQuery.isError) {
+    let errorMessage = "An unknown error occurred";
+
+    if (getTeacherInfoQuery.error instanceof Error) {
+      errorMessage = getTeacherInfoQuery.error.message;
+    }
     return (
       <>
-        <p>Error: {(getTeacherInfoQuery.error as Error).message}</p>
+        <p>Error: {errorMessage}</p>
       </>
     );
   }

@@ -186,15 +186,28 @@ export const attemptLogin = async (credential: string) => {
 };
 
 export const getTeacherInfo = async (teacherSlug: string): Promise<Teacher> => {
+  console.log(`getTeacherInfo called with teacherSlug: ${teacherSlug}`);
+
   let config = {};
   if (token) {
     config = {
       headers: { Authorization: token },
     };
   }
-  const response = await axios.get(
-    `${baseUrl}/teachers/${teacherSlug}`,
-    config
-  );
-  return response.data;
+  try {
+    const response = await axios.get(
+      `${baseUrl}/teachers/${teacherSlug}`,
+      config
+    );
+    console.log(`getTeacherInfo response:`);
+
+    console.dir(response);
+    return response.data;
+  } catch (error: any) {
+    if (error.response && error.response.data) {
+      throw new Error(error.response.data.error);
+    } else {
+      throw new Error("random message I'm making up...");
+    }
+  }
 };
