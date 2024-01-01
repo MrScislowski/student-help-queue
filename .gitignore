@@ -4,3 +4,4 @@ backend/build
 .DS_Store
 .env.local
 database_backup.json
+certificates
