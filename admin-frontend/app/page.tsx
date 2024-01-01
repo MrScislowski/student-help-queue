@@ -5,7 +5,6 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import LoginButton from "./components/LoginButton";
 import App from "./components/App";
 
-
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -14,7 +13,11 @@ const queryClient = new QueryClient({
   },
 });
 
-export default function Home({ params }: { params: { endpoint: string } }) {
+export default function Home() {
+  console.log(
+    `process.env.NEXT_PUBLIC_GOOGLE_OAUTH_CLIENT_ID: ${process.env.NEXT_PUBLIC_GOOGLE_OAUTH_CLIENT_ID}`
+  );
+
   return (
     <GoogleOAuthProvider
       clientId={
