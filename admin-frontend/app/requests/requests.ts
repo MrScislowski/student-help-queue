@@ -20,7 +20,7 @@ const loginUrl = `${baseUrl}/login`;
 
 export const attemptLogin = async (credential: string) => {
   const response = await axios.post(`${loginUrl}`, {
-    role: "teacher",
+    role: "admin",
     credential: credential,
   });
   setToken(response.data.token);
