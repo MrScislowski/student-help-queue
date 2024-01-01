@@ -54,6 +54,8 @@ app.post("/api/login", async (req, res) => {
       clientId = config.GOOGLE_OAUTH_CLIENT_ID_TEACHER;
     }
 
+    console.log(`clientId: ${clientId}, role: ${role}`);
+
     const client = new OAuth2Client(clientId);
 
     const ticket = await client.verifyIdToken({
