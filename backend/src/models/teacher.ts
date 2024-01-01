@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 
-import { Teacher } from "../types";
+import { Teacher, TeacherBase } from "../types";
 
-const teacherSchema = new mongoose.Schema<Teacher>({
+const teacherSchema = new mongoose.Schema<TeacherBase>({
   email: {
     type: String,
     required: true,
@@ -15,9 +15,9 @@ const teacherSchema = new mongoose.Schema<Teacher>({
     unique: true,
   },
 
-  classes: [mongoose.Schema.Types.ObjectId],
+  classes: [{ type: mongoose.Schema.Types.ObjectId, ref: "Class" }],
 });
 
-const TeacherModel = mongoose.model<Teacher>("Teacher", teacherSchema);
+const TeacherModel = mongoose.model<TeacherBase>("Teacher", teacherSchema);
 
 export { TeacherModel, teacherSchema };

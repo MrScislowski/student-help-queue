@@ -51,4 +51,21 @@ router.get("/", async (req: Request, res: Response) => {
   }
 });
 
+// Get teacher by slug
+router.get("/:slug", async (req: Request, res: Response) => {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const session: Session = res.locals.session;
+
+    const teacher = await teacherService.getTeacherBySlug(
+      session.user.email,
+      req.params.slug
+    );
+
+    res.send(teacher);
+  } catch (error: unknown) {
+    handleDatabaseError(error);
+  }
+});
+
 export default router;

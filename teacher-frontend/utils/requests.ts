@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Queue, ResolutionStatus, User } from "../types/types";
+import { Queue, ResolutionStatus, Teacher, User } from "../types/types";
 
 const baseUrl =
   process.env.NODE_ENV === "development"
@@ -182,5 +182,19 @@ export const attemptLogin = async (credential: string) => {
     credential: credential,
   });
   setToken(response.data.token);
+  return response.data;
+};
+
+export const getTeacherInfo = async (teacherSlug: string): Promise<Teacher> => {
+  let config = {};
+  if (token) {
+    config = {
+      headers: { Authorization: token },
+    };
+  }
+  const response = await axios.get(
+    `${baseUrl}/teachers/${teacherSlug}`,
+    config
+  );
   return response.data;
 };

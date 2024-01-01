@@ -12,11 +12,15 @@ export interface Session {
   user: User;
 }
 
-export interface Teacher {
+export interface TeacherBase {
   _id: Types.ObjectId;
   email: string;
   slug: string;
   classes: Types.ObjectId[];
+}
+
+export interface Teacher extends Omit<TeacherBase, "classes"> {
+  classes: Class[];
 }
 
 export interface ClassBase {

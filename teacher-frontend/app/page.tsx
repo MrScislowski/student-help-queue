@@ -1,7 +1,10 @@
 "use client";
 
-export default function Home( ) {
+export default function Home() {
   return (
-    <p>Please enter an endpoint (e.g. mrscislowski) at the end of your URL</p>
+    <p>
+      Welcome to the teacher portal of the help queue! Please use your
+      teacher-specific URL
+    </p>
   );
 }
