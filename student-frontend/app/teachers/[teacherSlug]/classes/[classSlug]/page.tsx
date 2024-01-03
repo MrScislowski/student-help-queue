@@ -9,7 +9,6 @@ import LoginButton from "@components/LoginButton";
 import QueueSet from "@components/QueueSet";
 import { Session } from "@appTypes/types";
 import { QueryClient, QueryClientProvider } from "react-query";
-import AddQueueForm from "@components/AddQueueForm";
 import config from "@config/config";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
@@ -65,7 +64,6 @@ const App = ({ params }: AppProps) => {
       <QueryClientProvider client={queryClient}>
         <SessionContext.Provider value={session}>
           <Header handleLogout={handleLogout} />
-          <AddQueueForm teacherSlug={teacherSlug} classSlug={classSlug} />
           <QueueSet teacherSlug={teacherSlug} classSlug={classSlug} />
         </SessionContext.Provider>
       </QueryClientProvider>

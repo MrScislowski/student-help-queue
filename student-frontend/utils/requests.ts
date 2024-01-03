@@ -85,120 +85,12 @@ export const resolveEntry = async (
   );
 };
 
-export const createQueue = async (
-  teacherSlug: string,
-  classSlug: string,
-  queueName: string
-): Promise<void> => {
-  let config = {};
-  if (token) {
-    config = {
-      headers: { Authorization: token },
-    };
-  }
-
-  return (
-    await axios.post(
-      `${baseUrl}/teachers/${teacherSlug}/classes/${classSlug}/queues`,
-      { queueName },
-      config
-    )
-  ).data;
-};
-
-export const createClass = async (
-  teacherSlug: string,
-  classSlug: string
-): Promise<void> => {
-  let config = {};
-  if (token) {
-    config = {
-      headers: { Authorization: token },
-    };
-  }
-
-  return (
-    await axios.post(
-      `${baseUrl}/teachers/${teacherSlug}/classes`,
-      { classSlug },
-      config
-    )
-  ).data;
-};
-
-export const renameQueue = async (
-  teacherSlug: string,
-  classSlug: string,
-  queueId: string,
-  newName: string
-) => {
-  let config = {
-    headers: {},
-  };
-
-  const data = {
-    queueName: newName,
-  };
-
-  if (token) {
-    config = {
-      headers: { Authorization: token },
-    };
-  }
-
-  await axios.patch(
-    `${baseUrl}/teachers/${teacherSlug}/classes/${classSlug}/queues/${queueId}`,
-    data,
-    config
-  );
-};
-
-export const deleteQueue = async (
-  teacherSlug: string,
-  classSlug: string,
-  queueId: string
-): Promise<void> => {
-  let config = {};
-  if (token) {
-    config = {
-      headers: { Authorization: token },
-    };
-  }
-  return (
-    await axios.delete(
-      `${baseUrl}/teachers/${teacherSlug}/classes/${classSlug}/queues/${queueId}`,
-      config
-    )
-  ).data;
-};
-
-export const changeQueueVisibility = async (
-  teacherSlug: string,
-  classSlug: string,
-  queueId: string,
-  visible: boolean
-): Promise<void> => {
-  let config = {};
-  if (token) {
-    config = {
-      headers: { Authorization: token },
-    };
-  }
-  return (
-    await axios.patch(
-      `${baseUrl}/teachers/${teacherSlug}/classes/${classSlug}/queues/${queueId}`,
-      { visible },
-      config
-    )
-  ).data;
-};
-
 const loginUrl = `${baseUrl}/login`;
 // TODO: in future I think this info should be sent directly to the backend via the stored callback url in Google so that we never see it on the user end
 
 export const attemptLogin = async (credential: string) => {
   const response = await axios.post(`${loginUrl}`, {
-    role: "teacher",
+    role: "student",
     credential: credential,
   });
   setToken(response.data.token);
@@ -206,8 +98,6 @@ export const attemptLogin = async (credential: string) => {
 };
 
 export const getTeacherInfo = async (teacherSlug: string): Promise<Teacher> => {
-  console.log(`getTeacherInfo called with teacherSlug: ${teacherSlug}`);
-
   let config = {};
   if (token) {
     config = {
@@ -219,7 +109,6 @@ export const getTeacherInfo = async (teacherSlug: string): Promise<Teacher> => {
       `${baseUrl}/teachers/${teacherSlug}`,
       config
     );
-    console.log(`getTeacherInfo response:`);
 
     console.dir(response);
     return response.data;

@@ -1,10 +1,5 @@
 "use client";
 
 export default function Home() {
-  return (
-    <p>
-      Welcome to the teacher portal of the help queue! Please use your
-      teacher-specific URL
-    </p>
-  );
+  return <p>Please make sure you're using the URL your teacher gave you</p>;
 }

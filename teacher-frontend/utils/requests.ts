@@ -206,8 +206,6 @@ export const attemptLogin = async (credential: string) => {
 };
 
 export const getTeacherInfo = async (teacherSlug: string): Promise<Teacher> => {
-  console.log(`getTeacherInfo called with teacherSlug: ${teacherSlug}`);
-
   let config = {};
   if (token) {
     config = {
@@ -219,7 +217,6 @@ export const getTeacherInfo = async (teacherSlug: string): Promise<Teacher> => {
       `${baseUrl}/teachers/${teacherSlug}`,
       config
     );
-    console.log(`getTeacherInfo response:`);
 
     console.dir(response);
     return response.data;
