@@ -70,42 +70,24 @@ router.post("/:classSlug/queues", async (req, res) => {
   }
 });
 
-// // delete a queue
-// router.delete("/:classId/queues/:queueId", async (req, res) => {
-//   try {
-//     const classId = req.params.classId;
-//     const queueId = req.params.queueId;
+// Create a new class
+router.post("/", async (req: Request, res: Response) => {
+  const teacherSlug = req.params.teacherSlug;
+  const classSlug = req.body.className;
 
-//     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-//     const session: Session = res.locals.session;
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const session: Session = res.locals.session;
 
-//     await activeQueueService.deleteQueue(classId, session.user.email, queueId);
-//     res.status(200).send();
-//   } catch (err) {
-//     res.status(400).send(err);
-//   }
-// });
-
-// // change visibility of a queue
-// router.patch("/:classId/queues/:queueId", async (req, res) => {
-//   try {
-//     const classId = req.params.classId;
-//     const queueId = req.params.queueId;
-//     const visible = req.body.visible;
-
-//     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-//     const session: Session = res.locals.session;
-
-//     await activeQueueService.changeVisibility(
-//       classId,
-//       session.user.email,
-//       queueId,
-//       visible
-//     );
-//     res.status(200).send();
-//   } catch (err) {
-//     res.status(400).send(err);
-//   }
-// });
+    await classService.createNewClass(
+      session.user.email,
+      teacherSlug,
+      classSlug
+    );
+    res.status(200).send();
+  } catch (err) {
+    res.status(400).send(JSON.stringify(err));
+  }
+});
 
 export default router;
