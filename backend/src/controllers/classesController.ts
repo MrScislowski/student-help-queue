@@ -54,7 +54,7 @@ router.get(
   }
 );
 
-// TODO: Create a new queue for a class
+// Create a new queue for a class
 router.post("/:classSlug/queues", async (req, res) => {
   try {
     const classSlug = req.params.classSlug;
@@ -73,7 +73,7 @@ router.post("/:classSlug/queues", async (req, res) => {
 // Create a new class
 router.post("/", async (req: Request, res: Response) => {
   const teacherSlug = req.params.teacherSlug;
-  const classSlug = req.body.className;
+  const classSlug = req.body.classSlug;
 
   try {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment

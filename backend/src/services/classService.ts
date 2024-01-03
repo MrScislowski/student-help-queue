@@ -63,6 +63,7 @@ const createNewClass = async (
 
   try {
     await newClass.save();
+    await teacher.updateOne({ $push: { classes: newClass._id } });
   } catch (err) {
     handleDatabaseError(err);
   }
