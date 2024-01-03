@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import config from "../config";
 import { TeacherModel } from "../models/teacher";
 import { ClassModel } from "../models/class";
-import { Class, ClassBase, Teacher } from "../types";
+import { Class, ClassBase, Teacher, TeacherBase } from "../types";
 
 mongoose
   .connect(config.DB_URL)
@@ -13,7 +13,7 @@ mongoose
     console.log(`error connecting to MongoDB: ${err.message}`);
   });
 
-async function createTeachers(): Promise<Teacher[]> {
+async function createTeachers(): Promise<TeacherBase[]> {
   const teacher1: Teacher = {
     _id: new mongoose.Types.ObjectId(),
     email: "mr.scislowski@gmail.com",
