@@ -13,6 +13,7 @@ import AddQueueForm from "@components/AddQueueForm";
 import config from "@config/config";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import TeacherPage from "@/components/TeacherPage";
+import AddClassForm from "@/components/AddClassForm";
 
 const queryClient = new QueryClient();
 
@@ -66,6 +67,7 @@ const Home = ({ params }: HomeProps) => {
         <SessionContext.Provider value={session}>
           <Header handleLogout={handleLogout} />
           <TeacherPage teacherSlug={teacherSlug} />
+          <AddClassForm teacherSlug={teacherSlug} />
         </SessionContext.Provider>
       </QueryClientProvider>
     </GoogleOAuthProvider>

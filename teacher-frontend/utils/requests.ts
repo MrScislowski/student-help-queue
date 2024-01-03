@@ -106,6 +106,26 @@ export const createQueue = async (
   ).data;
 };
 
+export const createClass = async (
+  teacherSlug: string,
+  classSlug: string
+): Promise<void> => {
+  let config = {};
+  if (token) {
+    config = {
+      headers: { Authorization: token },
+    };
+  }
+
+  return (
+    await axios.post(
+      `${baseUrl}/teachers/${teacherSlug}/classes`,
+      { classSlug },
+      config
+    )
+  ).data;
+};
+
 export const renameQueue = async (
   teacherSlug: string,
   classSlug: string,
