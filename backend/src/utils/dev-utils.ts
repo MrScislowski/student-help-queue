@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import config from "../config";
 import { TeacherModel } from "../models/teacher";
 import { ClassModel } from "../models/class";
-import { Class, ClassBase, Teacher, TeacherBase } from "../types";
+import { ClassBase, Teacher, TeacherBase } from "../types";
 
 mongoose
   .connect(config.DB_URL)
@@ -14,14 +14,14 @@ mongoose
   });
 
 async function createTeachers(): Promise<TeacherBase[]> {
-  const teacher1: Teacher = {
+  const teacher1: TeacherBase = {
     _id: new mongoose.Types.ObjectId(),
     email: "mr.scislowski@gmail.com",
     slug: "mrscislowski",
     classes: [],
   };
 
-  const teacher2: Teacher = {
+  const teacher2: TeacherBase = {
     _id: new mongoose.Types.ObjectId(),
     email: "dscislowski@usd266.com",
     slug: "dscislowski",
@@ -43,7 +43,7 @@ async function createTeachers(): Promise<TeacherBase[]> {
   }
 }
 
-async function createClasses(teachers: Teacher[]): Promise<void> {
+async function createClasses(teachers: TeacherBase[]): Promise<void> {
   await ClassModel.deleteMany({});
 
   const class1: ClassBase = {
