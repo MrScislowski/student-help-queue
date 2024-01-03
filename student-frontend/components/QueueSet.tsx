@@ -1,12 +1,13 @@
 import { Fragment, useContext } from "react";
 import Queue from "./Queue";
 import { useQuery, useQueryClient } from "react-query";
-import { getActiveEntries } from "../requests";
-import SessionContext from "../SessionContext";
-import TimeOffsetContext from "../TimeOffsetContext";
+import { getQueuesForClass } from "../utils/requests";
+import SessionContext from "./SessionContext";
+import TimeOffsetContext from "./TimeOffsetContext";
 
 interface QueueSetProps {
-  classId: string;
+  teacherSlug: string;
+  classSlug: string;
 }
 
 const QueueSet = (props: QueueSetProps) => {
@@ -16,7 +17,8 @@ const QueueSet = (props: QueueSetProps) => {
 
   const getEntriesQuery = useQuery({
     queryKey: ["entries"],
-    queryFn: async () => await getActiveEntries(props.classId),
+    queryFn: async () =>
+      await getQueuesForClass(props.teacherSlug, props.classSlug),
   });
 
   if (getEntriesQuery.isLoading) {
@@ -27,10 +29,10 @@ const QueueSet = (props: QueueSetProps) => {
     );
   }
 
-  if (getEntriesQuery.error) {
+  if (getEntriesQuery.isError) {
     return (
       <>
-        <p>unable to get queue entries: {JSON.stringify(getEntriesQuery.error)}</p>
+        <p>Error: {(getEntriesQuery.error as Error).message}</p>
       </>
     );
   }
@@ -47,10 +49,9 @@ const QueueSet = (props: QueueSetProps) => {
         return (
           <Queue
             key={queue._id}
-            classId={props.classId}
-            queueId={queue._id}
-            queueName={queue.displayName}
-            entries={queue.entries}
+            teacherSlug={props.teacherSlug}
+            classSlug={props.classSlug}
+            queue={queue}
           />
         );
       })}

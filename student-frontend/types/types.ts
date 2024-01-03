@@ -2,7 +2,7 @@ export type ResolutionStatus = "cancel" | "resolve";
 
 export interface ActiveEntry {
   user: User;
-  timestamp: string;
+  timeAdded: string;
 }
 
 export interface Queue {
@@ -24,5 +24,26 @@ export interface Session {
     name: string;
     teacherEmail: string;
   };
-  token: string;
+}
+
+export interface TeacherBase {
+  _id: string;
+  email: string;
+  slug: string;
+  classes: string[];
+}
+
+export interface Teacher extends Omit<TeacherBase, "classes"> {
+  classes: Class[];
+}
+
+export interface ClassBase {
+  _id: string;
+  classSlug: string;
+  teacher: string;
+  queues: Queue[];
+}
+
+export interface Class extends Omit<ClassBase, "teacher"> {
+  teacher: Teacher;
 }

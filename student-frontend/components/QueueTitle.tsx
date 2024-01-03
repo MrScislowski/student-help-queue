@@ -1,6 +1,13 @@
 import styled from "styled-components";
 import Queue from "./Queue";
 import { useRef, useState } from "react";
+import { useMutation, useQueryClient } from "react-query";
+import {
+  changeQueueVisibility,
+  deleteQueue,
+  renameQueue,
+} from "../utils/requests";
+import { Queue as QueueType } from "../types/types";
 
 const Title = styled.h2`
   padding: 10px;
@@ -25,19 +32,50 @@ const EditContainer = styled.div`
 `;
 
 interface QueueTitleProps {
-  name: string;
-  id: string;
-  classId: string;
+  teacherSlug: string;
+  classSlug: string;
+  queue: QueueType;
 }
 
 const QueueTitle = (props: QueueTitleProps) => {
-  const { name, id, classId } = props;
+  const { teacherSlug, classSlug, queue } = props;
+  const name = queue.displayName;
+  const id = queue._id;
 
   const [isEditing, setIsEditing] = useState(false);
   const [title, setTitle] = useState(name);
   const [originalTitle, setOriginalTitle] = useState(name);
 
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const queryClient = useQueryClient();
+
+  const renameQueueMutation = useMutation({
+    mutationFn: async ({ newName }: { newName: string }) => {
+      await renameQueue(teacherSlug, classSlug, id, newName);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["entries"]);
+    },
+  });
+
+  const deleteQueueMutation = useMutation({
+    mutationFn: async () => {
+      await deleteQueue(teacherSlug, classSlug, id);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["entries"]);
+    },
+  });
+
+  const changeVisibilityMutation = useMutation({
+    mutationFn: async () => {
+      await changeQueueVisibility(teacherSlug, classSlug, id, !queue.visible);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["entries"]);
+    },
+  });
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -49,12 +87,20 @@ const QueueTitle = (props: QueueTitleProps) => {
   const handleSave = () => {
     setIsEditing(false);
     setOriginalTitle(title);
-    // TODO: update queue name in database
+    renameQueueMutation.mutate({ newName: title });
   };
 
   const handleCancel = () => {
     setIsEditing(false);
     setTitle(originalTitle);
+  };
+
+  const handleDelete = () => {
+    deleteQueueMutation.mutate();
+  };
+
+  const handleChangeVisibility = () => {
+    changeVisibilityMutation.mutate();
   };
 
   return (
@@ -79,6 +125,10 @@ const QueueTitle = (props: QueueTitleProps) => {
         <span>
           {title}
           <button onClick={handleEdit}>Edit</button>
+          <button onClick={handleChangeVisibility}>
+            {queue.visible ? "Hide" : "Show"}
+          </button>
+          <button onClick={handleDelete}>Delete</button>
         </span>
       )}
     </Title>

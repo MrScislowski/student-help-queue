@@ -1,10 +1,10 @@
 import styled from "styled-components";
-import { ActiveEntry, ResolutionStatus } from "../types";
+import { ActiveEntry, Queue, ResolutionStatus } from "../types/types";
 import { useMutation, useQueryClient } from "react-query";
-import { resolveEntry, addName } from "../requests";
+import { resolveEntry, addName } from "../utils/requests";
 import { useContext, useEffect, useState } from "react";
-import TimeOffsetContext from "../TimeOffsetContext";
-import SessionContext from "../SessionContext";
+import TimeOffsetContext from "./TimeOffsetContext";
+import SessionContext from "./SessionContext";
 import QueueTitle from "./QueueTitle";
 
 const EntriesContainer = styled.div`
@@ -55,14 +55,17 @@ const getEntryAge = (
 };
 
 interface QueueProps {
-  classId: string;
-  queueId: string;
-  queueName: string;
-  entries: ActiveEntry[];
+  teacherSlug: string;
+  classSlug: string;
+  queue: Queue;
 }
 
 const Queue = (props: QueueProps) => {
-  const { queueName, entries, classId, queueId } = props;
+  const { teacherSlug, classSlug, queue } = props;
+  const queueName = queue.displayName;
+  const queueId = queue._id;
+  const entries = queue.entries;
+
   const [currentTime, setCurrentTime] = useState(new Date().getTime());
   const session = useContext(SessionContext);
 
@@ -70,7 +73,7 @@ const Queue = (props: QueueProps) => {
 
   const addNameMutation = useMutation({
     mutationFn: () => {
-      return addName(classId, queueId);
+      return addName(teacherSlug, classSlug, queueId);
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["entries"]);
@@ -78,8 +81,14 @@ const Queue = (props: QueueProps) => {
   });
 
   const resolveEntryMutation = useMutation({
-    mutationFn: () => {
-      return resolveEntry(classId, queueId, "resolve");
+    mutationFn: ({ studentEmail }: { studentEmail: string }) => {
+      return resolveEntry(
+        teacherSlug,
+        classSlug,
+        queueId,
+        studentEmail,
+        "resolve"
+      );
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["entries"] });
@@ -87,8 +96,14 @@ const Queue = (props: QueueProps) => {
   });
 
   const cancelEntryMutation = useMutation({
-    mutationFn: () => {
-      return resolveEntry(classId, queueId, "cancel");
+    mutationFn: ({ studentEmail }: { studentEmail: string }) => {
+      return resolveEntry(
+        teacherSlug,
+        classSlug,
+        queueId,
+        studentEmail,
+        "cancel"
+      );
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["entries"] });
@@ -107,7 +122,11 @@ const Queue = (props: QueueProps) => {
 
   return (
     <>
-      <QueueTitle name={queueName} id={queueId} classId={classId} />
+      <QueueTitle
+        teacherSlug={teacherSlug}
+        classSlug={classSlug}
+        queue={queue}
+      />
 
       {entries.find((entry) => entry.user.email === session.user.email) ? (
         ""
@@ -122,28 +141,31 @@ const Queue = (props: QueueProps) => {
               {item.user.givenName} {item.user.familyName} (
               {getEntryAge(
                 currentTime,
-                new Date(item.timestamp).getTime(),
+                new Date(item.timeAdded).getTime(),
                 timeOffset
               )}
+              ) (
+              <>
+                <ResolveButton
+                  onClick={() => {
+                    resolveEntryMutation.mutate({
+                      studentEmail: item.user.email,
+                    });
+                  }}
+                >
+                  Resolve
+                </ResolveButton>
+                <CancelButton
+                  onClick={async () => {
+                    cancelEntryMutation.mutate({
+                      studentEmail: item.user.email,
+                    });
+                  }}
+                >
+                  Cancel
+                </CancelButton>
+              </>
               )
-              {item.user.email === session.user.email && (
-                <>
-                  <ResolveButton
-                    onClick={() => {
-                      resolveEntryMutation.mutate();
-                    }}
-                  >
-                    Resolve
-                  </ResolveButton>
-                  <CancelButton
-                    onClick={async () => {
-                      cancelEntryMutation.mutate();
-                    }}
-                  >
-                    Cancel
-                  </CancelButton>
-                </>
-              )}
             </QueueItem>
           );
         })}

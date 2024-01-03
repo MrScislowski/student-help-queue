@@ -1,6 +1,7 @@
-import { attemptLogin } from "../requests";
+import { attemptLogin } from "../utils/requests";
 import { GoogleLogin } from "@react-oauth/google";
-import { Session, User } from "../types";
+import { Session, User } from "../types/types";
+import config from "../config/config";
 
 interface LoginButtonProps {
   setSession: (session: Session | null) => void;
@@ -19,7 +20,7 @@ const LoginButton = (props: LoginButtonProps) => {
         attemptLogin(credential).then((response) => {
           setSession(response);
           window.localStorage.setItem(
-            "studentHelpQueueUser",
+            config.cookieName,
             JSON.stringify(response)
           );
         });

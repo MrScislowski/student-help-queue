@@ -1,6 +1,6 @@
-import { Session, User } from "../types";
+import { Session, User } from "../types/types";
 import { useContext } from "react";
-import SessionContext from "../SessionContext";
+import SessionContext from "./SessionContext";
 
 interface HeaderProps {
   handleLogout: () => void;
