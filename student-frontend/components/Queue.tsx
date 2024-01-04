@@ -144,7 +144,7 @@ const Queue = (props: QueueProps) => {
                 new Date(item.timeAdded).getTime(),
                 timeOffset
               )}
-              ) (
+              )
               {item.user.email === session.user.email ? (
                 <>
                   <ResolveButton
@@ -169,7 +169,6 @@ const Queue = (props: QueueProps) => {
               ) : (
                 <></>
               )}
-              )
             </QueueItem>
           );
         })}
