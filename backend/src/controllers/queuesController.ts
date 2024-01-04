@@ -133,7 +133,7 @@ router.delete(
       await classService.removeUserFromQueue(
         classSlug,
         queueId,
-        session.user,
+        userToRemove,
         session.user,
         resolutionStatus
       );
