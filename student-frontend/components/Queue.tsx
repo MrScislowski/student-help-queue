@@ -145,26 +145,30 @@ const Queue = (props: QueueProps) => {
                 timeOffset
               )}
               ) (
-              <>
-                <ResolveButton
-                  onClick={() => {
-                    resolveEntryMutation.mutate({
-                      studentEmail: item.user.email,
-                    });
-                  }}
-                >
-                  Resolve
-                </ResolveButton>
-                <CancelButton
-                  onClick={async () => {
-                    cancelEntryMutation.mutate({
-                      studentEmail: item.user.email,
-                    });
-                  }}
-                >
-                  Cancel
-                </CancelButton>
-              </>
+              {item.user.email === session.user.email ? (
+                <>
+                  <ResolveButton
+                    onClick={() => {
+                      resolveEntryMutation.mutate({
+                        studentEmail: item.user.email,
+                      });
+                    }}
+                  >
+                    Resolve
+                  </ResolveButton>
+                  <CancelButton
+                    onClick={async () => {
+                      cancelEntryMutation.mutate({
+                        studentEmail: item.user.email,
+                      });
+                    }}
+                  >
+                    Cancel
+                  </CancelButton>
+                </>
+              ) : (
+                <></>
+              )}
               )
             </QueueItem>
           );
