@@ -17,6 +17,7 @@ const QueueSet = (props: QueueSetProps) => {
 
   const getEntriesQuery = useQuery({
     queryKey: ["entries"],
+    refetchInterval: 3000,
     queryFn: async () =>
       await getQueuesForClass(props.teacherSlug, props.classSlug),
   });
