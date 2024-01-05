@@ -1,4 +1,5 @@
 export type ResolutionStatus = "cancel" | "resolve";
+type Role = "student" | "teacher" | "admin";
 
 export interface ActiveEntry {
   user: User;
@@ -20,10 +21,7 @@ export interface User {
 
 export interface Session {
   user: User;
-  selectedClass: {
-    name: string;
-    teacherEmail: string;
-  };
+  role: Role;
 }
 
 export interface TeacherBase {
