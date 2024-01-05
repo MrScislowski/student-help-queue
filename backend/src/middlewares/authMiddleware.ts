@@ -10,6 +10,7 @@ const mockSession: Session = {
     familyName: "Daniel",
     givenName: "Scislowski",
   },
+  role: "teacher",
 };
 
 const authenticateToken = (

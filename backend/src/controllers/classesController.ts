@@ -34,10 +34,8 @@ router.get(
         });
       }
 
-      const ownsClass = classData.teacher.email === session.user.email;
-
       const queues: Queue[] = classData.queues.filter((queue) => {
-        return queue.visible || ownsClass;
+        return queue.visible || session.role === "teacher";
       });
 
       res.send({

@@ -1,6 +1,7 @@
 import { Types } from "mongoose";
 
 export type ResolutionStatus = "cancel" | "resolve";
+export type Role = "teacher" | "student" | "admin";
 
 export interface User {
   email: string;
@@ -10,6 +11,7 @@ export interface User {
 
 export interface Session {
   user: User;
+  role: Role;
 }
 
 export interface TeacherBase {

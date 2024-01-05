@@ -18,6 +18,7 @@ app.use((_req: Request, _res: Response, next: NextFunction) => {
 
 // import { parseLoginPayload, parseString, parseUser } from "./utils";
 import { parseLoginPayload } from "./utils/utils";
+import { Session } from "./types";
 // import accountsService from "./services/accountsService";
 
 const PORT = config.PORT;
@@ -70,8 +71,9 @@ app.post("/api/login", async (req, res) => {
 
     const userInfo = parseLoginPayload(payload);
 
-    const sessionObject = {
+    const sessionObject: Session = {
       user: userInfo,
+      role: role,
     };
 
     const token = jwt.sign(sessionObject, config.SECRET);

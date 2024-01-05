@@ -1,4 +1,4 @@
-import { ResolutionStatus, User, Session } from "../types";
+import { ResolutionStatus, User, Session, Role } from "../types";
 
 const isString = (text: unknown): text is string => {
   return typeof text === "string" || text instanceof String;
@@ -44,6 +44,26 @@ export const parseUser = (data: unknown): User => {
   }
 };
 
+export const parseRole = (data: unknown): Role => {
+  if (!data || typeof data !== "object") {
+    throw new Error("login payload needs to be an object");
+  }
+
+  if ("role" in data) {
+    const requestedRole = parseString(data.role);
+    if (
+      requestedRole !== "teacher" &&
+      requestedRole !== "student" &&
+      requestedRole !== "admin"
+    ) {
+      throw new Error("invalid role");
+    }
+    return requestedRole as Role;
+  } else {
+    throw new Error("missing role property");
+  }
+};
+
 export const parseSession = (data: unknown): Session => {
   if (!data || typeof data !== "object") {
     throw new Error("login payload needs to be an object");
@@ -57,8 +77,16 @@ export const parseSession = (data: unknown): Session => {
     throw new Error("missing user property");
   }
 
+  let role: Role;
+  if ("role" in data) {
+    role = parseRole(data.role);
+  } else {
+    throw new Error("missing role property");
+  }
+
   return {
     user: userInfo,
+    role: role,
   };
 };
 
