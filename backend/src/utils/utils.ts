@@ -45,28 +45,20 @@ export const parseUser = (data: unknown): User => {
 };
 
 export const parseRole = (data: unknown): Role => {
-  if (!data || typeof data !== "object") {
-    throw new Error("login payload needs to be an object");
+  const requestedRole = parseString(data);
+  if (
+    requestedRole !== "teacher" &&
+    requestedRole !== "student" &&
+    requestedRole !== "admin"
+  ) {
+    throw new Error("invalid role");
   }
-
-  if ("role" in data) {
-    const requestedRole = parseString(data.role);
-    if (
-      requestedRole !== "teacher" &&
-      requestedRole !== "student" &&
-      requestedRole !== "admin"
-    ) {
-      throw new Error("invalid role");
-    }
-    return requestedRole as Role;
-  } else {
-    throw new Error("missing role property");
-  }
+  return requestedRole as Role;
 };
 
 export const parseSession = (data: unknown): Session => {
   if (!data || typeof data !== "object") {
-    throw new Error("login payload needs to be an object");
+    throw new Error("session needs to be an object");
   }
 
   let userInfo: User;
