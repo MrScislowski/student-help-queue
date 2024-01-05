@@ -16,7 +16,11 @@ interface QueueTitleProps {
 const QueueTitle = (props: QueueTitleProps) => {
   const name = props.queue.displayName;
 
-  return <Title>{name}</Title>;
+  return (
+    <Title>
+      {name} ( {props.queue.entries.length} )
+    </Title>
+  );
 };
 
 export default QueueTitle;
