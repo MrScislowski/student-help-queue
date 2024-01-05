@@ -1,5 +1,7 @@
 import styled from "styled-components";
 import { Queue as QueueType } from "../types/types";
+import { useContext } from "react";
+import SessionContext from "./SessionContext";
 
 const Title = styled.h2`
   padding: 10px;
@@ -18,10 +20,18 @@ interface QueueTitleProps {
 const QueueTitle = (props: QueueTitleProps) => {
   const name = props.queue.displayName;
   const { collapsed, setCollapsed } = props;
+  const session = useContext(SessionContext);
+  const positionInQueue = props.queue.entries.findIndex(
+    (entry) => entry.user.email === session.user.email
+  );
+
+  const positionSummary =
+    positionInQueue === -1 ? "" : `${positionInQueue + 1}/`;
+  const summaryString = `${positionSummary}${props.queue.entries.length}`;
 
   return (
     <Title>
-      {name} ( {props.queue.entries.length} )
+      {name} ({summaryString})
       <button onClick={() => setCollapsed(!collapsed)}>
         {collapsed ? "↓" : "↑"}
       </button>
