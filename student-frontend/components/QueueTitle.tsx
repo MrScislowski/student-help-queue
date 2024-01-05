@@ -11,14 +11,20 @@ interface QueueTitleProps {
   teacherSlug: string;
   classSlug: string;
   queue: QueueType;
+  collapsed: boolean;
+  setCollapsed: (collapsed: boolean) => void;
 }
 
 const QueueTitle = (props: QueueTitleProps) => {
   const name = props.queue.displayName;
+  const { collapsed, setCollapsed } = props;
 
   return (
     <Title>
       {name} ( {props.queue.entries.length} )
+      <button onClick={() => setCollapsed(!collapsed)}>
+        {collapsed ? "↓" : "↑"}
+      </button>
     </Title>
   );
 };

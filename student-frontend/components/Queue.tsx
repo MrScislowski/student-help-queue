@@ -63,11 +63,9 @@ const Queue = (props: QueueProps) => {
         teacherSlug={teacherSlug}
         classSlug={classSlug}
         queue={queue}
+        collapsed={collapsed}
+        setCollapsed={setCollapsed}
       />
-      <button onClick={() => setCollapsed(!collapsed)}>
-        {collapsed ? "expand" : "collapse"}
-      </button>{" "}
-      <br></br>
       {collapsed ? (
         ""
       ) : (
