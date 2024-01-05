@@ -33,6 +33,7 @@ const Queue = (props: QueueProps) => {
   const entries = queue.entries;
 
   const [currentTime, setCurrentTime] = useState(new Date().getTime());
+  const [collapsed, setCollapsed] = useState(false);
   const session = useContext(SessionContext);
 
   const queryClient = useQueryClient();
@@ -63,28 +64,36 @@ const Queue = (props: QueueProps) => {
         classSlug={classSlug}
         queue={queue}
       />
-
-      {entries.find((entry) => entry.user.email === session.user.email) ? (
+      <button onClick={() => setCollapsed(!collapsed)}>
+        {collapsed ? "expand" : "collapse"}
+      </button>{" "}
+      <br></br>
+      {collapsed ? (
         ""
       ) : (
-        <button onClick={() => addNameMutation.mutate()}>add name</button>
+        <>
+          {entries.find((entry) => entry.user.email === session.user.email) ? (
+            ""
+          ) : (
+            <button onClick={() => addNameMutation.mutate()}>add name</button>
+          )}
+          <EntriesContainer>
+            {entries.map((entry) => {
+              return (
+                <QueueEntry
+                  key={entry.user.email}
+                  teacherSlug={teacherSlug}
+                  classSlug={classSlug}
+                  queueId={queueId}
+                  entry={entry}
+                  currentTime={currentTime}
+                  timeOffset={timeOffset}
+                />
+              );
+            })}
+          </EntriesContainer>
+        </>
       )}
-
-      <EntriesContainer>
-        {entries.map((entry) => {
-          return (
-            <QueueEntry
-              key={entry.user.email}
-              teacherSlug={teacherSlug}
-              classSlug={classSlug}
-              queueId={queueId}
-              entry={entry}
-              currentTime={currentTime}
-              timeOffset={timeOffset}
-            />
-          );
-        })}
-      </EntriesContainer>
     </>
   );
 };
