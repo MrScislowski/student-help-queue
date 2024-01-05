@@ -58,8 +58,6 @@ app.post("/api/login", async (req, res) => {
       return res.status(400).send("role required in request body");
     }
 
-    console.log(`clientId: ${clientId}, role: ${role}`);
-
     const client = new OAuth2Client(clientId);
 
     const ticket = await client.verifyIdToken({
