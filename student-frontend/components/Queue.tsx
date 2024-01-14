@@ -8,9 +8,16 @@ import SessionContext from "./SessionContext";
 import QueueTitle from "./QueueTitle";
 import QueueEntry from "./QueueEntry";
 
+const Container = styled.div`
+  flex: 1 0 100%;
+
+  @media screen and (min-width: 400px) {
+    flex: 1 0 auto;
+    min-width: 400px;
+  }
+`;
+
 const EntriesContainer = styled.div`
-  display: flex;
-  flex-direction: column;
   background-color: #8d94ba;
   padding: 10px;
   border-radius: 10px;
@@ -55,35 +62,37 @@ const Queue = (props: QueueProps) => {
 
   return (
     <>
-      <QueueTitle
-        teacherSlug={teacherSlug}
-        classSlug={classSlug}
-        queue={queue}
-        collapsed={collapsed}
-        setCollapsed={setCollapsed}
-        addName={() => addNameMutation.mutate()}
-      />
-      {collapsed ? (
-        ""
-      ) : (
-        <>
-          <EntriesContainer>
-            {entries.map((entry) => {
-              return (
-                <QueueEntry
-                  key={entry.user.email}
-                  teacherSlug={teacherSlug}
-                  classSlug={classSlug}
-                  queueId={queueId}
-                  entry={entry}
-                  currentTime={currentTime}
-                  timeOffset={timeOffset}
-                />
-              );
-            })}
-          </EntriesContainer>
-        </>
-      )}
+      <Container>
+        <QueueTitle
+          teacherSlug={teacherSlug}
+          classSlug={classSlug}
+          queue={queue}
+          collapsed={collapsed}
+          setCollapsed={setCollapsed}
+          addName={() => addNameMutation.mutate()}
+        />
+        {collapsed ? (
+          ""
+        ) : (
+          <>
+            <EntriesContainer>
+              {entries.map((entry) => {
+                return (
+                  <QueueEntry
+                    key={entry.user.email}
+                    teacherSlug={teacherSlug}
+                    classSlug={classSlug}
+                    queueId={queueId}
+                    entry={entry}
+                    currentTime={currentTime}
+                    timeOffset={timeOffset}
+                  />
+                );
+              })}
+            </EntriesContainer>
+          </>
+        )}
+      </Container>
     </>
   );
 };
