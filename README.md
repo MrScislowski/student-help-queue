@@ -67,6 +67,7 @@
 
 - `_id`: ObjectId - unique identifier for the class
 - `classSlug`: String - endpoint of the class
+- `className`: String - name of the class
 - `teacher`: ObjectId, ref to `Teacher` - reference to the teacher who created the class. Can be populated to a `Teacher` object.
 - `queues`: Queue[] - array of queues for the class
 

@@ -45,7 +45,14 @@ app.use("/api/teachers", teachersRouter);
 //   });
 // });
 
-app.post("/api/login", async (req, res) => {
+interface LoginRequest extends Request {
+  body: {
+    credential: string;
+    role: string;
+  };
+}
+
+app.post("/api/login", async (req: LoginRequest, res) => {
   try {
     const role = req.body.role;
     let clientId;

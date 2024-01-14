@@ -1,5 +1,7 @@
-import { Router, Request, Response, NextFunction } from "express";
-import { handleDatabaseError, handleError } from "../utils/errorHandlers";
+/* eslint-disable @typescript-eslint/no-misused-promises */
+
+import { Router, Request, Response } from "express";
+import { handleError } from "../utils/errorHandlers";
 import { Session, Teacher } from "../types";
 import teacherService from "../services/teacherService";
 import { authenticateToken } from "../middlewares/authMiddleware";
@@ -8,8 +10,15 @@ const router = Router();
 
 router.use(authenticateToken);
 
+interface CreateNewTeacherRequest extends Request {
+  body: {
+    email: string;
+    slug: string;
+  };
+}
+
 // Create a new teacher account
-router.post("/", async (req: Request, res: Response) => {
+router.post("/", async (req: CreateNewTeacherRequest, res: Response) => {
   const email = req.body.email;
   const slug = req.body.slug;
 

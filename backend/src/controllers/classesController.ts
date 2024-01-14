@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import { Router, Request, Response, NextFunction } from "express";
+import { Router, Request, Response } from "express";
 import { Queue, Session } from "../types";
 import classService from "../services/classService";
 import { authenticateToken } from "../middlewares/authMiddleware";
@@ -52,8 +52,18 @@ router.get(
   }
 );
 
+interface CreateNewQueueRequest extends Request {
+  params: {
+    classSlug: string;
+  };
+
+  body: {
+    queueName: string;
+  };
+}
+
 // Create a new queue for a class
-router.post("/:classSlug/queues", async (req, res) => {
+router.post("/:classSlug/queues", async (req: CreateNewQueueRequest, res) => {
   try {
     const classSlug = req.params.classSlug;
     const queueName = req.body.queueName;
@@ -68,8 +78,18 @@ router.post("/:classSlug/queues", async (req, res) => {
   }
 });
 
+interface CreateNewClassRequest extends Request {
+  params: {
+    teacherSlug: string;
+  };
+
+  body: {
+    classSlug: string;
+  };
+}
+
 // Create a new class
-router.post("/", async (req: Request, res: Response) => {
+router.post("/", async (req: CreateNewClassRequest, res: Response) => {
   const teacherSlug = req.params.teacherSlug;
   const classSlug = req.body.classSlug;
 

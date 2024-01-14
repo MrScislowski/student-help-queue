@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-import { Teacher, TeacherBase } from "../types";
+import { TeacherBase } from "../types";
 
 const teacherSchema = new mongoose.Schema<TeacherBase>({
   email: {

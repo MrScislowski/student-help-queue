@@ -28,6 +28,7 @@ export interface Teacher extends Omit<TeacherBase, "classes"> {
 export interface ClassBase {
   _id: Types.ObjectId;
   classSlug: string;
+  className: string;
   teacher: Types.ObjectId;
   queues: Queue[];
 }

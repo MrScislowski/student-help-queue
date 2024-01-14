@@ -12,7 +12,7 @@ const getClassData = async (
   let teacher;
   try {
     teacher = await TeacherModel.findOne({ slug: teacherSlug });
-  } catch (err: any) {
+  } catch (err: unknown) {
     handleDatabaseError(err);
   }
 
@@ -78,10 +78,6 @@ const addQueue = async (
   const classData = await ClassModel.findOne({ classSlug: classSlug }).populate(
     "teacher"
   );
-
-  const unpopulatedClassData = await ClassModel.findOne({
-    classSlug: classSlug,
-  });
 
   if (!classData) {
     throw new Error("ClassNotFound");
@@ -260,7 +256,7 @@ const removeUserFromQueue = async (
   queueId: string,
   userToRemove: User,
   userRemoving: User,
-  resolutionStatus: ResolutionStatus
+  _resolutionStatus: ResolutionStatus
 ): Promise<void> => {
   const classDetails = await ClassModel.findOne({
     classSlug: classSlug,
@@ -277,6 +273,8 @@ const removeUserFromQueue = async (
   ) {
     throw new Error("Insufficient permissions");
   }
+
+  // TODO: implement an archived queue...
 
   classDetails.queues = classDetails.queues.map((queue) => {
     if (queue._id.toString() === queueId) {
@@ -295,14 +293,6 @@ const removeUserFromQueue = async (
 };
 
 export default {
-  // getQueuesForClass,
-  // addActiveEntry,
-  // resolveMyEntry,
-  // resolveOthersEntry,
-  // renameQueue,
-  // addQueue,
-  // deleteQueue,
-  // changeVisibility,
   getClassData,
   addQueue,
   deleteQueue,

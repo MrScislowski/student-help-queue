@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import config from "../config";
 import { TeacherModel } from "../models/teacher";
 import { ClassModel } from "../models/class";
-import { ClassBase, Teacher, TeacherBase } from "../types";
+import { ClassBase, TeacherBase } from "../types";
 
 mongoose
   .connect(config.DB_URL)
@@ -49,6 +49,7 @@ async function createClasses(teachers: TeacherBase[]): Promise<void> {
   const class1: ClassBase = {
     _id: new mongoose.Types.ObjectId(),
     classSlug: "apcsa",
+    className: "AP Computer Science A",
     teacher: teachers[0]._id,
     queues: [],
   };
@@ -61,6 +62,7 @@ async function createClasses(teachers: TeacherBase[]): Promise<void> {
   const class2: ClassBase = {
     _id: new mongoose.Types.ObjectId(),
     classSlug: "computer_programming",
+    className: "Computer Programming",
     teacher: teachers[0]._id,
     queues: [],
   };
@@ -71,7 +73,7 @@ async function createClasses(teachers: TeacherBase[]): Promise<void> {
   });
 }
 
-async function fillQueues(): Promise<void> {
+async function _fillQueues(): Promise<void> {
   //   try {
   //     const activeAccount = await AccountModel.findOne({
   //       "owner.email": "mr.scislowski@gmail.com",
