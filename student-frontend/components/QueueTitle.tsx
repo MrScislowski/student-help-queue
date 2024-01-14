@@ -15,6 +15,7 @@ interface QueueTitleProps {
   queue: QueueType;
   collapsed: boolean;
   setCollapsed: (collapsed: boolean) => void;
+  addName: () => void;
 }
 
 const QueueTitle = (props: QueueTitleProps) => {
@@ -29,12 +30,15 @@ const QueueTitle = (props: QueueTitleProps) => {
     positionInQueue === -1 ? "" : `${positionInQueue + 1}/`;
   const summaryString = `${positionSummary}${props.queue.entries.length}`;
 
+  const isInQueue = positionInQueue !== -1;
+
   return (
     <Title>
       {name} ({summaryString})
       <button onClick={() => setCollapsed(!collapsed)}>
         {collapsed ? "↓" : "↑"}
       </button>
+      {!isInQueue ? <button onClick={() => props.addName()}>+</button> : ""}
     </Title>
   );
 };

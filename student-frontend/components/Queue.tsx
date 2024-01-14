@@ -16,10 +16,6 @@ const EntriesContainer = styled.div`
   border-radius: 10px;
 `;
 
-const AddNameButton = styled.button`
-  border-radius: 10px;
-`;
-
 interface QueueProps {
   teacherSlug: string;
   classSlug: string;
@@ -65,16 +61,12 @@ const Queue = (props: QueueProps) => {
         queue={queue}
         collapsed={collapsed}
         setCollapsed={setCollapsed}
+        addName={() => addNameMutation.mutate()}
       />
       {collapsed ? (
         ""
       ) : (
         <>
-          {entries.find((entry) => entry.user.email === session.user.email) ? (
-            ""
-          ) : (
-            <button onClick={() => addNameMutation.mutate()}>add name</button>
-          )}
           <EntriesContainer>
             {entries.map((entry) => {
               return (
