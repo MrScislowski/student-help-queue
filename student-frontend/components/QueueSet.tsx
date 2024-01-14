@@ -12,8 +12,9 @@ interface QueueSetProps {
 }
 
 const Container = styled.div`
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  grid-gap: 20px;
 `;
 
 const QueueSet = (props: QueueSetProps) => {

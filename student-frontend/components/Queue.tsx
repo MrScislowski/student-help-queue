@@ -9,12 +9,7 @@ import QueueTitle from "./QueueTitle";
 import QueueEntry from "./QueueEntry";
 
 const Container = styled.div`
-  flex: 1 0 100%;
-
-  @media screen and (min-width: 400px) {
-    flex: 1 0 auto;
-    min-width: 400px;
-  }
+  min-width: 400px;
 `;
 
 const EntriesContainer = styled.div`
