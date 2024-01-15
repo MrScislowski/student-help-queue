@@ -108,7 +108,8 @@ export const createQueue = async (
 
 export const createClass = async (
   teacherSlug: string,
-  classSlug: string
+  classSlug: string,
+  className: string
 ): Promise<void> => {
   let config = {};
   if (token) {
@@ -120,7 +121,7 @@ export const createClass = async (
   return (
     await axios.post(
       `${baseUrl}/teachers/${teacherSlug}/classes`,
-      { classSlug },
+      { classSlug, className },
       config
     )
   ).data;

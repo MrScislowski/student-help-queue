@@ -40,7 +40,8 @@ const getClassData = async (
 const createNewClass = async (
   email: string,
   teacherSlug: string,
-  classSlug: string
+  classSlug: string,
+  className: string
 ): Promise<void> => {
   const teacher = await TeacherModel.findOne({ slug: teacherSlug });
 
@@ -58,6 +59,7 @@ const createNewClass = async (
     _id: new mongoose.Types.ObjectId(),
     teacher: teacher._id,
     classSlug: classSlug,
+    className: className,
     queues: [],
   });
 

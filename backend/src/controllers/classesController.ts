@@ -85,6 +85,7 @@ interface CreateNewClassRequest extends Request {
 
   body: {
     classSlug: string;
+    className: string;
   };
 }
 
@@ -92,6 +93,7 @@ interface CreateNewClassRequest extends Request {
 router.post("/", async (req: CreateNewClassRequest, res: Response) => {
   const teacherSlug = req.params.teacherSlug;
   const classSlug = req.body.classSlug;
+  const className = req.body.className;
 
   try {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -100,7 +102,8 @@ router.post("/", async (req: CreateNewClassRequest, res: Response) => {
     await classService.createNewClass(
       session.user.email,
       teacherSlug,
-      classSlug
+      classSlug,
+      className
     );
     res.status(200).send();
   } catch (err) {
