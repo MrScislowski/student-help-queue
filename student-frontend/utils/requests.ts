@@ -21,6 +21,7 @@ export const getQueuesForClass = async (
   classSlug: string
 ): Promise<{
   timestamp: string;
+  className: string;
   queues: Queue[];
 }> => {
   let config = {};

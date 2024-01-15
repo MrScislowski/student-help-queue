@@ -39,6 +39,7 @@ router.get(
       });
 
       res.send({
+        className: classData.className,
         queues: queues,
         timestamp: new Date().toISOString(),
       });

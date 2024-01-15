@@ -53,6 +53,7 @@ const QueueSet = (props: QueueSetProps) => {
 
   return (
     <TimeOffsetContext.Provider value={timeOffset}>
+      <h1>{getEntriesQuery.data?.className || props.classSlug}</h1>
       <Container>
         {getEntriesQuery.data?.queues.map((queue) => {
           return (
