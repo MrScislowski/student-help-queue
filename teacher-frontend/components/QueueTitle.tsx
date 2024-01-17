@@ -35,6 +35,9 @@ interface QueueTitleProps {
   teacherSlug: string;
   classSlug: string;
   queue: QueueType;
+  collapsed: boolean;
+  setCollapsed: (collapsed: boolean) => void;
+  addName: () => void;
 }
 
 const QueueTitle = (props: QueueTitleProps) => {
@@ -45,6 +48,7 @@ const QueueTitle = (props: QueueTitleProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [title, setTitle] = useState(name);
   const [originalTitle, setOriginalTitle] = useState(name);
+  const { collapsed, setCollapsed } = props;
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -129,6 +133,9 @@ const QueueTitle = (props: QueueTitleProps) => {
             {queue.visible ? "Hide" : "Show"}
           </button>
           <button onClick={handleDelete}>Delete</button>
+          <button onClick={() => setCollapsed(!collapsed)}>
+            {collapsed ? "↓" : "↑"}
+          </button>
         </span>
       )}
     </Title>
