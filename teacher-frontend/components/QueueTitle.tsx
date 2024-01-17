@@ -122,17 +122,17 @@ const QueueTitle = (props: QueueTitleProps) => {
               }
             }}
           />
-          <button onClick={handleSave}>Save</button>
-          <button onClick={handleCancel}>Cancel</button>
+          <button onClick={handleCancel}>❌</button>
+          <button onClick={handleSave}>💾</button>
         </EditContainer>
       ) : (
         <span>
           {title}
-          <button onClick={handleEdit}>Edit</button>
+          <button onClick={handleEdit}>✏️</button>
           <button onClick={handleChangeVisibility}>
             {queue.visible ? "Hide" : "Show"}
           </button>
-          <button onClick={handleDelete}>Delete</button>
+          <button onClick={handleDelete}>🗑️</button>
           <button onClick={() => setCollapsed(!collapsed)}>
             {collapsed ? "↓" : "↑"}
           </button>
