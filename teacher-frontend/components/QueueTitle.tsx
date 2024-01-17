@@ -10,14 +10,14 @@ import {
 import { Queue as QueueType } from "../types/types";
 
 type TitleProps = {
-  visible: boolean;
+  $visible: boolean;
 };
 
 const Title = styled.h2<TitleProps>`
   padding: 10px;
   display: flex;
   align-items: center;
-  color: ${(props) => (props.visible ? "black" : "lightgrey")};
+  color: ${(props) => (props.$visible ? "black" : "lightgrey")};
 `;
 
 const TitleInput = styled.input`
@@ -72,7 +72,7 @@ const QueueTitle = (props: QueueTitleProps) => {
     mutationFn: async () => {
       await deleteQueue(teacherSlug, classSlug, id);
     },
-    onSuccess: () => {
+    onSettled: () => {
       queryClient.invalidateQueries(["entries"]);
     },
   });
@@ -105,6 +105,9 @@ const QueueTitle = (props: QueueTitleProps) => {
   };
 
   const handleDelete = () => {
+    if (!window.confirm(`Are you sure you want to delete ${name}?`)) {
+      return;
+    }
     deleteQueueMutation.mutate();
   };
 
@@ -117,7 +120,7 @@ const QueueTitle = (props: QueueTitleProps) => {
   };
 
   return (
-    <Title visible={queue.visible}>
+    <Title $visible={queue.visible}>
       {isEditing ? (
         <EditContainer>
           <TitleInput
