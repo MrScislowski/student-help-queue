@@ -26,13 +26,11 @@ interface QueueProps {
 
 const Queue = (props: QueueProps) => {
   const { teacherSlug, classSlug, queue } = props;
-  const queueName = queue.displayName;
   const queueId = queue._id;
   const entries = queue.entries;
 
   const [currentTime, setCurrentTime] = useState(new Date().getTime());
   const [collapsed, setCollapsed] = useState(false);
-  const session = useContext(SessionContext);
 
   const queryClient = useQueryClient();
 

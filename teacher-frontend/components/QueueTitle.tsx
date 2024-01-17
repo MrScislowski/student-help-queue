@@ -9,10 +9,15 @@ import {
 } from "../utils/requests";
 import { Queue as QueueType } from "../types/types";
 
-const Title = styled.h2`
+type TitleProps = {
+  visible: boolean;
+};
+
+const Title = styled.h2<TitleProps>`
   padding: 10px;
   display: flex;
   align-items: center;
+  color: ${(props) => (props.visible ? "black" : "lightgrey")};
 `;
 
 const TitleInput = styled.input`
@@ -104,11 +109,15 @@ const QueueTitle = (props: QueueTitleProps) => {
   };
 
   const handleChangeVisibility = () => {
+    // if it's currently visible, collapse it
+    if (queue.visible) {
+      setCollapsed(true);
+    }
     changeVisibilityMutation.mutate();
   };
 
   return (
-    <Title>
+    <Title visible={queue.visible}>
       {isEditing ? (
         <EditContainer>
           <TitleInput
