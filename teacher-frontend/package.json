@@ -21,6 +21,7 @@
     "react-dom": "^18.2.0",
     "react-oauth": "^0.0.1",
     "react-query": "^3.39.3",
+    "react-swipeable": "^7.0.1",
     "styled-components": "^6.0.7",
     "typescript": "5.2.2"
   },

@@ -5,6 +5,7 @@ import { useMutation, useQueryClient } from "react-query";
 import { resolveEntry } from "../utils/requests";
 import { useContext } from "react";
 import SessionContext from "./SessionContext";
+import { useSwipeable } from "react-swipeable";
 
 const QueueItem = styled.div`
   background-color: #a0cfd3;
@@ -86,8 +87,25 @@ const QueueEntry = (props: QueueEntryProps) => {
     },
   });
 
+  const swipeHandlers = useSwipeable({
+    onSwipedLeft: async () => {
+      if (entry.user.email === session.user.email) {
+        resolveEntryMutation.mutate({
+          studentEmail: entry.user.email,
+        });
+      }
+    },
+    onSwipedRight: async () => {
+      if (entry.user.email === session.user.email) {
+        cancelEntryMutation.mutate({
+          studentEmail: entry.user.email,
+        });
+      }
+    },
+  });
+
   return (
-    <QueueItem key={entry.user.email}>
+    <QueueItem {...swipeHandlers} key={entry.user.email}>
       {entry.user.givenName} {entry.user.familyName} (
       {getEntryAge(
         currentTime,
@@ -95,30 +113,26 @@ const QueueEntry = (props: QueueEntryProps) => {
         timeOffset
       )}
       )
-      {entry.user.email === session.user.email ? (
-        <>
-          <ResolveButton
-            onClick={() => {
-              resolveEntryMutation.mutate({
-                studentEmail: entry.user.email,
-              });
-            }}
-          >
-            Resolve
-          </ResolveButton>
-          <CancelButton
-            onClick={async () => {
-              cancelEntryMutation.mutate({
-                studentEmail: entry.user.email,
-              });
-            }}
-          >
-            Cancel
-          </CancelButton>
-        </>
-      ) : (
-        <></>
-      )}
+      <>
+        <CancelButton
+          onClick={async () => {
+            cancelEntryMutation.mutate({
+              studentEmail: entry.user.email,
+            });
+          }}
+        >
+          Cancel
+        </CancelButton>
+        <ResolveButton
+          onClick={() => {
+            resolveEntryMutation.mutate({
+              studentEmail: entry.user.email,
+            });
+          }}
+        >
+          Resolve
+        </ResolveButton>
+      </>
     </QueueItem>
   );
 };
