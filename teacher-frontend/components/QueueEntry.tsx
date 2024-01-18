@@ -89,18 +89,14 @@ const QueueEntry = (props: QueueEntryProps) => {
 
   const swipeHandlers = useSwipeable({
     onSwipedLeft: async () => {
-      if (entry.user.email === session.user.email) {
-        resolveEntryMutation.mutate({
-          studentEmail: entry.user.email,
-        });
-      }
+      resolveEntryMutation.mutate({
+        studentEmail: entry.user.email,
+      });
     },
     onSwipedRight: async () => {
-      if (entry.user.email === session.user.email) {
-        cancelEntryMutation.mutate({
-          studentEmail: entry.user.email,
-        });
-      }
+      cancelEntryMutation.mutate({
+        studentEmail: entry.user.email,
+      });
     },
   });
 
