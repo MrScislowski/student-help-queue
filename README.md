@@ -12,7 +12,7 @@ Student Help Queue is a web-based ticketing system designed to facilitate commun
 - **Wait Time Display**: The system shows the order of requests and displays wait times.
 - **Dual Interfaces**: Separate frontends for teachers and students with appropriate permissions.
 
-![Teacher and Student Views Side-by-Side](path_to_your_annotated_image.png)
+![Teacher and Student Views Side-by-Side](HelpQueueDemoScreenshot_annotated.png)
 *Side-by-side comparison of Teacher and Student views*
 
 
