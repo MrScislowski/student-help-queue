@@ -1,5 +1,7 @@
 # Student Help Queue
 
+## [Live Demo](https://toy-teacher-frontend-05383dcc6215.herokuapp.com/)
+
 ## Project Overview
 
 Student Help Queue is a web-based ticketing system designed to facilitate communication between teachers and students. It allows teachers to manage class-specific queues for various purposes such as immediate assistance requests or assignment completion notifications. Students can add themselves to these queues, and either they or their teachers can remove them once the request is resolved.
